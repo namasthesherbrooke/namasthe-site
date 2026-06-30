@@ -1,0 +1,17 @@
+{
+  "name": "Café Namasthé",
+  "short_name": "Namasthé",
+  "description": "L'application client officielle du Café Namasthé",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2C1810",
+  "icons": [
+    {
+      "src": "/logo-new.png",
+      "sizes": "192x192 512x512 any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
