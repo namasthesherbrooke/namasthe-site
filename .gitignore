@@ -44,5 +44,4 @@ next-env.d.ts
 cloudflared
 *.db
 *.log
-public/hero-bg.mp4
 
