@@ -42,7 +42,7 @@ export async function POST(req) {
     // 1. Récupérer le profil actuel
     const { data: profile, error: fetchError } = await supabase
       .from('profiles')
-      .select('fidelite_points, tickets, prenom, nom')
+      .select('fidelite_points, tickets, prenom, nom, tickets_utilises')
       .eq('id', userId)
       .single();
 
@@ -53,8 +53,10 @@ export async function POST(req) {
 
     let currentPoints = profile.fidelite_points || 0;
     let currentTickets = profile.tickets || 0;
+    let currentTicketsUtilises = profile.tickets_utilises || 0;
     let newPoints = currentPoints;
     let newTickets = currentTickets;
+    let newTicketsUtilises = currentTicketsUtilises;
 
     // 2. Traiter l'action
     if (action === 'add') {
@@ -72,8 +74,10 @@ export async function POST(req) {
     } else if (action === 'claim') {
       if (currentTickets > 0) {
         newTickets = currentTickets - 1;
+        newTicketsUtilises = currentTicketsUtilises + 1;
       } else if (currentPoints >= 10) {
         newPoints = currentPoints - 10;
+        newTicketsUtilises = currentTicketsUtilises + 1;
       } else {
         return NextResponse.json({ error: "Aucun ticket ou point suffisant pour réclamer une récompense." }, { status: 400 });
       }
@@ -81,10 +85,20 @@ export async function POST(req) {
       return NextResponse.json({ error: "Action invalide" }, { status: 400 });
     }
 
+    const updatePayload = { 
+      fidelite_points: newPoints, 
+      tickets: newTickets,
+      tickets_utilises: newTicketsUtilises
+    };
+
+    if (action === 'add' || action === 'claim') {
+      updatePayload.derniere_visite = new Date().toISOString();
+    }
+
     // 3. Mettre à jour la base de données
     const { error: updateError } = await supabase
       .from('profiles')
-      .update({ fidelite_points: newPoints, tickets: newTickets })
+      .update(updatePayload)
       .eq('id', userId);
 
     if (updateError) {

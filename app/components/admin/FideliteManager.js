@@ -35,8 +35,10 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
             <tr style={{ background: '#f5f5f5', color: '#333' }}>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Client</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Courriel</th>
+              <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Dernière Visite</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Progression</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Tickets 🎟️</th>
+              <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Tickets Utilisés</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee', textAlign: 'right' }}>Actions rapides</th>
             </tr>
           </thead>
@@ -50,6 +52,9 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
                 <tr key={profile.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }}>
                   <td style={{ padding: '15px 20px', fontWeight: 'bold', color: '#2C1810' }}>{profile.prenom} {profile.nom}</td>
                   <td style={{ padding: '15px 20px', color: '#666', fontSize: '0.9rem' }}>{profile.email}</td>
+                  <td style={{ padding: '15px 20px', color: '#888', fontSize: '0.85rem' }}>
+                    {profile.derniere_visite ? new Date(profile.derniere_visite).toLocaleDateString('fr-CA', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Jamais'}
+                  </td>
                   <td style={{ padding: '15px 20px' }}>
                     <div style={{ background: '#E8F5E9', color: 'var(--green-tropical)', padding: '5px 10px', borderRadius: '20px', display: 'inline-block', fontWeight: 'bold', fontSize: '0.9rem' }}>
                       {progression}/10
@@ -61,6 +66,9 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
                         {coupons}
                       </div>
                     ) : '-'}
+                  </td>
+                  <td style={{ padding: '15px 20px', color: '#666', fontWeight: 'bold' }}>
+                    {profile.tickets_utilises || 0}
                   </td>
                   <td style={{ padding: '15px 20px', textAlign: 'right' }}>
                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
@@ -88,7 +96,7 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
             })}
             {filteredProfiles.length === 0 && (
               <tr>
-                <td colSpan="5" style={{ padding: '30px', textAlign: 'center', color: '#666' }}>Aucun client trouvé.</td>
+                <td colSpan="7" style={{ padding: '30px', textAlign: 'center', color: '#666' }}>Aucun client trouvé.</td>
               </tr>
             )}
           </tbody>

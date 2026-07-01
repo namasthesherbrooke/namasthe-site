@@ -132,7 +132,8 @@ export async function GET(req) {
             prenom: orderData.customer_name ? orderData.customer_name.split(' ')[0] : 'Client',
             nom: orderData.customer_name ? orderData.customer_name.split(' ').slice(1).join(' ') : 'Web',
             fidelite_points: currentPoints, 
-            tickets: currentTickets 
+            tickets: currentTickets,
+            derniere_visite: new Date().toISOString()
           });
           console.log(`[FIDELITE] ${pointsToAdd} points ajoutés à l'utilisateur ${orderData.user_id}.`);
         } catch (fideliteError) {
