@@ -80,23 +80,28 @@ async function notifyBaristas(orderNumber, supabaseAdmin, delaySeconds = 0, pick
       }
       console.log(`[NTFY] 5 Notifications différées programmées dans ~${delaySeconds}s`);
     } else {
-      // Notification immédiate (Alarme 5 fois en arrière-plan)
-      (async () => {
-        for (let i = 0; i < 5; i++) {
-          await fetch('https://ntfy.sh/', {
+      // Notification immédiate (Alarme 5 fois) avec le délai natif de Ntfy pour contourner Vercel
+      const fetchPromises = [];
+      for (let i = 0; i < 5; i++) {
+        const payload = {
+          topic: 'namasthe_barista_commandes',
+          message: `Commande ${orderNumber} prête à être préparée ! (Alerte ${i+1}/5)`,
+          title: 'NOUVELLE COMMANDE NAMASTHE !',
+          priority: 5,
+          tags: ['coffee', 'bell']
+        };
+        if (i > 0) {
+          payload.delay = `${i * 3}s`;
+        }
+        fetchPromises.push(
+          fetch('https://ntfy.sh/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              topic: 'namasthe_barista_commandes',
-              message: `Commande ${orderNumber} prête à être préparée ! (Alerte ${i+1}/5)`,
-              title: 'NOUVELLE COMMANDE NAMASTHE !',
-              priority: 5,
-              tags: ['coffee', 'bell']
-            })
-          }).catch(e => console.error(e));
-          if (i < 4) await new Promise(r => setTimeout(r, 2500));
-        }
-      })();
+            body: JSON.stringify(payload)
+          }).catch(e => console.error(e))
+        );
+      }
+      await Promise.all(fetchPromises);
       console.log('Notification ntfy (5x) envoyée');
     }
 

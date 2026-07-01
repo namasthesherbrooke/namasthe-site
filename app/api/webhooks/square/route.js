@@ -105,36 +105,28 @@ async function notifyBaristas(orderNumber, supabaseAdmin) {
     }
 
     // NOUVEAU: Envoi d'une notification d'urgence via ntfy.sh (Bypass Android Doze Mode)
-    // On envoie 5 requêtes espacées pour être sûr de réveiller la tablette
-    await fetch('https://ntfy.sh/namasthe_barista_commandes', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-          topic: 'namasthe_barista_commandes',
-          message: `Commande ${orderNumber} payée en magasin !`,
-          title: 'NOUVELLE COMMANDE NAMASTHE !',
-          priority: 5,
-          tags: ['coffee', 'bell']
-      })
-    }).catch(e => console.error(e));
-    
-    // Essayer de renvoyer plusieurs fois en background pour bypass doze mode
-    (async () => {
-      for (let i = 0; i < 4; i++) {
-        await new Promise(r => setTimeout(r, 2000));
-        await fetch('https://ntfy.sh/namasthe_barista_commandes', {
+    // On envoie 5 requêtes avec le délai natif de Ntfy pour contourner Vercel
+    const fetchPromises = [];
+    for (let i = 0; i < 5; i++) {
+      const payload = {
+        topic: 'namasthe_barista_commandes',
+        message: i === 0 ? `Commande ${orderNumber} payée en magasin !` : `Commande ${orderNumber} payée en magasin ! (Alerte ${i+1}/5)`,
+        title: 'NOUVELLE COMMANDE NAMASTHE !',
+        priority: 5,
+        tags: ['coffee', 'bell']
+      };
+      if (i > 0) {
+        payload.delay = `${i * 3}s`;
+      }
+      fetchPromises.push(
+        fetch('https://ntfy.sh/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              topic: 'namasthe_barista_commandes',
-              message: `Commande ${orderNumber} payée en magasin ! (Alerte ${i+2}/5)`,
-              title: 'NOUVELLE COMMANDE NAMASTHE !',
-              priority: 5,
-              tags: ['coffee', 'bell']
-          })
-        }).catch(e => console.error(e));
-      }
-    })();
+          body: JSON.stringify(payload)
+        }).catch(e => console.error(e))
+      );
+    }
+    await Promise.all(fetchPromises);
     console.log('[NTFY] Notification sonore d\'urgence envoyée');
 
   } catch (err) {
