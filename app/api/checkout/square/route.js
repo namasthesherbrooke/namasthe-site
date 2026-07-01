@@ -254,6 +254,27 @@ export async function POST(req) {
         }
       }
 
+      // Mise à jour des points de fidélité automatiquement
+      if (user_id) {
+        try {
+          const pointsToAdd = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+          const { data: profile } = await supabase.from('profiles').select('fidelite_points, tickets').eq('id', user_id).single();
+          if (profile) {
+            let currentPoints = profile.fidelite_points || 0;
+            let currentTickets = profile.tickets || 0;
+            currentPoints += pointsToAdd;
+            while (currentPoints >= 10) {
+              currentPoints -= 10;
+              currentTickets += 1;
+            }
+            await supabase.from('profiles').update({ fidelite_points: currentPoints, tickets: currentTickets }).eq('id', user_id);
+            console.log(`[FIDELITE] ${pointsToAdd} points ajoutés à l'utilisateur ${user_id}. Nouveau total: ${currentPoints} points, ${currentTickets} tickets.`);
+          }
+        } catch (fideliteError) {
+          console.error('Erreur lors de l\'ajout des points de fidélité:', fideliteError);
+        }
+      }
+
       // Envoi du reçu par courriel
       if (customer_email) {
         const receiptUrl = payment.receiptUrl || payment.receipt_url || '';

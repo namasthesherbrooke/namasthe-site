@@ -112,6 +112,27 @@ export async function GET(req) {
         }
       }
 
+      // Mise à jour des points de fidélité automatiquement
+      if (orderData.user_id) {
+        try {
+          const pointsToAdd = (orderData.order_items || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+          const { data: profile } = await supabase.from('profiles').select('fidelite_points, tickets').eq('id', orderData.user_id).single();
+          if (profile) {
+            let currentPoints = profile.fidelite_points || 0;
+            let currentTickets = profile.tickets || 0;
+            currentPoints += pointsToAdd;
+            while (currentPoints >= 10) {
+              currentPoints -= 10;
+              currentTickets += 1;
+            }
+            await supabase.from('profiles').update({ fidelite_points: currentPoints, tickets: currentTickets }).eq('id', orderData.user_id);
+            console.log(`[FIDELITE] ${pointsToAdd} points ajoutés à l'utilisateur ${orderData.user_id}.`);
+          }
+        } catch (fideliteError) {
+          console.error('Erreur lors de l\'ajout des points de fidélité:', fideliteError);
+        }
+      }
+
       // Notifier les baristas
       notifyBaristas(orderNumber, supabase, delaySeconds, pickupTime).catch(console.error);
     }
