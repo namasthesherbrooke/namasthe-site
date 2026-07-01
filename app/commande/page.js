@@ -214,6 +214,23 @@ export default function OrderBuilder() {
   };
 
   const handleAddToCart = () => {
+    // Validation des minimums
+    if (selectedProduct) {
+      const isCustomizable = CUSTOMIZABLE_DRINKS.includes(selectedProduct.name.toLowerCase().trim());
+      const listsToRender = (isCustomizable && creationMode === 'custom')
+        ? [JUS_MODIFIER_LIST]
+        : (selectedProduct.modifier_lists || []).map(listId => menu.modifierLists.find(l => l.id === listId)).filter(Boolean);
+
+      for (const list of listsToRender) {
+        if (list && list.min > 0) {
+          const currentTotal = list.modifiers.reduce((sum, m) => sum + (selectedQuantities[m.id] || 0), 0);
+          if (currentTotal < list.min) {
+            alert(`Veuillez sélectionner au moins ${list.min} option(s) pour : ${list.name}`);
+            return;
+          }
+        }
+      }
+    }
 
     const cartItem = buildCartItem();
     if (!cartItem) return;
