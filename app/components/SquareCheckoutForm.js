@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
+import { PaymentForm, CreditCard, ApplePay, GooglePay } from 'react-square-web-payments-sdk';
 
 export default function SquareCheckoutForm({ amount, cartTotal, tpsAmount, tvqAmount, cart, onSuccess, onCancel, customer_name, customer_email, user_id, pickupTime }) {
   const [loading, setLoading] = useState(false);
@@ -69,7 +69,27 @@ export default function SquareCheckoutForm({ amount, cartTotal, tpsAmount, tvqAm
           applicationId={process.env.NEXT_PUBLIC_SQUARE_APP_ID || 'sandbox-sq0idb-xxx'}
           locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || 'LXXX'}
           cardTokenizeResponseReceived={handlePayment}
+          createPaymentRequest={() => ({
+            countryCode: 'CA',
+            currencyCode: 'CAD',
+            total: {
+              amount: amount.toFixed(2),
+              label: 'Café Namasthé',
+            },
+          })}
         >
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+            <div style={{ flex: 1 }}>
+              <ApplePay />
+            </div>
+            <div style={{ flex: 1 }}>
+              <GooglePay />
+            </div>
+          </div>
+          <div style={{ margin: '15px 0', textAlign: 'center', color: '#666', fontSize: '0.9rem', position: 'relative' }}>
+            <span style={{ background: '#f9f9f9', padding: '0 10px', position: 'relative', zIndex: 1 }}>Ou payez par carte</span>
+            <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, borderTop: '1px solid #ddd', zIndex: 0 }}></div>
+          </div>
           <CreditCard
             buttonProps={{
               css: {

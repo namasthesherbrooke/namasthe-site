@@ -26,6 +26,49 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (product) => {
+    // Animation de vol vers le panier (Effet "Wow")
+    try {
+      if (typeof window !== 'undefined' && window.event) {
+        const e = window.event;
+        const x = e.clientX || e.touches?.[0]?.clientX;
+        const y = e.clientY || e.touches?.[0]?.clientY;
+        
+        if (x && y) {
+          const flyingImg = document.createElement('img');
+          flyingImg.src = product.image || product.image_url || '/logo.png';
+          flyingImg.style.position = 'fixed';
+          flyingImg.style.left = `${x - 25}px`;
+          flyingImg.style.top = `${y - 25}px`;
+          flyingImg.style.width = '50px';
+          flyingImg.style.height = '50px';
+          flyingImg.style.borderRadius = '50%';
+          flyingImg.style.objectFit = 'cover';
+          flyingImg.style.zIndex = '999999';
+          flyingImg.style.pointerEvents = 'none';
+          flyingImg.style.transition = 'all 0.7s cubic-bezier(0.25, 1, 0.5, 1)';
+          flyingImg.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
+          
+          document.body.appendChild(flyingImg);
+          
+          // Animer vers l'icône du panier en haut à droite
+          setTimeout(() => {
+            flyingImg.style.left = 'calc(100vw - 60px)'; 
+            flyingImg.style.top = '30px';
+            flyingImg.style.transform = 'scale(0.1) rotate(180deg)';
+            flyingImg.style.opacity = '0';
+          }, 10);
+          
+          setTimeout(() => {
+            if (document.body.contains(flyingImg)) {
+              document.body.removeChild(flyingImg);
+            }
+          }, 700);
+        }
+      }
+    } catch (err) {
+      console.log('Erreur animation panier', err);
+    }
+
     setCart((prev) => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
@@ -35,7 +78,9 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
-    setIsCartOpen(true);
+    
+    // Délai avant d'ouvrir le panier pour laisser le temps à l'animation de jouer un peu
+    setTimeout(() => setIsCartOpen(true), 300);
   };
 
   const removeFromCart = (productId) => {

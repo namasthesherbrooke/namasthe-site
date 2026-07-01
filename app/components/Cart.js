@@ -98,6 +98,7 @@ export default function Cart() {
   const [session, setSession] = useState(null);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
+  const [userPoints, setUserPoints] = useState(0);
   const [pickupType, setPickupType] = useState('Dès que possible');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -108,9 +109,10 @@ export default function Cart() {
       setSession(session);
       if (session) {
         setGuestEmail(session.user.email);
-        // Récupérer le vrai nom depuis la table profiles
-        const { data } = await supabase.from('profiles').select('prenom, nom').eq('id', session.user.id).single();
+        // Récupérer le vrai nom et les points depuis la table profiles
+        const { data } = await supabase.from('profiles').select('prenom, nom, fidelite_points').eq('id', session.user.id).single();
         if (data) {
+          setUserPoints(data.fidelite_points || 0);
           const fullName = [data.prenom, data.nom].filter(Boolean).join(' ');
           if (fullName) {
             setGuestName(fullName);
@@ -137,6 +139,25 @@ export default function Cart() {
           <h2 style={{ margin: 0, color: '#2C1810' }}>Mon Panier</h2>
           <button onClick={() => setIsCartOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>✕</button>
         </div>
+        
+        {/* Jauge de fidélité */}
+        {session && (
+          <div style={{ padding: '15px 20px', background: '#F8FBF8', borderBottom: '1px solid #eaeaea' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.9rem', color: '#2E7D32', fontWeight: 'bold' }}>Vos points 🍵</span>
+              <span style={{ fontSize: '0.85rem', color: '#666' }}>{userPoints} / 10 pour un breuvage gratuit</span>
+            </div>
+            <div style={{ background: '#E0E0E0', borderRadius: '10px', height: '12px', width: '100%', overflow: 'hidden' }}>
+              <div style={{ 
+                background: 'linear-gradient(90deg, #4CAF50, #2E7D32)', 
+                width: `${Math.min(userPoints * 10, 100)}%`, 
+                height: '100%', 
+                transition: 'width 1s ease-in-out',
+                borderRadius: '10px'
+              }}></div>
+            </div>
+          </div>
+        )}
 
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
           {cart.length === 0 ? (

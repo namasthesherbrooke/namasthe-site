@@ -99,6 +99,14 @@ export default function OrderBuilder() {
     setCreationMode('preset'); // Reset du mode
     setCustomRecipeName(''); // Reset custom recipe
     setSelectedVariation(product.variations && product.variations.length > 0 ? product.variations[0] : null);
+    
+    // Défilement automatique vers la section de personnalisation (pratique sur mobile)
+    setTimeout(() => {
+      const section = document.getElementById('personnalisation-section');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const getTotalQtyForList = (listId) => {
@@ -412,7 +420,7 @@ export default function OrderBuilder() {
         </div>
 
         {/* ÉTAPE 2 : PERSONNALISATION (Affiché seulement si un produit est sélectionné) */}
-        <div style={{ opacity: selectedProduct ? 1 : 0.4, pointerEvents: selectedProduct ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
+        <div id="personnalisation-section" style={{ opacity: selectedProduct ? 1 : 0.4, pointerEvents: selectedProduct ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
           <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>2. Personnalisez-le</h2>
           
           {!selectedProduct && <p style={{ color: '#888' }}>Veuillez d'abord sélectionner une base.</p>}

@@ -118,10 +118,44 @@ export default function ProductsCarousel({ items, type }) {
     carouselRef.current.scrollLeft = scrollLeft - walk;
   };
 
+  const scrollByAmount = (amount) => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  };
+
   const closeModal = () => setSelectedProduct(null);
 
   return (
     <div style={{ position: 'relative', margin: '0 -24px', padding: '0 24px' }}>
+      {/* Boutons de navigation (visibles surtout sur desktop) */}
+      <button 
+        onClick={() => scrollByAmount(-350)}
+        className="carousel-nav-btn prev-btn"
+        style={{
+          position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)',
+          width: '45px', height: '45px', borderRadius: '50%', background: 'white', border: '1px solid #ddd',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: '#2C1810'
+        }}
+        aria-label="Faire défiler vers la gauche"
+      >
+        &#8249;
+      </button>
+      <button 
+        onClick={() => scrollByAmount(350)}
+        className="carousel-nav-btn next-btn"
+        style={{
+          position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
+          width: '45px', height: '45px', borderRadius: '50%', background: 'white', border: '1px solid #ddd',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: '#2C1810'
+        }}
+        aria-label="Faire défiler vers la droite"
+      >
+        &#8250;
+      </button>
+
       {/* Conteneur du Carousel avec barre de défilement stylisée et drag-to-scroll */}
       <div 
         ref={carouselRef}
