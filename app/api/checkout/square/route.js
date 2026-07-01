@@ -259,17 +259,26 @@ export async function POST(req) {
         try {
           const pointsToAdd = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
           const { data: profile } = await supabase.from('profiles').select('fidelite_points, tickets').eq('id', user_id).single();
-          if (profile) {
-            let currentPoints = profile.fidelite_points || 0;
-            let currentTickets = profile.tickets || 0;
-            currentPoints += pointsToAdd;
-            while (currentPoints >= 10) {
-              currentPoints -= 10;
-              currentTickets += 1;
-            }
-            await supabase.from('profiles').update({ fidelite_points: currentPoints, tickets: currentTickets }).eq('id', user_id);
-            console.log(`[FIDELITE] ${pointsToAdd} points ajoutés à l'utilisateur ${user_id}. Nouveau total: ${currentPoints} points, ${currentTickets} tickets.`);
+          
+          let currentPoints = profile ? (profile.fidelite_points || 0) : 0;
+          let currentTickets = profile ? (profile.tickets || 0) : 0;
+          currentPoints += pointsToAdd;
+          
+          while (currentPoints >= 10) {
+            currentPoints -= 10;
+            currentTickets += 1;
           }
+          
+          // Utilisation de upsert au cas où le profil n'existe pas encore
+          await supabase.from('profiles').upsert({ 
+            id: user_id, 
+            prenom: finalCustomerName.split(' ')[0],
+            nom: finalCustomerName.split(' ').slice(1).join(' '),
+            fidelite_points: currentPoints, 
+            tickets: currentTickets 
+          });
+          
+          console.log(`[FIDELITE] ${pointsToAdd} points ajoutés à l'utilisateur ${user_id}. Nouveau total: ${currentPoints} points, ${currentTickets} tickets.`);
         } catch (fideliteError) {
           console.error('Erreur lors de l\'ajout des points de fidélité:', fideliteError);
         }
