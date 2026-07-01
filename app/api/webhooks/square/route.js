@@ -113,7 +113,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin) {
           topic: 'namasthe_barista_commandes',
           message: `Commande ${orderNumber} payée en magasin !`,
           title: 'NOUVELLE COMMANDE NAMASTHE !',
-          priority: 'max',
+          priority: 5,
           tags: ['coffee', 'bell']
       })
     }).catch(e => console.error(e));
@@ -129,7 +129,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin) {
               topic: 'namasthe_barista_commandes',
               message: `Commande ${orderNumber} payée en magasin ! (Alerte ${i+2}/5)`,
               title: 'NOUVELLE COMMANDE NAMASTHE !',
-              priority: 'max',
+              priority: 5,
               tags: ['coffee', 'bell']
           })
         }).catch(e => console.error(e));
