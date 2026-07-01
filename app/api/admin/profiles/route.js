@@ -16,16 +16,23 @@ export async function GET(req) {
       isAdminAuthenticated = true;
     }
     
+    let debugReason = "No token";
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const { data: { user } } = await defaultSupabase.auth.getUser(token);
-      if (user && user.email === 'namasthesherbrooke@gmail.com') {
-        isAdminAuthenticated = true;
+      const { data: { user }, error: userError } = await defaultSupabase.auth.getUser(token);
+      if (userError) {
+        debugReason = "User error: " + userError.message;
+      } else if (user) {
+        if (user.email === 'namasthesherbrooke@gmail.com') {
+          isAdminAuthenticated = true;
+        } else {
+          debugReason = "Email mismatch: " + user.email;
+        }
       }
     }
 
     if (!isAdminAuthenticated) {
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+      return NextResponse.json({ error: "Accès refusé. Debug: " + debugReason }, { status: 403 });
     }
 
     // 2. Récupération de tous les profils (besoin du service role si RLS l'empêche)

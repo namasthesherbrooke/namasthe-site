@@ -216,29 +216,24 @@ async function notifyBaristas(orderNumber, supabaseAdmin, delaySeconds = 0, pick
       }
       console.log(`[NTFY] 5 Notifications différées programmées dans ~${delaySeconds}s`);
     } else {
-      // Notification immédiate (Alarme 5 fois) avec le délai natif de Ntfy pour contourner Vercel
-      const fetchPromises = [];
-      for (let i = 0; i < 5; i++) {
-        const payload = {
-          topic: 'namasthe_barista_commandes',
-          message: `Commande ${orderNumber} prête à être préparée ! (Alerte ${i+1}/5)`,
-          title: 'NOUVELLE COMMANDE NAMASTHE !',
-          priority: 5,
-          tags: ['coffee', 'bell']
-        };
-        if (i > 0) {
-          payload.delay = `${i * 10}s`;
-        }
-        fetchPromises.push(
-          fetch('https://ntfy.sh/', {
+      // Notification immédiate (Alarme 5 fois) avec setTimeout (fonctionne car hébergé localement)
+      (async () => {
+        for (let i = 0; i < 5; i++) {
+          await fetch('https://ntfy.sh/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }).catch(e => console.error(e))
-        );
-      }
-      await Promise.all(fetchPromises);
-      console.log('[NTFY] Notification sonore d\'urgence envoyée');
+            body: JSON.stringify({
+              topic: 'namasthe_barista_commandes',
+              message: `Commande ${orderNumber} prête à être préparée ! (Alerte ${i+1}/5)`,
+              title: 'NOUVELLE COMMANDE NAMASTHE !',
+              priority: 5,
+              tags: ['coffee', 'bell']
+            })
+          }).catch(e => console.error(e));
+          if (i < 4) await new Promise(r => setTimeout(r, 2500)); // Attend 2.5s entre chaque sonnerie
+        }
+      })();
+      console.log('[NTFY] Notifications sonores d\'urgence lancées en arrière-plan');
     }
 
   } catch (err) {
