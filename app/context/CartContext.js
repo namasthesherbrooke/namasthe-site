@@ -45,7 +45,7 @@ export function CartProvider({ children }) {
           flyingImg.style.objectFit = 'cover';
           flyingImg.style.zIndex = '999999';
           flyingImg.style.pointerEvents = 'none';
-          flyingImg.style.transition = 'all 0.7s cubic-bezier(0.25, 1, 0.5, 1)';
+          flyingImg.style.transition = 'all 1.2s cubic-bezier(0.25, 1, 0.5, 1)';
           flyingImg.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
           
           document.body.appendChild(flyingImg);
@@ -62,7 +62,7 @@ export function CartProvider({ children }) {
             if (document.body.contains(flyingImg)) {
               document.body.removeChild(flyingImg);
             }
-          }, 700);
+          }, 1200);
         }
       }
     } catch (err) {
@@ -80,7 +80,7 @@ export function CartProvider({ children }) {
     });
     
     // Délai avant d'ouvrir le panier pour laisser le temps à l'animation de jouer un peu
-    setTimeout(() => setIsCartOpen(true), 300);
+    setTimeout(() => setIsCartOpen(true), 1200);
   };
 
   const removeFromCart = (productId) => {
