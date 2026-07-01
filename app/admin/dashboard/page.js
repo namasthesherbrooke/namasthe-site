@@ -45,9 +45,12 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (data.success) {
         setProfiles(data.profiles);
+      } else {
+        alert("Erreur de chargement des profils : " + (data.error || "Inconnue"));
       }
     } catch (err) {
       console.error(err);
+      alert("Erreur réseau : " + err.message);
     }
     setLoading(false);
   };
