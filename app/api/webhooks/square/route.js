@@ -116,7 +116,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin) {
         tags: ['coffee', 'bell']
       };
       if (i > 0) {
-        payload.delay = `${i * 3}s`;
+        payload.delay = `${i * 10}s`;
       }
       fetchPromises.push(
         fetch('https://ntfy.sh/', {
