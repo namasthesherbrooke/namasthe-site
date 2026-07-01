@@ -105,16 +105,36 @@ async function notifyBaristas(orderNumber, supabaseAdmin) {
     }
 
     // NOUVEAU: Envoi d'une notification d'urgence via ntfy.sh (Bypass Android Doze Mode)
-    // Cela garantit que le téléphone sonne même s'il est en veille profonde et verrouillé.
+    // On envoie 5 requêtes espacées pour être sûr de réveiller la tablette
     await fetch('https://ntfy.sh/namasthe_barista_commandes', {
       method: 'POST',
-      body: `Commande ${orderNumber} prête à être préparée !`,
-      headers: {
-          'Title': 'NOUVELLE COMMANDE NAMASTHE !',
-          'Priority': 'max', // Changé à MAX pour forcer un nouveau canal Android
-          'Tags': 'coffee,bell' // Emojis
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+          topic: 'namasthe_barista_commandes',
+          message: `Commande ${orderNumber} payée en magasin !`,
+          title: 'NOUVELLE COMMANDE NAMASTHE !',
+          priority: 'max',
+          tags: ['coffee', 'bell']
+      })
+    }).catch(e => console.error(e));
+    
+    // Essayer de renvoyer plusieurs fois en background pour bypass doze mode
+    (async () => {
+      for (let i = 0; i < 4; i++) {
+        await new Promise(r => setTimeout(r, 2000));
+        await fetch('https://ntfy.sh/namasthe_barista_commandes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              topic: 'namasthe_barista_commandes',
+              message: `Commande ${orderNumber} payée en magasin ! (Alerte ${i+2}/5)`,
+              title: 'NOUVELLE COMMANDE NAMASTHE !',
+              priority: 'max',
+              tags: ['coffee', 'bell']
+          })
+        }).catch(e => console.error(e));
       }
-    });
+    })();
     console.log('[NTFY] Notification sonore d\'urgence envoyée');
 
   } catch (err) {

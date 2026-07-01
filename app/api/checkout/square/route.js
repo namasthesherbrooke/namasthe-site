@@ -52,6 +52,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin, delaySeconds = 0, pick
       // 1. Notification immédiate (Info)
       await fetch('https://ntfy.sh/', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topic: 'namasthe_barista_commandes',
           message: `Commande ${orderNumber} planifiée pour ${pickupTime}.`,
@@ -66,6 +67,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin, delaySeconds = 0, pick
         const extraDelay = delaySeconds + (i * 3);
         await fetch('https://ntfy.sh/', {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             topic: 'namasthe_barista_commandes',
             message: `Il est temps de préparer la commande ${orderNumber} ! (Prévue pour ${pickupTime}) (Alerte ${i+1}/5)`,
@@ -83,6 +85,7 @@ async function notifyBaristas(orderNumber, supabaseAdmin, delaySeconds = 0, pick
         for (let i = 0; i < 5; i++) {
           await fetch('https://ntfy.sh/', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               topic: 'namasthe_barista_commandes',
               message: `Commande ${orderNumber} prête à être préparée ! (Alerte ${i+1}/5)`,
