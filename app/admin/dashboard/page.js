@@ -23,19 +23,20 @@ export default function AdminDashboard() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session && session.user && session.user.email === 'namasthesherbrooke@gmail.com') {
       setIsAdmin(true);
-      fetchProfiles();
+      fetchProfiles(session.access_token);
     } else {
       setLoading(false);
     }
   };
 
-  const fetchProfiles = async () => {
+  const fetchProfiles = async (token) => {
     setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = token || (await supabase.auth.getSession()).data?.session?.access_token;
+      
       const res = await fetch('/api/admin/profiles', {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${accessToken}`,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'

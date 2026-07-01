@@ -19,14 +19,18 @@ export async function GET(req) {
     let debugReason = "No token";
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const { data: { user }, error: userError } = await defaultSupabase.auth.getUser(token);
-      if (userError) {
-        debugReason = "User error: " + userError.message;
-      } else if (user) {
-        if (user.email === 'namasthesherbrooke@gmail.com') {
-          isAdminAuthenticated = true;
-        } else {
-          debugReason = "Email mismatch: " + user.email;
+      if (!token || token === 'undefined' || token === 'null') {
+        debugReason = "Token is literally " + token;
+      } else {
+        const { data: { user }, error: userError } = await defaultSupabase.auth.getUser(token);
+        if (userError) {
+          debugReason = "User error: " + userError.message;
+        } else if (user) {
+          if (user.email === 'namasthesherbrooke@gmail.com') {
+            isAdminAuthenticated = true;
+          } else {
+            debugReason = "Email mismatch: " + user.email;
+          }
         }
       }
     }
