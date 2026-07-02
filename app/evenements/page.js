@@ -99,25 +99,43 @@ export default function EvenementsPage() {
         <h2 style={{ fontSize: '2rem', color: 'var(--text-dark)', marginBottom: '32px' }}>Événements à venir</h2>
         
         <div style={{ textAlign: 'left', background: 'var(--bg-light)', padding: '32px', borderRadius: '16px', marginBottom: '32px', boxShadow: 'var(--shadow-sm)' }}>
-          <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <li style={{ paddingBottom: '16px', borderBottom: '1px solid #Eae4d8' }}>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '4px' }}>17 Juin — 18h à 20h</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)' }}>Lancement d'un roman avec Les éditions 2 oiseaux rares</span>
+          <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            
+            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>11 et 12 Juillet</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Compétition équestre à Ayer's Cliff</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 977, Main Street, Ayer's Cliff</span>
+              <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
             </li>
-            <li style={{ paddingBottom: '16px', borderBottom: '1px solid #Eae4d8' }}>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '4px' }}>19 Juin — 18h à 20h</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)' }}>Lancement d'un roman avec Les éditions 2 oiseaux rares</span>
+
+            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>7, 14, 21 et 28 Août — 18h30 à 20h30</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Soirées découverte à la Placette</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Parc Jacques-Cartier, Sherbrooke</span>
             </li>
-            <li>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '4px' }}>26 Juin — 18h30 à 20h30</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)' }}>Quizz musical à l'extérieur à la placette au Parc Jacques-Cartier</span>
+
+            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>15 Août — 9h à 15h</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Fiesta Maïs — Moisson Estrie !</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Au Marché de la Gare de Sherbrooke</span>
+              <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
             </li>
+
+            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>4, 11 et 18 Septembre — 18h30 à 20h30</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Soirées découverte à la Placette</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Parc Jacques-Cartier, Sherbrooke <br/><em style={{ fontSize: '0.9rem', color: 'var(--text-medium)' }}>(Plus d'informations à venir)</em></span>
+            </li>
+
+            <li style={{ paddingBottom: '4px' }}>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>10 Octobre — 9h à 15h</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Décore ta citrouille !</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Au Marché de la Gare de Sherbrooke</span>
+              <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
+            </li>
+
           </ul>
         </div>
-
-        <p style={{ fontSize: '1.1rem', color: 'var(--text-dark)', lineHeight: '1.6', background: 'rgba(152, 219, 137, 0.15)', padding: '24px', borderRadius: '12px', borderLeft: '4px solid var(--green-tropical)', textAlign: 'left' }}>
-          D'autres événements, en collaboration avec Sherbrooke Loisirs-Action, seront offerts à la Placette du parc Jacques-Cartier au cours des mois d'août et de septembre, les vendredis soirs.
-        </p>
       </section>
 
       {/* ========================================
