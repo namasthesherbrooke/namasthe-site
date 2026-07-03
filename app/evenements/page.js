@@ -103,8 +103,8 @@ export default function EvenementsPage() {
             
             <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
               <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>11 et 12 Juillet</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Compétition équestre à Ayer's Cliff</span>
-              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 977, Main Street, Ayer's Cliff</span>
+              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Compétition équestre à Richmond</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 128, Qc-143, Cleveland, QC J0B 2H0</span>
               <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
             </li>
 
