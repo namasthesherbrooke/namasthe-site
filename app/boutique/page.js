@@ -137,17 +137,53 @@ export default function BoutiquePage() {
             SECTION BOUTIQUE DYNAMIQUE
             ======================================== */}
         <section>
-          {(!filteredItems || filteredItems.length === 0) ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-              <div style={{ fontSize: '4rem', marginBottom: '20px' }}>📦</div>
-              <h3 style={{ color: '#2C1810', marginBottom: '15px', fontSize: '1.5rem' }}>Boutique en réapprovisionnement</h3>
-              <p style={{ color: '#5A4A42', fontSize: '1.1rem' }}>Nos produits de la Boutique NamasThé arrivent très bientôt.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '40px' }}>
+            {/* CARTE CADEAU */}
+            <div style={{ 
+              background: 'white', borderRadius: '16px', overflow: 'hidden', 
+              boxShadow: '0 4px 15px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column',
+              transition: 'transform 0.3s ease'
+            }}>
+              <div style={{ height: '250px', width: '100%', overflow: 'hidden', background: '#FCE4EC', position: 'relative' }}>
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>🎁</div>
+              </div>
+              
+              <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1, textAlign: 'left' }}>
+                <h3 style={{ fontSize: '1.4rem', color: '#2C1810', marginBottom: '10px', margin: 0 }}>Certificat Cadeau</h3>
+                <p style={{ color: '#5A4A42', fontSize: '0.95rem', marginBottom: '20px', flex: 1, lineHeight: '1.5' }}>
+                  Offrez le cadeau parfait ! Les certificats cadeaux électroniques NamasThé peuvent être utilisés en boutique ou pour vos achats en ligne.
+                </p>
+                
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
+                  <a 
+                    href="https://squareup.com/gift/L0HPARWMR53AM/order" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{
+                      background: 'var(--crimson)',
+                      color: 'white',
+                      textDecoration: 'none',
+                      border: 'none', padding: '12px 24px', borderRadius: '8px',
+                      fontWeight: 'bold', cursor: 'pointer',
+                      transition: 'background 0.2s, transform 0.1s',
+                      display: 'inline-block',
+                      width: '100%',
+                      textAlign: 'center'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--crimson-light)' }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'var(--crimson)' }}
+                    onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.95)' }}
+                    onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)' }}
+                  >
+                    Acheter en ligne 🎁
+                  </a>
+                </div>
+              </div>
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '40px' }}>
-              {filteredItems.map((product) => {
-                const isSoldOut = product.is_sold_out;
-                const currentVarId = selectedVariations[product.id] || (product.variations?.length > 0 ? product.variations[0].id : '');
+
+            {filteredItems && filteredItems.map((product) => {
+              const isSoldOut = product.is_sold_out;
+              const currentVarId = selectedVariations[product.id] || (product.variations?.length > 0 ? product.variations[0].id : '');
                 const currentVar = product.variations?.find(v => v.id === currentVarId) || product.variations?.[0];
                 const price = currentVar ? currentVar.price : product.price;
 
@@ -271,7 +307,14 @@ export default function BoutiquePage() {
                     </div>
                   </div>
                 );
-              })}
+            })}
+          </div>
+
+          {(!filteredItems || filteredItems.length === 0) && (
+            <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', marginTop: '40px' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '20px' }}>📦</div>
+              <h3 style={{ color: '#2C1810', marginBottom: '15px', fontSize: '1.5rem' }}>Boutique en réapprovisionnement</h3>
+              <p style={{ color: '#5A4A42', fontSize: '1.1rem' }}>Nos autres produits de la Boutique NamasThé arrivent très bientôt.</p>
             </div>
           )}
         </section>
