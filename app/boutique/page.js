@@ -156,7 +156,7 @@ export default function BoutiquePage() {
                 
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
                   <a 
-                    href="https://squareup.com/gift/L0HPARWMR53AM/order" 
+                    href="https://app.squareup.com/gift/MLBTQSZP7CFHZ/order" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{
