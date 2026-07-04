@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 const imageMap = {
   // Breuvages
@@ -75,8 +75,9 @@ const getImageForProduct = (name, type) => {
   return type === 'boisson' ? imageMap.fallbackDrink : imageMap.fallbackFood;
 };
 
-export default function ProductsCarousel({ items, type }) {
+export default function ProductsGrid({ items, type }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('Tous');
 
   // Empêcher le défilement de l'arrière-plan quand le modal est ouvert
   useEffect(() => {
@@ -90,91 +91,77 @@ export default function ProductsCarousel({ items, type }) {
     };
   }, [selectedProduct]);
 
-  // État de l'utilisateur pour le défilement (drag-to-scroll)
-  const carouselRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  // Extraire les tags uniques pour les filtres
+  const uniqueTags = Array.from(new Set(items.map(item => item.tag).filter(Boolean)));
+  // Trier alphabétiquement (optionnel) mais on garde un ordre défini ou brut
+  uniqueTags.sort();
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Multiplicateur de vitesse
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const scrollByAmount = (amount) => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-  };
+  const filteredItems = activeFilter === 'Tous' 
+    ? items 
+    : items.filter(item => item.tag === activeFilter);
 
   const closeModal = () => setSelectedProduct(null);
 
   return (
-    <div style={{ position: 'relative', margin: '0 -24px', padding: '0 24px' }}>
-      {/* Boutons de navigation (visibles surtout sur desktop) */}
-      <button 
-        onClick={() => scrollByAmount(-350)}
-        className="carousel-nav-btn prev-btn"
-        style={{
-          position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)',
-          width: '45px', height: '45px', borderRadius: '50%', background: 'white', border: '1px solid #ddd',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: '#2C1810'
-        }}
-        aria-label="Faire défiler vers la gauche"
-      >
-        &#8249;
-      </button>
-      <button 
-        onClick={() => scrollByAmount(350)}
-        className="carousel-nav-btn next-btn"
-        style={{
-          position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
-          width: '45px', height: '45px', borderRadius: '50%', background: 'white', border: '1px solid #ddd',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: '#2C1810'
-        }}
-        aria-label="Faire défiler vers la droite"
-      >
-        &#8250;
-      </button>
+    <div style={{ position: 'relative' }}>
+      
+      {/* ========================================
+          BARRE DE FILTRES
+          ======================================== */}
+      {uniqueTags.length > 0 && (
+        <div style={{
+          display: 'flex',
+          gap: '10px',
+          flexWrap: 'wrap',
+          marginBottom: '32px',
+          justifyContent: 'center'
+        }}>
+          <button
+            onClick={() => setActiveFilter('Tous')}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '30px',
+              border: activeFilter === 'Tous' ? '2px solid var(--green-tropical)' : '1px solid #ddd',
+              background: activeFilter === 'Tous' ? 'rgba(76, 175, 80, 0.1)' : 'white',
+              color: activeFilter === 'Tous' ? 'var(--green-tropical)' : '#666',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Tous
+          </button>
+          {uniqueTags.map(tag => (
+            <button
+              key={tag}
+              onClick={() => setActiveFilter(tag)}
+              style={{
+                padding: '8px 20px',
+                borderRadius: '30px',
+                border: activeFilter === tag ? '2px solid var(--green-tropical)' : '1px solid #ddd',
+                background: activeFilter === tag ? 'rgba(76, 175, 80, 0.1)' : 'white',
+                color: activeFilter === tag ? 'var(--green-tropical)' : '#666',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Conteneur du Carousel avec barre de défilement stylisée et drag-to-scroll */}
-      <div 
-        ref={carouselRef}
-        className="products-carousel custom-scrollbar"
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        style={{
-          scrollBehavior: isDragging ? 'auto' : 'smooth', // Désactiver smooth scroll pendant le drag
-          position: 'relative',
-          zIndex: 1,
-          paddingBottom: '24px', // Espace pour la scrollbar
-          cursor: isDragging ? 'grabbing' : 'grab',
-          userSelect: 'none', // Empêcher la sélection de texte pendant le glissement
-        }}
-      >
-        {items.map((item, i) => (
-          <div className="product-card" key={i} id={`${type}-${i}`}>
+      {/* ========================================
+          GRILLE DE PRODUITS
+          ======================================== */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+        gap: '30px',
+      }}>
+        {filteredItems.map((item, i) => (
+          <div className="product-card" key={i} id={`${type}-${i}`} style={{ minWidth: 'auto', margin: 0 }}>
             <div style={{
               width: '100%', height: 220,
               position: 'relative',
@@ -182,7 +169,7 @@ export default function ProductsCarousel({ items, type }) {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }} className="product-card-img-container">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src={getImageForProduct(item.name, type)} 
@@ -203,13 +190,12 @@ export default function ProductsCarousel({ items, type }) {
                 </span>
               )}
             </div>
-            <div className="product-card-body">
-              <h3 style={{ fontSize: '1.45rem', marginBottom: '8px', lineHeight: '1.3' }}>{item.name}</h3>
-              {/* La description a été retirée d'ici comme demandé */}
+            <div className="product-card-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '1.45rem', marginBottom: '8px', lineHeight: '1.3', textAlign: 'center' }}>{item.name}</h3>
               <button 
                 className="product-card-btn"
                 onClick={() => setSelectedProduct({ ...item, index: i })}
-                style={{ marginTop: '16px' }}
+                style={{ marginTop: 'auto' }}
               >
                 Découvrir
               </button>
@@ -218,7 +204,9 @@ export default function ProductsCarousel({ items, type }) {
         ))}
       </div>
 
-      {/* Pop-up (Modal) */}
+      {/* ========================================
+          MODAL (POP-UP)
+          ======================================== */}
       {selectedProduct && (
         <div 
           style={{

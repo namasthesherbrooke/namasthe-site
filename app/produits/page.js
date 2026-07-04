@@ -12,7 +12,7 @@
 
 import Link from 'next/link';
 import { supabase } from '../../lib/supabaseClient';
-import ProductsCarousel from '../components/ProductsCarousel';
+import ProductsGrid from '../components/ProductsGrid';
 
 // Fonction pour nettoyer les ingrédients (retire les quantités et les unités)
 function formatIngredients(rawText) {
@@ -178,35 +178,21 @@ export default async function ProduitsPage() {
       </section>
 
       {/* ========================================
-          PHILOSOPHIE SANTÉ
+          PHILOSOPHIE SANTÉ (Version Compacte)
           ======================================== */}
-      <section className="section" style={{ background: '#fdfcfb', borderBottom: '1px solid #eaeaea', padding: '60px 24px' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--green-tropical)', marginBottom: '16px', fontSize: '2.2rem' }}>Notre philosophie santé 🌱</h2>
-          <p style={{ fontSize: '1.15rem', color: '#5A4A42', lineHeight: '1.6', marginBottom: '20px' }}>
-            Pour vous offrir des boissons savoureuses sans compromis, nous privilégions les <strong>alternatives santé</strong> pour sucrer nos créations : <br/>
-            <span style={{ color: '#2E7D32', fontWeight: '600' }}>Stevia, fruit du moine, érythritol, allulose et sucre de canne biologique.</span>
-          </p>
-          <p style={{ fontSize: '1.1rem', color: '#5A4A42', lineHeight: '1.6', marginBottom: '32px' }}>
-            Chaque recette est pensée pour nourrir votre corps. Nous visons le <strong>moins de calories possible</strong> tout en intégrant des propriétés fonctionnelles (énergie, concentration, protéines et nutriments). De plus, si vous avez des restrictions ou habitudes alimentaires spécifiques, n'hésitez pas à nous en faire part : nous ajusterons ou modifierons la recette avec plaisir si cela est possible !
+      <section className="section" style={{ background: 'linear-gradient(to right, #fdfcfb, #f5e0d0)', borderBottom: '1px solid #eaeaea', padding: '30px 24px' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{ color: 'var(--green-tropical)', marginBottom: '12px', fontSize: '1.5rem' }}>Notre philosophie santé 🌱</h2>
+          <p style={{ fontSize: '1rem', color: '#5A4A42', marginBottom: '16px' }}>
+            Des créations savoureuses, fonctionnelles, et naturellement sucrées (Stevia, fruit du moine, etc.) pour nourrir votre corps sans compromis.
           </p>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
-            <span style={{ background: 'rgba(76, 175, 80, 0.1)', color: '#2E7D32', padding: '10px 20px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              🌿 Végane
-            </span>
-            <span style={{ background: 'rgba(245, 124, 0, 0.1)', color: '#E65100', padding: '10px 20px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              🌾 Sans gluten
-            </span>
-            <span style={{ background: 'rgba(3, 169, 244, 0.1)', color: '#0277BD', padding: '10px 20px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              🥛 Sans prod. laitiers
-            </span>
-            <span style={{ background: 'rgba(156, 39, 176, 0.1)', color: '#7B1FA2', padding: '10px 20px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              💪 Protéiné
-            </span>
-            <span style={{ background: 'rgba(255, 193, 7, 0.1)', color: '#F57F17', padding: '10px 20px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              ⚡ Énergie & Focus
-            </span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
+            <span style={{ background: 'rgba(255,255,255,0.6)', color: '#2E7D32', padding: '6px 14px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.85rem' }}>🌿 Végane</span>
+            <span style={{ background: 'rgba(255,255,255,0.6)', color: '#E65100', padding: '6px 14px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.85rem' }}>🌾 Sans gluten</span>
+            <span style={{ background: 'rgba(255,255,255,0.6)', color: '#0277BD', padding: '6px 14px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.85rem' }}>🥛 Sans lait</span>
+            <span style={{ background: 'rgba(255,255,255,0.6)', color: '#7B1FA2', padding: '6px 14px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.85rem' }}>💪 Protéiné</span>
+            <span style={{ background: 'rgba(255,255,255,0.6)', color: '#F57F17', padding: '6px 14px', borderRadius: '24px', fontWeight: 'bold', fontSize: '0.85rem' }}>⚡ Focus</span>
           </div>
         </div>
       </section>
@@ -222,7 +208,7 @@ export default async function ProduitsPage() {
         <p style={{ marginBottom: 24 }}>Rafraîchissants, énergisants et apaisants.</p>
 
         {/* Carousel horizontal interactif */}
-        <ProductsCarousel items={boissonsData} type="boisson" />
+        <ProductsGrid items={boissonsData} type="boisson" />
       </section>
 
       {/* ========================================
@@ -236,7 +222,7 @@ export default async function ProduitsPage() {
         <p style={{ marginBottom: 24 }}>Gourmandise saine et réconfortante.</p>
 
         {/* Carousel horizontal interactif */}
-        <ProductsCarousel items={grignotagesData} type="grignotage" />
+        <ProductsGrid items={grignotagesData} type="grignotage" />
       </section>
     </>
   );
