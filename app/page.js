@@ -15,17 +15,17 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const partners = [
-  { emoji: '🫘', type: 'Café', name: 'Géogène', location: 'Sherbrooke', description: "Torréfacteur de qualité" },
-  { emoji: '🥦', type: 'Fruits et légumes', name: 'FLE', location: 'Sherbrooke', description: "Sélection de produits frais" },
-  { emoji: '🥓', type: 'Bacon artisanal', name: 'Fumée Gourmande', location: 'Sherbrooke', description: "Fumoir artisanal en Estrie" },
-  { emoji: '🍪', type: 'Biscuits', name: 'Miss Biscuit', location: 'Sherbrooke', description: "Biscuits gourmands faits maison" },
-  { emoji: '🧋', type: 'Bubble tea', name: 'Bulle Bleue', location: 'Windsor (Estrie)', description: "Perles de qualité supérieure" },
-  { emoji: '🍓', type: 'Fruits lyophilisés', name: 'Verger Croustillant', location: 'Magog', description: "Fruits séchés pour nos boissons" },
-  { emoji: '⚡', type: 'Énergie', name: 'Mindblow', location: 'Montréal', description: "Boissons nootropiques" },
-  { emoji: '🥤', type: 'Jus', name: 'Poudrelicieux', location: 'Montréal', description: "Poudres sans sucre innovantes" },
-  { emoji: '🥗', type: 'Vinaigrettes', name: 'Fit Cook Foodz + Oh Silly Billy', location: 'Montréal', description: "Ingrédients santé de référence" },
-  { emoji: '🍑', type: 'Purées', name: 'Mixo Pro', location: 'Montréal', description: "Purées de fruits premium" },
-  { emoji: '💧', type: 'Saveurs', name: 'SIMPS', location: 'Canada', description: "Jets de saveurs" },
+  { initials: 'Gé', type: 'Café', name: 'Géogène', location: 'Sherbrooke', description: "Torréfacteur de qualité" },
+  { initials: 'FL', type: 'Fruits et légumes', name: 'FLE', location: 'Sherbrooke', description: "Sélection de produits frais" },
+  { initials: 'FG', type: 'Bacon artisanal', name: 'Fumée Gourmande', location: 'Sherbrooke', description: "Fumoir artisanal en Estrie" },
+  { initials: 'MB', type: 'Biscuits', name: 'Miss Biscuit', location: 'Sherbrooke', description: "Biscuits gourmands faits maison" },
+  { initials: 'BB', type: 'Bubble tea', name: 'Bulle Bleue', location: 'Windsor (Estrie)', description: "Perles de qualité supérieure" },
+  { initials: 'VC', type: 'Fruits lyophilisés', name: 'Verger Croustillant', location: 'Magog', description: "Fruits séchés pour nos boissons" },
+  { initials: 'MB', type: 'Énergie', name: 'Mindblow', location: 'Montréal', description: "Boissons nootropiques" },
+  { initials: 'Po', type: 'Jus', name: 'Poudrelicieux', location: 'Montréal', description: "Poudres sans sucre innovantes" },
+  { initials: 'FC', type: 'Vinaigrettes', name: 'Fit Cook Foodz', location: 'Montréal', description: "Ingrédients santé de référence" },
+  { initials: 'MP', type: 'Purées', name: 'Mixo Pro', location: 'Montréal', description: "Purées de fruits premium" },
+  { initials: 'SI', type: 'Saveurs', name: 'SIMPS', location: 'Canada', description: "Jets de saveurs" },
 ];
 
 export default function Home() {
@@ -41,6 +41,22 @@ export default function Home() {
       document.body.style.overflow = 'unset';
     };
   }, [showModal]);
+
+  // Animation au défilement (Fade-in)
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const hiddenElements = document.querySelectorAll('.fade-in-hidden');
+    hiddenElements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
@@ -86,7 +102,7 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
           SECTION 2 : L'ESPRIT NAMASTHÉ
           Présentation du café et de sa philosophie
           ======================================== */}
-      <section className="esprit-section" id="esprit-namasthe">
+      <section className="esprit-section fade-in-hidden" id="esprit-namasthe">
         {/* Colonne texte */}
         <div className="esprit-text">
           {/* Icône de la section */}
@@ -150,7 +166,7 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
       {/* ========================================
           SECTION PARTENAIRES (Marquee Défilant)
           ======================================== */}
-      <section className="section" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
+      <section className="section fade-in-hidden" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
         <div className="section-header" style={{ marginBottom: '40px' }}>
           <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Nos collaborateurs locaux</h2>
           <p style={{ textAlign: 'center', color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
@@ -163,7 +179,7 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
             {/* On double la liste pour créer l'effet infini */}
             {[...partners, ...partners].map((partner, i) => (
               <div key={i} className="marquee-card">
-                <div className="marquee-emoji">{partner.emoji}</div>
+                <div className="marquee-initial">{partner.initials}</div>
                 <div className="marquee-info">
                   <span className="marquee-type">{partner.type}</span>
                   <h4 className="marquee-name">{partner.name}</h4>
@@ -182,7 +198,7 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
           SECTION 3 : VENEZ NOUS REJOINDRE
           Carte et adresse
           ======================================== */}
-      <section className="section" id="location-section" style={{ background: '#Fdfcfb', borderTop: '1px solid #Eae4d8' }}>
+      <section className="section fade-in-hidden" id="location-section" style={{ background: '#Fdfcfb', borderTop: '1px solid #Eae4d8' }}>
         <div className="section-header">
           <h2 style={{ color: '#2C1810' }}>Venez nous rejoindre !</h2>
         </div>
@@ -243,7 +259,7 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
           SECTION 4 : TÉMOIGNAGES CLIENTS
           Trois cartes avec étoiles et citations
           ======================================== */}
-      <section className="section" id="temoignages-section">
+      <section className="section fade-in-hidden" id="temoignages-section">
         {/* En-tête de la section */}
         <div className="section-header">
           <div style={{ fontSize: '2rem', color: '#B8003E', marginBottom: 8 }}>❝</div>

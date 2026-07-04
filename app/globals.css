@@ -1737,9 +1737,20 @@ p { color: var(--text-medium); line-height: 1.7; }
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
-.marquee-emoji {
-  font-size: 2.5rem;
+.marquee-initial {
+  width: 48px;
+  height: 48px;
+  background: rgba(184, 0, 62, 0.05);
+  color: var(--crimson);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
   flex-shrink: 0;
+  border: 1px solid rgba(184, 0, 62, 0.1);
 }
 .marquee-info {
   display: flex;
@@ -1788,4 +1799,16 @@ p { color: var(--text-medium); line-height: 1.7; }
 @keyframes scrollMarquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(calc(-50% - 12px)); }
+}
+
+/* --- Animations d'apparition (Fade-in) --- */
+.fade-in-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity, transform;
+}
+.fade-in-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
