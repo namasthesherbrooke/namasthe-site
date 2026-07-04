@@ -1817,9 +1817,20 @@ p { color: var(--text-medium); line-height: 1.7; }
   transform: translateY(0);
 }
 
-/* --- Effet de zoom sur les images de boutique --- */
+/* --- Effet de zoom sur les images --- */
+.zoom-on-hover {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.product-card:hover .zoom-on-hover {
+  transform: scale(1.06);
+}
+.event-img-container:hover .zoom-on-hover {
+  transform: scale(1.05);
+}
+
+/* Boutique */
 .boutique-card-img {
-  transition: transform 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .boutique-card-img-container:hover .boutique-card-img {
   transform: scale(1.05);

@@ -187,6 +187,7 @@ export default function ProductsCarousel({ items, type }) {
               <img 
                 src={getImageForProduct(item.name, type)} 
                 alt={item.name || 'Produit Namasthé'} 
+                className="zoom-on-hover"
                 style={{ 
                   width: '180px', 
                   height: '180px', 

@@ -87,11 +87,12 @@ export default function EvenementsPage() {
           overflow: 'hidden',
           marginBottom: '24px',
           boxShadow: 'var(--shadow-md)'
-        }}>
+        }} className="event-img-container">
           <Image 
             src="/images/evenement_placeholder.jpg" 
             alt="Groupe de discussion autour de breuvages Namasthé" 
             fill 
+            className="zoom-on-hover"
             style={{ objectFit: 'cover' }} 
             priority
           />
