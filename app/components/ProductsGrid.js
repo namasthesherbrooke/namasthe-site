@@ -161,11 +161,11 @@ export default function ProductsGrid({ items, type }) {
         gap: '30px',
       }}>
         {filteredItems.map((item, i) => (
-          <div className="product-card" key={i} id={`${type}-${i}`} style={{ minWidth: 'auto', margin: 0 }}>
+          <div className="product-card" key={i} id={`${type}-${i}`} style={{ minWidth: 'auto', margin: 0, overflow: 'hidden' }}>
             <div style={{
-              width: '100%', height: 220,
+              width: '100%', height: 260,
               position: 'relative',
-              background: 'transparent',
+              background: '#F9F7F4',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -176,12 +176,10 @@ export default function ProductsGrid({ items, type }) {
                 alt={item.name || 'Produit Namasthé'} 
                 className="zoom-on-hover"
                 style={{ 
-                  width: '180px', 
-                  height: '180px', 
+                  width: '100%', 
+                  height: '100%', 
                   objectFit: 'cover', 
                   pointerEvents: 'none',
-                  borderRadius: '50%',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)'
                 }}
               />
               {item.tag && (
@@ -267,24 +265,23 @@ export default function ProductsGrid({ items, type }) {
 
             {/* Photo agrandie */}
             <div style={{
-              width: '100%', height: '320px',
+              width: '100%', height: '350px',
               position: 'relative',
-              background: 'transparent',
+              background: '#F9F7F4',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              paddingTop: '20px'
+              borderRadius: '24px 24px 0 0',
+              overflow: 'hidden'
             }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src={getImageForProduct(selectedProduct.name, type)} 
                 alt={selectedProduct.name || 'Produit Namasthé'} 
                 style={{ 
-                  width: '260px', 
-                  height: '260px', 
+                  width: '100%', 
+                  height: '100%', 
                   objectFit: 'cover',
-                  borderRadius: '50%',
-                  boxShadow: '0 15px 30px rgba(0,0,0,0.2)'
                 }}
               />
               {selectedProduct.tag && (

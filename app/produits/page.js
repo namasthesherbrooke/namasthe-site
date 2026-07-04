@@ -125,6 +125,8 @@ export default async function ProduitsPage() {
     nourrituresRes.forEach(item => {
       const name = item['Nom du produit'] || item.Nom || item.nom || 'Sans nom';
       if (seenNourritures.has(name)) return;
+      // Exclure la crème glacée protéinée
+      if (name.toLowerCase().includes('creme glacee') || name.toLowerCase().includes('crème glacée')) return;
       seenNourritures.add(name);
 
       const rawCategories = item.catégories || item.Catégories || item.categories || '';
