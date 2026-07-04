@@ -575,6 +575,10 @@ p { color: var(--text-medium); line-height: 1.7; }
   height: 280px;
   object-fit: cover;
   position: relative;
+  transition: transform 0.4s ease;
+}
+.event-card:hover .event-card-img {
+  transform: scale(1.05);
 }
 .event-card-badge {
   position: absolute;
@@ -1811,4 +1815,12 @@ p { color: var(--text-medium); line-height: 1.7; }
 .fade-in-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* --- Effet de zoom sur les images de boutique --- */
+.boutique-card-img {
+  transition: transform 0.4s ease;
+}
+.boutique-card-img-container:hover .boutique-card-img {
+  transform: scale(1.05);
 }

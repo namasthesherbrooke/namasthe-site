@@ -8,6 +8,7 @@ export default function BoutiquePage() {
   const [loading, setLoading] = useState(true);
   const [selectedVariations, setSelectedVariations] = useState({});
   const [selectedModifiers, setSelectedModifiers] = useState({});
+  const [addedState, setAddedState] = useState({});
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -108,8 +109,12 @@ export default function BoutiquePage() {
 
     addToCart(cartItem);
     
-    // Petite animation ou feedback pourrait être ajouté ici, mais un alert rapide fait l'affaire
-    // On scroll up légèrement pour montrer que c'est ajouté si le header a un indicateur
+    // Animation Ajouté ! ✓
+    setAddedState(prev => ({ ...prev, [product.id]: true }));
+    setTimeout(() => {
+      setAddedState(prev => ({ ...prev, [product.id]: false }));
+    }, 1500);
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -193,11 +198,11 @@ export default function BoutiquePage() {
                     boxShadow: '0 4px 15px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column',
                     transition: 'transform 0.3s ease', opacity: isSoldOut ? 0.6 : 1
                   }}>
-                    <div style={{ height: '250px', width: '100%', overflow: 'hidden', background: '#f5f5f5', position: 'relative' }}>
+                    <div className="boutique-card-img-container" style={{ height: '250px', width: '100%', overflow: 'hidden', background: '#f5f5f5', position: 'relative' }}>
                       {product.image_url ? (
-                        <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={product.image_url} alt={product.name} className="boutique-card-img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem' }}>🍵</div>
+                        <div className="boutique-card-img" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem' }}>🍵</div>
                       )}
                       {isSoldOut && (
                         <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(211, 47, 47, 0.9)', color: 'white', padding: '5px 10px', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.85rem' }}>
@@ -288,20 +293,20 @@ export default function BoutiquePage() {
                         </span>
                         <button 
                           onClick={() => handleAddToCart(product)}
-                          disabled={isSoldOut}
+                          disabled={isSoldOut || addedState[product.id]}
                           style={{
-                            background: isSoldOut ? '#ccc' : 'var(--crimson)',
+                            background: addedState[product.id] ? '#4CAF50' : (isSoldOut ? '#ccc' : 'var(--crimson)'),
                             color: isSoldOut ? '#666' : 'white',
                             border: 'none', padding: '12px 24px', borderRadius: '8px',
-                            fontWeight: 'bold', cursor: isSoldOut ? 'not-allowed' : 'pointer',
-                            transition: 'background 0.2s, transform 0.1s'
+                            fontWeight: 'bold', cursor: (isSoldOut || addedState[product.id]) ? 'not-allowed' : 'pointer',
+                            transition: 'background 0.3s, transform 0.1s'
                           }}
-                          onMouseEnter={e => { if (!isSoldOut) e.currentTarget.style.background = 'var(--crimson-light)' }}
-                          onMouseLeave={e => { if (!isSoldOut) e.currentTarget.style.background = 'var(--crimson)' }}
-                          onMouseDown={e => { if (!isSoldOut) e.currentTarget.style.transform = 'scale(0.95)' }}
-                          onMouseUp={e => { if (!isSoldOut) e.currentTarget.style.transform = 'scale(1)' }}
+                          onMouseEnter={e => { if (!isSoldOut && !addedState[product.id]) e.currentTarget.style.background = 'var(--crimson-light)' }}
+                          onMouseLeave={e => { if (!isSoldOut && !addedState[product.id]) e.currentTarget.style.background = 'var(--crimson)' }}
+                          onMouseDown={e => { if (!isSoldOut && !addedState[product.id]) e.currentTarget.style.transform = 'scale(0.95)' }}
+                          onMouseUp={e => { if (!isSoldOut && !addedState[product.id]) e.currentTarget.style.transform = 'scale(1)' }}
                         >
-                          Ajouter 🛍️
+                          {addedState[product.id] ? 'Ajouté ! ✓' : 'Ajouter 🛍️'}
                         </button>
                       </div>
                     </div>

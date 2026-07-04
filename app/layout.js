@@ -17,6 +17,7 @@ import ChatBubble from './components/ChatBubble';
 import SignupPopup from './components/SignupPopup';
 import Cart from './components/Cart';
 import IosInstallPrompt from './components/IosInstallPrompt';
+import TabTitleChanger from './components/TabTitleChanger';
 import { CartProvider } from './context/CartContext';
 
 /* Métadonnées SEO globales du site */
@@ -64,6 +65,9 @@ export default function RootLayout({ children }) {
 
           {/* Guide d'installation pour iOS */}
           <IosInstallPrompt />
+
+          {/* Easter egg de l'onglet du navigateur */}
+          <TabTitleChanger />
         </CartProvider>
       </body>
     </html>

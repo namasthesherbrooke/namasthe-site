@@ -25,6 +25,7 @@ export default function OrderModal({ creation, squareItem, onClose, onAddToCart 
     return init;
   });
   const [commentaires, setCommentaires] = useState('');
+  const [isAdded, setIsAdded] = useState(false);
 
   if (!creation || !squareItem) return null;
 
@@ -93,7 +94,11 @@ export default function OrderModal({ creation, squareItem, onClose, onAddToCart 
       quantity: 1,
     });
     
-    onClose();
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+      onClose();
+    }, 1000);
   };
 
   return (
@@ -187,20 +192,21 @@ export default function OrderModal({ creation, squareItem, onClose, onAddToCart 
           </div>
           <button
             onClick={handleAdd}
-            disabled={!selectedVariation}
+            disabled={!selectedVariation || isAdded}
             style={{
               padding: '12px 24px',
-              background: selectedVariation ? 'var(--green-tropical)' : '#ccc',
+              background: isAdded ? '#4CAF50' : (selectedVariation ? 'var(--green-tropical)' : '#ccc'),
               color: 'white',
               border: 'none',
               borderRadius: '30px',
               fontWeight: 'bold',
               fontSize: '1.1rem',
-              cursor: selectedVariation ? 'pointer' : 'not-allowed',
-              boxShadow: selectedVariation ? '0 4px 15px rgba(46, 125, 50, 0.3)' : 'none'
+              cursor: (!selectedVariation || isAdded) ? 'not-allowed' : 'pointer',
+              boxShadow: selectedVariation ? '0 4px 15px rgba(46, 125, 50, 0.3)' : 'none',
+              transition: 'all 0.3s ease'
             }}
           >
-            Ajouter au panier
+            {isAdded ? 'Ajouté ! ✓' : 'Ajouter au panier'}
           </button>
         </div>
       </div>
