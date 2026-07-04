@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
-    const { email, prenom, nom, date_naissance, action } = await req.json();
+    const { email, prenom, nom, date_naissance, action, telephone, preference_contact } = await req.json();
 
     if (!email || !action) {
       return NextResponse.json({ error: "L'email et l'action sont requis" }, { status: 400 });
@@ -29,6 +29,13 @@ export async function POST(req) {
       };
       if (date_naissance) {
         payload.attributes.DATE_NAISSANCE = date_naissance;
+      }
+      if (telephone) {
+        payload.attributes.SMS = telephone; // Attribut standard Brevo pour les numéros
+        payload.attributes.TELEPHONE = telephone;
+      }
+      if (preference_contact) {
+        payload.attributes.PREF_CONTACT = preference_contact.toUpperCase();
       }
       // Si l'utilisateur se réinscrit, on s'assure qu'il n'est plus blacklisté
       payload.emailBlacklisted = false;

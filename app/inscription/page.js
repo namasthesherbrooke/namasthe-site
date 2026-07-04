@@ -16,7 +16,7 @@ export default function InscriptionPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     prenom: '', nom: '', jourNaissance: '', moisNaissance: '', anneeNaissance: '', email: '',
-    password: '', codePostal: '', source: '', newsletter: true,
+    password: '', codePostal: '', source: '', newsletter: true, telephone: '', preference_contact: 'courriel'
   });
 
   const handleChange = (e) => {
@@ -74,7 +74,9 @@ export default function InscriptionPage() {
             date_naissance: dateNaissanceFmt,
             code_postal: formData.codePostal,
             source: formData.source,
-            newsletter: formData.newsletter
+            newsletter: formData.newsletter,
+            telephone: formData.telephone || null,
+            preference_contact: formData.preference_contact
           }
         ]);
 
@@ -98,7 +100,9 @@ export default function InscriptionPage() {
               email: formData.email,
               prenom: formData.prenom,
               nom: formData.nom,
-              date_naissance: dateNaissanceFmt
+              date_naissance: dateNaissanceFmt,
+              telephone: formData.telephone,
+              preference_contact: formData.preference_contact
             })
           }).catch(err => console.error("Erreur appel API Brevo:", err));
         }
@@ -106,7 +110,7 @@ export default function InscriptionPage() {
         // Réinitialiser le formulaire
         setFormData({
           prenom: '', nom: '', jourNaissance: '', moisNaissance: '', anneeNaissance: '', email: '',
-          password: '', codePostal: '', source: '', newsletter: false,
+          password: '', codePostal: '', source: '', newsletter: true, telephone: '', preference_contact: 'courriel'
         });
         
         // On ne redirige plus automatiquement pour que l'utilisateur puisse voir son code promo !
@@ -173,6 +177,10 @@ export default function InscriptionPage() {
                 <input type="email" id="signup-email" name="email" placeholder="votre@email.com" value={formData.email} onChange={handleChange} required />
               </div>
               <div className="form-group">
+                <label htmlFor="telephone">Numéro de téléphone</label>
+                <input type="tel" id="telephone" name="telephone" placeholder="Ex: 819-123-4567" value={formData.telephone} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
                 <label htmlFor="signup-password">Mot de passe</label>
                 <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                   <input type={showPassword ? "text" : "password"} id="signup-password" name="password" placeholder="Min. 8 caractères" value={formData.password} onChange={handleChange} required minLength={8} style={{ width: '100%', paddingRight: '40px' }} />
@@ -190,6 +198,21 @@ export default function InscriptionPage() {
               <div className="form-group">
                 <label htmlFor="codePostal">Nom de la ville</label>
                 <input type="text" id="codePostal" name="codePostal" placeholder="Ex: Sherbrooke (optionnel)" value={formData.codePostal} onChange={handleChange} />
+              </div>
+              <div className="form-group full">
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-dark)' }}>
+                  Comment préférez-vous être contacté(e) ?
+                </label>
+                <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
+                    <input type="radio" name="preference_contact" value="courriel" checked={formData.preference_contact === 'courriel'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
+                    Par courriel ✉️
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
+                    <input type="radio" name="preference_contact" value="texto" checked={formData.preference_contact === 'texto'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
+                    Par texto (SMS) 📱
+                  </label>
+                </div>
               </div>
               <div className="form-group full">
                 <label htmlFor="source">Comment avez-vous découvert Namasthé ?</label>
