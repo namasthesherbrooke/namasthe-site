@@ -97,7 +97,9 @@ p { color: var(--text-medium); line-height: 1.7; }
 
 /* --- Header / Navigation --- */
 .header {
-  background: #FEF2F2; /* Modifié pour correspondre exactement à la couleur de fond du logo */
+  background: rgba(254, 242, 242, 0.85); /* Semi-transparent FEF2F2 */
+  backdrop-filter: blur(12px); /* Glassmorphism */
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,0,0,0.06);
   position: sticky;
   top: 0;
@@ -1678,4 +1680,112 @@ p { color: var(--text-medium); line-height: 1.7; }
   .order-qr-code {
     display: none;
   }
+}
+
+/* --- Marquee Partenaires --- */
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #Fdfcfb 0%, transparent 100%);
+}
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #Fdfcfb 0%, transparent 100%);
+}
+.marquee-track {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+  animation: scrollMarquee 40s linear infinite;
+  width: max-content;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-card {
+  width: 280px;
+  height: 140px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.marquee-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.marquee-emoji {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+.marquee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.marquee-type {
+  font-size: 0.75rem;
+  color: var(--green-tropical);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.marquee-name {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin: 0;
+}
+.marquee-loc {
+  font-size: 0.8rem;
+  color: var(--text-medium);
+}
+.marquee-hover {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.marquee-hover p {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 500;
+}
+.marquee-card:hover .marquee-hover {
+  opacity: 1;
+}
+
+@keyframes scrollMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 12px)); }
 }

@@ -14,6 +14,20 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const partners = [
+  { emoji: '🫘', type: 'Café', name: 'Géogène', location: 'Sherbrooke', description: "Torréfacteur de qualité" },
+  { emoji: '🥦', type: 'Fruits et légumes', name: 'FLE', location: 'Sherbrooke', description: "Sélection de produits frais" },
+  { emoji: '🥓', type: 'Bacon artisanal', name: 'Fumée Gourmande', location: 'Sherbrooke', description: "Fumoir artisanal en Estrie" },
+  { emoji: '🍪', type: 'Biscuits', name: 'Miss Biscuit', location: 'Sherbrooke', description: "Biscuits gourmands faits maison" },
+  { emoji: '🧋', type: 'Bubble tea', name: 'Bulle Bleue', location: 'Windsor (Estrie)', description: "Perles de qualité supérieure" },
+  { emoji: '🍓', type: 'Fruits lyophilisés', name: 'Verger Croustillant', location: 'Magog', description: "Fruits séchés pour nos boissons" },
+  { emoji: '⚡', type: 'Énergie', name: 'Mindblow', location: 'Montréal', description: "Boissons nootropiques" },
+  { emoji: '🥤', type: 'Jus', name: 'Poudrelicieux', location: 'Montréal', description: "Poudres sans sucre innovantes" },
+  { emoji: '🥗', type: 'Vinaigrettes', name: 'Fit Cook Foodz + Oh Silly Billy', location: 'Montréal', description: "Ingrédients santé de référence" },
+  { emoji: '🍑', type: 'Purées', name: 'Mixo Pro', location: 'Montréal', description: "Purées de fruits premium" },
+  { emoji: '💧', type: 'Saveurs', name: 'SIMPS', location: 'Canada', description: "Jets de saveurs" },
+];
+
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
 
@@ -130,6 +144,37 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
             alt="La devanture du café Namasthé" 
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
+        </div>
+      </section>
+
+      {/* ========================================
+          SECTION PARTENAIRES (Marquee Défilant)
+          ======================================== */}
+      <section className="section" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
+        <div className="section-header" style={{ marginBottom: '40px' }}>
+          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Nos collaborateurs locaux</h2>
+          <p style={{ textAlign: 'center', color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+            Fiers d'encourager les créateurs et producteurs d'ici.
+          </p>
+        </div>
+
+        <div className="marquee-wrapper">
+          <div className="marquee-track">
+            {/* On double la liste pour créer l'effet infini */}
+            {[...partners, ...partners].map((partner, i) => (
+              <div key={i} className="marquee-card">
+                <div className="marquee-emoji">{partner.emoji}</div>
+                <div className="marquee-info">
+                  <span className="marquee-type">{partner.type}</span>
+                  <h4 className="marquee-name">{partner.name}</h4>
+                  <span className="marquee-loc">📍 {partner.location}</span>
+                </div>
+                <div className="marquee-hover">
+                  <p>{partner.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
