@@ -16,7 +16,7 @@ export default function InscriptionPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     prenom: '', nom: '', jourNaissance: '', moisNaissance: '', anneeNaissance: '', email: '',
-    password: '', codePostal: '', source: '', newsletter: false,
+    password: '', codePostal: '', source: '', newsletter: true,
   });
 
   const handleChange = (e) => {
@@ -203,9 +203,12 @@ export default function InscriptionPage() {
                 </select>
               </div>
               <div className="form-group full">
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                  <input type="checkbox" name="newsletter" checked={formData.newsletter} onChange={handleChange} />
-                  Je souhaite recevoir l&apos;infolettre Namasthé (promotions, événements, nouveautés)
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, cursor: 'pointer', background: 'rgba(76, 175, 80, 0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(76, 175, 80, 0.2)' }}>
+                  <input type="checkbox" name="newsletter" checked={formData.newsletter} onChange={handleChange} style={{ marginTop: '4px', width: '20px', height: '20px' }} />
+                  <span style={{ fontSize: '0.95rem', lineHeight: '1.4' }}>
+                    <strong>Oui, je veux recevoir mon cadeau d'anniversaire ! 🎁</strong><br/>
+                    <span style={{ color: '#555', fontSize: '0.85rem' }}>M'abonner aux offres VIP Namasthé. (Ne vous inquiétez pas, on n'aime pas le spam non plus. Nous n'envoyons que des courriels importants ou des cadeaux !)</span>
+                  </span>
                 </label>
               </div>
             </div>
