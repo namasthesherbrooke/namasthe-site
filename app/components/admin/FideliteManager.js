@@ -34,7 +34,7 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
           <thead>
             <tr style={{ background: '#f5f5f5', color: '#333' }}>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Client</th>
-              <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Courriel</th>
+              <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Contact</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Dernière Visite</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Progression</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Tickets 🎟️</th>
@@ -51,7 +51,11 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
               return (
                 <tr key={profile.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }}>
                   <td style={{ padding: '15px 20px', fontWeight: 'bold', color: '#2C1810' }}>{profile.prenom} {profile.nom}</td>
-                  <td style={{ padding: '15px 20px', color: '#666', fontSize: '0.9rem' }}>{profile.email}</td>
+                  <td style={{ padding: '15px 20px', color: '#666', fontSize: '0.85rem' }}>
+                    <div style={{ marginBottom: '4px' }}>✉️ {profile.email}</div>
+                    {profile.telephone && <div>📞 {profile.telephone}</div>}
+                    {profile.preference_contact === 'texto' && <div style={{ fontSize: '0.75rem', color: '#1565C0', marginTop: '4px', fontWeight: 'bold' }}>Préfère SMS</div>}
+                  </td>
                   <td style={{ padding: '15px 20px', color: '#888', fontSize: '0.85rem' }}>
                     {profile.derniere_visite ? new Date(profile.derniere_visite).toLocaleDateString('fr-CA', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Jamais'}
                   </td>

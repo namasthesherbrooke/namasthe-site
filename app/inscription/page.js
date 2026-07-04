@@ -200,21 +200,6 @@ export default function InscriptionPage() {
                 <input type="text" id="codePostal" name="codePostal" placeholder="Ex: Sherbrooke (optionnel)" value={formData.codePostal} onChange={handleChange} />
               </div>
               <div className="form-group full">
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: 'var(--text-dark)' }}>
-                  Comment préférez-vous être contacté(e) ?
-                </label>
-                <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
-                    <input type="radio" name="preference_contact" value="courriel" checked={formData.preference_contact === 'courriel'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
-                    Par courriel ✉️
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
-                    <input type="radio" name="preference_contact" value="texto" checked={formData.preference_contact === 'texto'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
-                    Par texto (SMS) 📱
-                  </label>
-                </div>
-              </div>
-              <div className="form-group full">
                 <label htmlFor="source">Comment avez-vous découvert Namasthé ?</label>
                 <select id="source" name="source" value={formData.source} onChange={handleChange}>
                   <option value="">Sélectionnez...</option>
@@ -234,6 +219,25 @@ export default function InscriptionPage() {
                   </span>
                 </label>
               </div>
+              
+              {/* Afficher la préférence de contact seulement s'ils ont coché l'option cadeau */}
+              {formData.newsletter && (
+                <div className="form-group full" style={{ marginTop: '-10px', padding: '16px', background: '#F9F7F4', borderRadius: '12px' }}>
+                  <label style={{ display: 'block', marginBottom: '12px', fontWeight: '600', color: 'var(--text-dark)' }}>
+                    Où préférez-vous recevoir vos cadeaux et annonces ?
+                  </label>
+                  <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
+                      <input type="radio" name="preference_contact" value="courriel" checked={formData.preference_contact === 'courriel'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
+                      Par courriel ✉️
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem', color: '#555' }}>
+                      <input type="radio" name="preference_contact" value="texto" checked={formData.preference_contact === 'texto'} onChange={handleChange} style={{ width: '18px', height: '18px' }} />
+                      Par texto (SMS) 📱
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
 
             <button type="submit" className="btn btn-primary form-submit">Créer mon compte</button>
