@@ -71,6 +71,36 @@ export default function MonComptePage() {
             });
           }, 500);
         }
+
+        // --- NOUVEAUTÉ : Mise à jour en temps réel (Realtime) ---
+        // Si la Barista ajoute un point sur sa tablette, l'écran du client se met à jour tout seul instantanément !
+        const channel = supabase
+          .channel(`profile_changes_${session.user.id}`)
+          .on('postgres_changes', 
+            { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${session.user.id}` }, 
+            (payload) => {
+              setProfile(currentProfile => {
+                // Si on passe de 0 à 1 ticket (ou plus), on déclenche les confettis en temps réel !
+                if (payload.new.tickets > (currentProfile?.tickets || 0)) {
+                  confetti({
+                    particleCount: 200,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#B8003E', '#4ADE80', '#FFC107', '#FFFFFF']
+                  });
+                }
+                return { ...currentProfile, ...payload.new };
+              });
+            }
+          )
+          .subscribe();
+
+        // Nettoyage de l'abonnement quand le composant est détruit
+        return () => {
+          supabase.removeChannel(channel);
+        };
+        // --------------------------------------------------------
+
       } catch (err) {
         console.error("Erreur inattendue lors de la récupération du profil:", err);
       } finally {
