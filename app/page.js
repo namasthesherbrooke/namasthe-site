@@ -195,6 +195,85 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
       </section>
 
       {/* ========================================
+          SECTION INSTAGRAM (Preuve Sociale)
+          ======================================== */}
+      <section className="section fade-in-hidden" id="instagram-feed" style={{ background: '#FFFFFF', paddingTop: '60px', paddingBottom: '60px' }}>
+        <div className="section-header" style={{ marginBottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <h2 style={{ color: '#2C1810', textAlign: 'center', marginBottom: '8px' }}>Rejoignez notre communauté</h2>
+          <a 
+            href="https://www.instagram.com/cafe.namasthe.sherbrooke/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ color: '#E1306C', fontWeight: 'bold', fontSize: '1.2rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            📸 @cafe.namasthe.sherbrooke
+          </a>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: '16px',
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 24px'
+        }}>
+          {[
+            { src: '/esprit_namasthe_v2.jpg', alt: 'Ambiance zen au café' },
+            { src: '/bg-drink-candle.jpg', alt: 'Breuvage Namasthé avec chandelle' },
+            { src: '/colorful-drink.png', alt: 'Délicieux Bubble Tea coloré' },
+            { src: '/drink-2.png', alt: 'Boisson rafraîchissante' }
+          ].map((img, index) => (
+            <a 
+              key={index} 
+              href="https://www.instagram.com/cafe.namasthe.sherbrooke/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                position: 'relative',
+                aspectRatio: '1',
+                overflow: 'hidden',
+                borderRadius: '16px',
+                display: 'block',
+                cursor: 'pointer',
+                background: '#f0f0f0'
+              }}
+              className="insta-post"
+              onMouseEnter={(e) => {
+                e.currentTarget.querySelector('.insta-overlay').style.opacity = '1';
+                e.currentTarget.querySelector('img').style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.querySelector('.insta-overlay').style.opacity = '0';
+                e.currentTarget.querySelector('img').style.transform = 'scale(1)';
+              }}
+            >
+              <img 
+                src={img.src} 
+                alt={img.alt} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }} 
+              />
+              <div 
+                className="insta-overlay"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'rgba(0,0,0,0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease'
+                }}
+              >
+                <span style={{ color: 'white', fontSize: '2rem' }}>❤️</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================
           SECTION 3 : VENEZ NOUS REJOINDRE
           Carte et adresse
           ======================================== */}

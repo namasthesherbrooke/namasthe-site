@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import Link from 'next/link';
+import confetti from 'canvas-confetti';
 
 export default function MonComptePage() {
   const router = useRouter();
@@ -57,6 +58,18 @@ export default function MonComptePage() {
             newsletter: false 
           });
           setFormData({ email: session.user.email, codePostal: '' });
+        }
+        
+        // Déclencher les confettis si des tickets sont disponibles !
+        if (profileData && profileData.tickets > 0) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 150,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#B8003E', '#4ADE80', '#FFC107', '#FFFFFF']
+            });
+          }, 500);
         }
       } catch (err) {
         console.error("Erreur inattendue lors de la récupération du profil:", err);
@@ -251,19 +264,34 @@ export default function MonComptePage() {
                   </p>
                 </div>
                 
-                {/* Jauge de progression */}
-                <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '20px', height: '24px', position: 'relative', overflow: 'hidden', marginBottom: '12px' }}>
-                  <div style={{ 
-                    background: 'white', 
-                    width: `${(profile.fidelite_points || 0) * 10}%`, 
-                    height: '100%', 
-                    transition: 'width 1s ease-in-out',
-                    borderRadius: '20px'
-                  }}></div>
+                {/* Jauge de progression ludique (Gamification) */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', gap: '4px' }}>
+                  {[...Array(10)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      style={{ 
+                        flex: 1,
+                        aspectRatio: '1',
+                        borderRadius: '50%',
+                        background: i < (profile.fidelite_points || 0) ? '#4ADE80' : 'rgba(255,255,255,0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: i < (profile.fidelite_points || 0) ? '0 0 10px rgba(74, 222, 128, 0.8)' : 'none',
+                        transition: 'all 0.5s ease',
+                        border: '2px solid rgba(255,255,255,0.4)',
+                        position: 'relative'
+                      }}
+                    >
+                      {i === 9 && <span style={{ fontSize: '0.8rem' }}>🎁</span>}
+                      {i < (profile.fidelite_points || 0) && i !== 9 && <span style={{ fontSize: '0.8rem', color: '#1B5E20' }}>✓</span>}
+                    </div>
+                  ))}
                 </div>
+                
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                  <span>{profile.fidelite_points || 0} point{(profile.fidelite_points || 0) > 1 ? 's' : ''}</span>
-                  <span>10 points</span>
+                  <span style={{ color: '#4ADE80' }}>{profile.fidelite_points || 0} point{(profile.fidelite_points || 0) > 1 ? 's' : ''} gagné{(profile.fidelite_points || 0) > 1 ? 's' : ''}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.8)' }}>Objectif : 10</span>
                 </div>
                 
                 {(profile.tickets || 0) > 0 && (
