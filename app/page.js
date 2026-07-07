@@ -221,8 +221,8 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
           {[
             { src: '/esprit_namasthe_v2.jpg', alt: 'Ambiance zen au café' },
             { src: '/bg-drink-candle.jpg', alt: 'Breuvage Namasthé avec chandelle' },
-            { src: '/colorful-drink.png', alt: 'Délicieux Bubble Tea coloré' },
-            { src: '/drink-2.png', alt: 'Boisson rafraîchissante' }
+            { src: '/images/products/Bubble tea.jpeg', alt: 'Nos fameux Bubble Teas' },
+            { src: '/images/products/Matcha glace.jpeg', alt: 'Matcha glacé rafraîchissant' }
           ].map((img, index) => (
             <a 
               key={index} 
