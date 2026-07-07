@@ -56,6 +56,12 @@ export default function EvenementsPage() {
           On aime faire des événements <em>pour tous</em>. Découvrez nos prochains 
           rendez-vous bien-être et gourmands.
         </p>
+
+        {/* BANNER VACANCES */}
+        <div style={{ background: '#FFC107', color: '#2C1810', padding: '15px 24px', borderRadius: '12px', fontWeight: 'bold', fontSize: '1.15rem', marginTop: '24px', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+          🏖️ Nous sommes en vacances du 26 juillet au 3 août inclusivement.
+        </div>
+
         <div style={{ marginTop: '24px' }}>
           <a 
             href="#reserver-hero"

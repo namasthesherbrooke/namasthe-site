@@ -90,6 +90,11 @@ export default function Home() {
           {/* Titre principal du site (h1 unique pour le SEO) */}
           <h1>Bienvenue au Café Namasthé.</h1>
 
+          {/* BANNER VACANCES */}
+          <div style={{ background: '#FFC107', color: '#2C1810', padding: '15px 24px', borderRadius: '12px', fontWeight: 'bold', fontSize: '1.15rem', marginBottom: '24px', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '2px solid rgba(255,255,255,0.5)' }}>
+            🏖️ Avis à notre clientèle : Nous sommes en vacances du 26 juillet au 3 août inclusivement.
+          </div>
+
 <p>
           
 Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l'esprit s'accorde avec une énergie vibrante. Que vous veniez pour un café de spécialité ou une pause suspendue, infusez votre journée de bonnes ondes et de lumière !
