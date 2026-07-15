@@ -8,13 +8,21 @@ export async function POST(req) {
 
     // 1. Vérification de l'authentification
     let isAdminAuthenticated = false;
+    let authDebug = "No token";
     const authHeader = req.headers.get('Authorization');
     
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const { data: { user } } = await defaultSupabase.auth.getUser(token);
-      if (user && user.email === 'namasthesherbrooke@gmail.com') {
-        isAdminAuthenticated = true;
+      const { data: { user }, error: userError } = await defaultSupabase.auth.getUser(token);
+      
+      if (userError) {
+        authDebug = "getUser error: " + userError.message;
+      } else if (user) {
+        if (user.email === 'namasthesherbrooke@gmail.com') {
+          isAdminAuthenticated = true;
+        } else {
+          authDebug = "User is not admin: " + user.email;
+        }
       }
     }
 
@@ -22,7 +30,7 @@ export async function POST(req) {
       // Fallback au mot de passe manuel si non connecté
       const adminPassword = process.env.ADMIN_PASSWORD || 'NamastheAdmin!';
       if (password !== adminPassword) {
-        return NextResponse.json({ error: "Mot de passe incorrect ou non autorisé" }, { status: 401 });
+        return NextResponse.json({ error: "Mot de passe incorrect ou non autorisé. Debug: " + authDebug }, { status: 401 });
       }
     }
 
