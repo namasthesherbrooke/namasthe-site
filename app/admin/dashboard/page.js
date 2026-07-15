@@ -95,9 +95,11 @@ export default function AdminDashboard() {
           derniere_visite: data.derniere_visite
         } : p));
       } else {
+        alert("ERREUR : " + data.error);
         setStatusMessage({ type: 'error', text: data.error });
       }
     } catch (err) {
+      alert("Erreur de connexion : " + err.message);
       setStatusMessage({ type: 'error', text: "Erreur de connexion" });
     }
     
