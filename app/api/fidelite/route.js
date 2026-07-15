@@ -79,6 +79,7 @@ export async function POST(req) {
     let currentTicketsUtilises = profile.tickets_utilises || 0;
     let newPoints = currentPoints;
     let newTickets = currentTickets;
+    let newTicketsUtilises = currentTicketsUtilises;
     const currentYear = new Date().getFullYear();
     const hasClaimedThisYear = profile.birthday_claims?.some(c => c.claim_year === currentYear);
 
