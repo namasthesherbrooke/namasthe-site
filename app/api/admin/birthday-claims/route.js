@@ -34,8 +34,7 @@ export async function GET(req) {
         claim_year,
         profiles (
           prenom,
-          nom,
-          email
+          nom
         )
       `)
       .order('claimed_at', { ascending: false });
