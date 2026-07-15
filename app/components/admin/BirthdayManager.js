@@ -14,7 +14,7 @@ export default function BirthdayManager() {
   const fetchClaims = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch('/api/admin/birthday-claims', {
+      const res = await fetch('/api/admin/birthday-claims?t=' + Date.now(), {
         headers: {
           'Authorization': `Bearer ${session.access_token}`,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
