@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function POST(req) {
   try {
-    const { userId, password, action } = await req.json();
+    const { userId, password, action, itemClaimed } = await req.json();
 
     // 1. Vérification de l'authentification
     let isAdminAuthenticated = false;
@@ -102,7 +102,6 @@ export async function POST(req) {
         return NextResponse.json({ error: "Aucun ticket ou point suffisant pour réclamer une récompense." }, { status: 400 });
       }
     } else if (action === 'claim_birthday') {
-      const { itemClaimed } = await req.json();
       
       if (hasClaimedThisYear) {
          return NextResponse.json({ error: "Cadeau déjà réclamé pour cette année." }, { status: 400 });

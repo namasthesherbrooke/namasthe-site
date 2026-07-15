@@ -51,10 +51,12 @@ function ScannerContent() {
       const today = new Date();
       
       const currentYearBirthDate = new Date(Date.UTC(today.getFullYear(), birthDate.getUTCMonth(), birthDate.getUTCDate()));
-      const diffTime = Math.abs(today - currentYearBirthDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      // diffTime sans Math.abs pour savoir si c'est avant ou après
+      const diffTime = today - currentYearBirthDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
       
-      setIsBirthdayWeek(diffDays <= 7);
+      // Valide uniquement le jour J (0) jusqu'à J+7
+      setIsBirthdayWeek(diffDays >= 0 && diffDays <= 7);
       setBirthdayClaimedThisYear(clientInfo.birthdayClaimedThisYear || false);
     } else {
       setIsBirthdayWeek(false);
