@@ -16,8 +16,12 @@ export default function BirthdayManager() {
       const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch('/api/admin/birthday-claims', {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`
-        }
+          'Authorization': `Bearer ${session.access_token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        },
+        cache: 'no-store'
       });
       const data = await res.json();
       if (data.success) {
