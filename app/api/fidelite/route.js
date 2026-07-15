@@ -182,6 +182,6 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("Erreur API Fidelite:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur: " + (error.message || String(error)) }, { status: 500 });
   }
 }
