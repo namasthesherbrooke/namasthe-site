@@ -87,7 +87,12 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok) {
         setStatusMessage({ type: 'success', text: `Mise à jour réussie pour ${data.prenom}` });
-        setProfiles(prev => prev.map(p => p.id === userId ? { ...p, fidelite_points: data.points, tickets: data.tickets } : p));
+        setProfiles(prev => prev.map(p => p.id === userId ? { 
+          ...p, 
+          fidelite_points: data.points, 
+          tickets: data.tickets,
+          derniere_visite: data.derniere_visite
+        } : p));
       } else {
         setStatusMessage({ type: 'error', text: data.error });
       }

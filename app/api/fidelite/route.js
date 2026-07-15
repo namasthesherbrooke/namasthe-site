@@ -111,7 +111,8 @@ export async function POST(req) {
       points: newPoints, 
       tickets: newTickets,
       prenom: profile.prenom, 
-      nom: profile.nom 
+      nom: profile.nom,
+      derniere_visite: updatePayload.derniere_visite || profile.derniere_visite
     });
 
   } catch (error) {
