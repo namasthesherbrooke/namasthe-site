@@ -14,6 +14,9 @@ export default function AdminDashboard() {
   const [profiles, setProfiles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusMessage, setStatusMessage] = useState(null);
+  
+  // States for Stats
+  const [totalVisits, setTotalVisits] = useState(0);
 
   useEffect(() => {
     checkAdmin();
@@ -24,6 +27,7 @@ export default function AdminDashboard() {
     if (session && session.user && session.user.email === 'namasthesherbrooke@gmail.com') {
       setIsAdmin(true);
       fetchProfiles(session.access_token);
+      fetchStats();
     } else {
       setLoading(false);
     }
@@ -54,6 +58,18 @@ export default function AdminDashboard() {
       alert("Erreur réseau : " + err.message);
     }
     setLoading(false);
+  };
+
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/stats/get', { cache: 'no-store' });
+      const data = await res.json();
+      if (data.success) {
+        setTotalVisits(data.total_views);
+      }
+    } catch (err) {
+      console.error("Erreur stats:", err);
+    }
   };
 
   const handleAction = async (userId, action) => {
@@ -95,6 +111,18 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'var(--font-body)' }}>
+      {/* Box Statistiques Rapides */}
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
+        <div style={{ background: '#FFF', padding: '20px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', flex: 1, borderLeft: '5px solid #4ADE80' }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#666', fontSize: '1rem' }}>Visiteurs Uniques (Accueil)</h3>
+          <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold', color: '#2C1810' }}>{totalVisits}</p>
+        </div>
+        <div style={{ background: '#FFF', padding: '20px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', flex: 1, borderLeft: '5px solid #B8003E' }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#666', fontSize: '1rem' }}>Membres Club Namasthé</h3>
+          <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold', color: '#2C1810' }}>{profiles.length}</p>
+        </div>
+      </div>
+
       {/* Navigation des onglets */}
       <div style={{ display: 'flex', gap: '20px', marginBottom: '40px', borderBottom: '2px solid #eee', paddingBottom: '15px', overflowX: 'auto' }}>
         <button 

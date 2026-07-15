@@ -22,14 +22,31 @@ import { CartProvider } from './context/CartContext';
 
 /* Métadonnées SEO globales du site */
 export const metadata = {
+  metadataBase: new URL('https://cafenamasthesherbrooke.ca'),
   title: "Café Namasthé — Éveillez vos sens. Nourrissez votre âme.",
-  description: "Café Namasthé est une oasis urbaine proposant des boissons vibrantes, des créations tropicales et une ambiance zen. Découvrez nos jus pressés, thés signatures et événements bien-être.",
-  keywords: "café, namasthé, jus pressé, thé, bien-être, tropical, zen, boissons naturelles",
+  description: "Café Namasthé est une oasis urbaine proposant des boissons vibrantes, des créations tropicales et une ambiance zen. Découvrez nos jus pressés, thés signatures et événements bien-être à Sherbrooke.",
+  keywords: "café, namasthé, sherbrooke, jus pressé, thé, bien-être, tropical, zen, boissons naturelles, bubble tea",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Namasthé",
+  },
+  openGraph: {
+    title: "Café Namasthé | Oasis Urbaine à Sherbrooke",
+    description: "Découvrez nos boissons vibrantes, nos Bubble Teas et nos événements bien-être dans une ambiance zen.",
+    url: 'https://cafenamasthesherbrooke.ca',
+    siteName: 'Café Namasthé',
+    images: [
+      {
+        url: '/images/esprit_namasthe_v2.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Intérieur du Café Namasthé',
+      },
+    ],
+    locale: 'fr_CA',
+    type: 'website',
   },
 };
 

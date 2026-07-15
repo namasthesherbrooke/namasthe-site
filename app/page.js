@@ -58,8 +58,42 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  // Incrémentation du compteur de visites
+  useEffect(() => {
+    // Éviter de compter plusieurs fois si on navigue rapidement
+    if (!sessionStorage.getItem('visited_namasthe')) {
+      fetch('/api/stats/visit', { method: 'POST' }).catch(e => console.error(e));
+      sessionStorage.setItem('visited_namasthe', 'true');
+    }
+  }, []);
+
+  // Données structurées SEO pour Google (LocalBusiness)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CafeOrCoffeeShop",
+    "name": "Café Namasthé",
+    "image": "https://cafenamasthesherbrooke.ca/images/esprit_namasthe_v2.jpg",
+    "@id": "https://cafenamasthesherbrooke.ca",
+    "url": "https://cafenamasthesherbrooke.ca",
+    "telephone": "+18195634567", // Remplacez par le vrai numéro si disponible
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "70 rue King Ouest",
+      "addressLocality": "Sherbrooke",
+      "addressRegion": "QC",
+      "postalCode": "J1H 1P1",
+      "addressCountry": "CA"
+    },
+    "servesCuisine": "Coffee, Tea, Bubble Tea, Health Food",
+    "priceRange": "$$"
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ========================================
           SECTION 1 : HERO — Impression principale
           ======================================== */}
