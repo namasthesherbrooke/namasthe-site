@@ -42,7 +42,15 @@ export async function POST(req) {
     // 1. Récupérer le profil actuel
     const { data: profile, error: fetchError } = await supabase
       .from('profiles')
-      .select('fidelite_points, tickets, prenom, nom, tickets_utilises')
+      .select(`
+        fidelite_points, 
+        tickets, 
+        prenom, 
+        nom, 
+        tickets_utilises, 
+        date_naissance,
+        birthday_claims (claim_year)
+      `)
       .eq('id', userId)
       .single();
 
@@ -56,10 +64,22 @@ export async function POST(req) {
     let currentTicketsUtilises = profile.tickets_utilises || 0;
     let newPoints = currentPoints;
     let newTickets = currentTickets;
-    let newTicketsUtilises = currentTicketsUtilises;
+    const currentYear = new Date().getFullYear();
+    const hasClaimedThisYear = profile.birthday_claims?.some(c => c.claim_year === currentYear);
 
     // 2. Traiter l'action
-    if (action === 'add') {
+    if (action === 'info') {
+      return NextResponse.json({ 
+        success: true, 
+        points: currentPoints, 
+        tickets: currentTickets,
+        prenom: profile.prenom, 
+        nom: profile.nom,
+        date_naissance: profile.date_naissance,
+        birthdayClaimedThisYear: hasClaimedThisYear,
+        derniere_visite: profile.derniere_visite
+      });
+    } else if (action === 'add') {
       newPoints = currentPoints + 1;
       if (newPoints >= 10) {
         newPoints = newPoints - 10;
@@ -81,6 +101,35 @@ export async function POST(req) {
       } else {
         return NextResponse.json({ error: "Aucun ticket ou point suffisant pour réclamer une récompense." }, { status: 400 });
       }
+    } else if (action === 'claim_birthday') {
+      const { itemClaimed } = await req.json();
+      
+      if (hasClaimedThisYear) {
+         return NextResponse.json({ error: "Cadeau déjà réclamé pour cette année." }, { status: 400 });
+      }
+
+      const { error: claimError } = await supabase
+        .from('birthday_claims')
+        .insert({
+          profile_id: userId,
+          claim_year: currentYear,
+          item_claimed: itemClaimed || 'Cadeau non spécifié'
+        });
+
+      if (claimError) {
+        console.error("Erreur insertion birthday_claims:", claimError);
+        return NextResponse.json({ error: "Impossible d'enregistrer le cadeau" }, { status: 500 });
+      }
+      
+      return NextResponse.json({ 
+        success: true, 
+        points: currentPoints, 
+        tickets: currentTickets,
+        prenom: profile.prenom, 
+        nom: profile.nom,
+        date_naissance: profile.date_naissance,
+        birthdayClaimedThisYear: true
+      });
     } else {
       return NextResponse.json({ error: "Action invalide" }, { status: 400 });
     }
@@ -112,6 +161,8 @@ export async function POST(req) {
       tickets: newTickets,
       prenom: profile.prenom, 
       nom: profile.nom,
+      date_naissance: profile.date_naissance,
+      birthdayClaimedThisYear: hasClaimedThisYear,
       derniere_visite: updatePayload.derniere_visite || profile.derniere_visite
     });
 

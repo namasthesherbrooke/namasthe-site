@@ -12,6 +12,12 @@ function ScannerContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [status, setStatus] = useState({ loading: false, error: null, success: null });
   const [clientInfo, setClientInfo] = useState(null);
+  
+  // Nouveaux états pour les anniversaires
+  const [isBirthdayWeek, setIsBirthdayWeek] = useState(false);
+  const [birthdayClaimedThisYear, setBirthdayClaimedThisYear] = useState(false);
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [itemClaimed, setItemClaimed] = useState('');
 
   // Vérifier si l'admin est déjà connecté
   useEffect(() => {
@@ -30,6 +36,30 @@ function ScannerContent() {
       setIsAuthenticated(true);
     }
   }, []);
+
+  // Charger les infos du client une fois authentifié
+  useEffect(() => {
+    if (isAuthenticated && userId) {
+      processAction('info');
+    }
+  }, [isAuthenticated, userId]);
+
+  // Vérifier si c'est la fête du client
+  useEffect(() => {
+    if (clientInfo && clientInfo.date_naissance) {
+      const birthDate = new Date(clientInfo.date_naissance);
+      const today = new Date();
+      
+      const currentYearBirthDate = new Date(Date.UTC(today.getFullYear(), birthDate.getUTCMonth(), birthDate.getUTCDate()));
+      const diffTime = Math.abs(today - currentYearBirthDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      
+      setIsBirthdayWeek(diffDays <= 7);
+      setBirthdayClaimedThisYear(clientInfo.birthdayClaimedThisYear || false);
+    } else {
+      setIsBirthdayWeek(false);
+    }
+  }, [clientInfo]);
 
   // Connexion avec le vrai compte Supabase
   const handleLogin = async (e) => {
@@ -80,7 +110,7 @@ function ScannerContent() {
           'Content-Type': 'application/json',
           ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
-        body: JSON.stringify({ userId, password, action }),
+        body: JSON.stringify({ userId, password, action, itemClaimed }),
         signal: controller.signal
       });
       
@@ -97,17 +127,25 @@ function ScannerContent() {
         }
         setStatus({ loading: false, error: data.error || "Erreur inconnue", success: null });
       } else {
-        setClientInfo({ prenom: data.prenom, nom: data.nom, points: data.points, tickets: data.tickets });
+        setClientInfo(data);
         
         const c = data.tickets || 0;
         const p = data.points || 0;
         
+        let successMessage = null;
+        if (action === 'add') successMessage = `Point ajouté ! Total: ${p}/10 (Tickets: ${c})`;
+        else if (action === 'remove') successMessage = `Point retiré ! Total: ${p}/10 (Tickets: ${c})`;
+        else if (action === 'claim') successMessage = `Ticket utilisé ! Il reste ${c} ticket(s).`;
+        else if (action === 'claim_birthday') {
+          successMessage = "Cadeau d'anniversaire enregistré avec succès !";
+          setShowGiftModal(false);
+          setItemClaimed('');
+        }
+        
         setStatus({ 
           loading: false, 
           error: null, 
-          success: action === 'add' ? `Point ajouté ! Total: ${p}/10 (Tickets: ${c})` : 
-                   action === 'remove' ? `Point retiré ! Total: ${p}/10 (Tickets: ${c})` : 
-                   `Ticket utilisé ! Il reste ${c} ticket(s).` 
+          success: successMessage
         });
       }
     } catch (err) {
@@ -169,6 +207,59 @@ function ScannerContent() {
         </div>
       ) : (
         <p style={{ fontSize: '1.1rem', marginBottom: '30px', color: '#5A4A42' }}>Prêt à scanner et ajouter des points.</p>
+      )}
+
+      {isBirthdayWeek && (
+        <div style={{ background: '#FF9800', padding: '15px', borderRadius: '12px', marginBottom: '24px', color: 'white', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(255, 152, 0, 0.3)' }}>
+          <h2 style={{ margin: 0, fontSize: '1.5rem' }}>🎉 C'EST SA FÊTE BIENTÔT ! 🎉</h2>
+          {!birthdayClaimedThisYear && (
+            <button 
+              onClick={() => setShowGiftModal(true)}
+              style={{ marginTop: '10px', background: 'white', color: '#FF9800', padding: '10px 20px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem', width: '100%' }}
+            >
+              🎁 DONNER LE CADEAU
+            </button>
+          )}
+          {birthdayClaimedThisYear && (
+            <p style={{ marginTop: '10px', margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>
+              Le cadeau a déjà été réclamé pour cette année.
+            </p>
+          )}
+        </div>
+      )}
+
+      {showGiftModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '20px' }}>
+          <div style={{ background: 'white', padding: '30px', borderRadius: '16px', width: '100%', maxWidth: '400px' }}>
+            <h2 style={{ marginTop: 0, color: '#2C1810' }}>Quel breuvage gratuit ?</h2>
+            <p style={{ color: '#666', marginBottom: '20px' }}>Saisissez le choix du client pour garder une trace.</p>
+            
+            <input 
+              type="text" 
+              value={itemClaimed}
+              onChange={(e) => setItemClaimed(e.target.value)}
+              placeholder="Ex: 16oz Matcha Litchi + amis"
+              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '20px', fontSize: '1rem' }}
+              autoFocus
+            />
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                onClick={() => setShowGiftModal(false)}
+                style={{ flex: 1, padding: '12px', background: '#eee', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                Annuler
+              </button>
+              <button 
+                onClick={() => processAction('claim_birthday')}
+                disabled={!itemClaimed.trim() || status.loading}
+                style={{ flex: 1, padding: '12px', background: '#FF9800', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: itemClaimed.trim() ? 'pointer' : 'not-allowed', opacity: itemClaimed.trim() ? 1 : 0.5 }}
+              >
+                Valider le cadeau
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {status.error && (
