@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import FideliteManager from '../../components/admin/FideliteManager';
 import MenuManager from '../../components/admin/MenuManager';
+import BirthdayManager from '../../components/admin/BirthdayManager';
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -142,6 +143,12 @@ export default function AdminDashboard() {
         >
           ☕️ Gestion du Menu
         </button>
+        <button 
+          onClick={() => setActiveTab('anniversaires')}
+          style={{ background: 'none', border: 'none', padding: '10px 15px', fontSize: '1.2rem', fontWeight: 'bold', color: activeTab === 'anniversaires' ? '#FF9800' : '#666', borderBottom: activeTab === 'anniversaires' ? '3px solid #FF9800' : 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
+        >
+          🎁 Cadeaux de Fête
+        </button>
       </div>
 
       {activeTab === 'fidelite' && (
@@ -154,7 +161,13 @@ export default function AdminDashboard() {
         />
       )}
 
-      {activeTab === 'menu' && <MenuManager />}
+      {activeTab === 'menu' && (
+        <MenuManager />
+      )}
+
+      {activeTab === 'anniversaires' && (
+        <BirthdayManager />
+      )}
     </div>
   );
 }
