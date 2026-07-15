@@ -13,16 +13,23 @@ export async function POST(req) {
     
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const { data: { user }, error: userError } = await defaultSupabase.auth.getUser(token);
       
-      if (userError) {
-        authDebug = "getUser error: " + userError.message;
-      } else if (user) {
-        if (user.email === 'namasthesherbrooke@gmail.com') {
-          isAdminAuthenticated = true;
+      try {
+        const { data, error: userError } = await defaultSupabase.auth.getUser(token);
+        
+        if (userError) {
+          authDebug = "getUser error: " + userError.message;
+        } else if (data && data.user) {
+          if (data.user.email === 'namasthesherbrooke@gmail.com') {
+            isAdminAuthenticated = true;
+          } else {
+            authDebug = "User is not admin: " + data.user.email;
+          }
         } else {
-          authDebug = "User is not admin: " + user.email;
+          authDebug = "getUser returned no user and no error";
         }
+      } catch (e) {
+        authDebug = "Exception during getUser: " + e.message;
       }
     }
 
