@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import recipesData from '../../data/recipes.json';
+import recipesData from '../data/recipes.json';
 
 const BASES = [
   { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [] },
