@@ -50,7 +50,7 @@ export default function ChatBubble() {
   const [messages, setMessages] = useState([
     { 
       role: 'assistant', 
-      content: "Bonjour ! 👋🎧 Je suis l'assistant virtuel du Café Namasthé.\n\nQuel est ton *mood* de la journée ? As-tu besoin d'une grosse dose d'énergie pour accomplir des miracles, ou es-tu plutôt en mode relax et cocooning ? Dis-moi de quoi tu as besoin !" 
+      content: "Bonjour ! 👋🎧 Je suis l'assistant virtuel du Café Namasthé.\n\nJe suis là pour répondre à toutes tes questions ou pour t'aider à trouver le breuvage parfait parmi nos centaines de recettes ! Comment puis-je t'aider aujourd'hui ?" 
     }
   ]);
   const [input, setInput] = useState('');
