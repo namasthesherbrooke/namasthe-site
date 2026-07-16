@@ -96,7 +96,30 @@ export default function BeverageRecommender() {
     setSearchTerm('');
   };
 
-  const displayedFlavors = ALL_FLAVORS.filter(f => 
+  // Saveurs possibles pour la catégorie sélectionnée
+  const possibleFlavors = useMemo(() => {
+    if (!selectedBase || selectedBase.id === 'tous') return ALL_FLAVORS;
+    
+    // On prend toutes les recettes de cette catégorie (avant les filtres de saveurs)
+    const baseRecipes = recipesData.filter(recipe => {
+      const hasBaseKeyword = 
+        recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
+        selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
+        (recipe.base && selectedBase.keywords.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())));
+        
+      const hasExcludedKeyword = selectedBase.excludes && selectedBase.excludes.length > 0 && (
+        recipe.flavors.some(f => selectedBase.excludes.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
+        selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
+        (recipe.base && selectedBase.excludes.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())))
+      );
+
+      return hasBaseKeyword && !hasExcludedKeyword;
+    });
+
+    return Array.from(new Set(baseRecipes.flatMap(r => r.flavors))).sort();
+  }, [selectedBase]);
+
+  const displayedFlavors = possibleFlavors.filter(f => 
     f.toLowerCase().includes(searchTerm.toLowerCase())
   ).slice(0, 40); // Limiter pour ne pas polluer l'interface
 
