@@ -43,6 +43,15 @@ export default function BeverageRecommender() {
         );
 
         if (!hasBaseKeyword || hasExcludedKeyword) return false;
+
+        // Validation stricte pour les Shakes
+        if (selectedBase.id === 'shake') {
+          const ingredients = (recipe.ingredients || '').toLowerCase();
+          const name = recipe.name.toLowerCase();
+          const hasProt = ingredients.includes('prot') || name.includes('prot');
+          const hasSub = ingredients.includes('sub') || name.includes('sub');
+          if (!hasProt || !hasSub) return false;
+        }
       }
 
       // 2. Filtrer par saveurs incluses (doit contenir TOUTES les saveurs incluses)
@@ -113,7 +122,18 @@ export default function BeverageRecommender() {
         (recipe.base && selectedBase.excludes.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())))
       );
 
-      return hasBaseKeyword && !hasExcludedKeyword;
+      if (!hasBaseKeyword || hasExcludedKeyword) return false;
+
+      // Validation stricte pour les Shakes
+      if (selectedBase.id === 'shake') {
+        const ingredients = (recipe.ingredients || '').toLowerCase();
+        const name = recipe.name.toLowerCase();
+        const hasProt = ingredients.includes('prot') || name.includes('prot');
+        const hasSub = ingredients.includes('sub') || name.includes('sub');
+        if (!hasProt || !hasSub) return false;
+      }
+
+      return true;
     });
 
     return Array.from(new Set(baseRecipes.flatMap(r => r.flavors))).sort();
