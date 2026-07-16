@@ -31,8 +31,20 @@ export async function POST(req) {
         payload.attributes.DATE_NAISSANCE = date_naissance;
       }
       if (telephone) {
-        payload.attributes.SMS = telephone; // Attribut standard Brevo pour les numéros
-        payload.attributes.TELEPHONE = telephone;
+        // Nettoyage et formatage du numéro pour Brevo (exige le code pays)
+        let cleanPhone = telephone.replace(/\D/g, '');
+        if (cleanPhone.length === 10) {
+          cleanPhone = '+1' + cleanPhone;
+        } else if (cleanPhone.length === 11 && cleanPhone.startsWith('1')) {
+          cleanPhone = '+' + cleanPhone;
+        } else if (!telephone.startsWith('+')) {
+          cleanPhone = '+' + cleanPhone;
+        } else {
+          cleanPhone = telephone; // Si déjà formaté avec le + au début
+        }
+        
+        payload.attributes.SMS = cleanPhone; // Attribut standard Brevo pour les numéros
+        payload.attributes.TELEPHONE = cleanPhone;
       }
       if (preference_contact) {
         payload.attributes.PREF_CONTACT = preference_contact.toUpperCase();
