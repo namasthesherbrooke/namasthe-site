@@ -5,12 +5,13 @@ import recipesData from '../data/recipes.json';
 
 const BASES = [
   { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [] },
+  { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga thé', 'Megathe', 'Lotus', 'Mindblow', 'Simplicithé', 'Thé'] },
+  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol'] },
+  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'] },
+  { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné'] },
   { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Moka', 'Expresso', 'Cappucino'] },
   { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'] },
-  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Limonade rose', 'Citron'] },
-  { id: 'chai', label: 'Chai', icon: '🍂', keywords: ['Chai', 'Cannelle'] },
-  { id: 'fruite', label: 'Rafraîchissant', icon: '🍓', keywords: ['Fraise', 'Framboise', 'Pêche', 'Melon d\'eau', 'Mangue', 'Ananas'] },
-  { id: 'gourmand', label: 'Gourmand', icon: '🍫', keywords: ['Chocolat', 'Caramel', 'Vanille', 'Noisette', 'Barbe à papa'] }
+  { id: 'slush', label: 'Slush', icon: '🍧', keywords: ['Slush'] }
 ];
 
 // Extraction de toutes les saveurs uniques triées alphabétiquement (sauf les bases explicites)
@@ -30,9 +31,10 @@ export default function BeverageRecommender() {
     return recipesData.filter(recipe => {
       // 1. Filtrer par base (si ce n'est pas "Surprenez-moi")
       if (selectedBase && selectedBase.id !== 'tous') {
-        const hasBaseKeyword = recipe.flavors.some(f => 
-          selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))
-        );
+        const hasBaseKeyword = 
+          recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
+          selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase()));
+          
         if (!hasBaseKeyword) return false;
       }
 

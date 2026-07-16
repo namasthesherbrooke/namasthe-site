@@ -1449,7 +1449,7 @@
     "id": 147,
     "name": "\"Latté Chai",
     "flavors": [
-      "Avec ou sans bubble tapioca\"",
+      "Avec ou sans bubble tapioca",
       "Chai"
     ]
   },
@@ -4519,13 +4519,12 @@
     "id": 437,
     "name": "\"Le kaki Marge simpson (emprunté) (+ 2",
     "flavors": [
-      "25$ hydratation)\"",
-      "\"ananas",
+      "Ananas",
       "Framboise",
       "Framboise bleue",
       "Mangue",
       "Orange",
-      "Pêche\""
+      "Pêche"
     ]
   },
   {
@@ -6604,10 +6603,9 @@
     "id": 641,
     "name": "\"Galaxy + 2",
     "flavors": [
-      "25$ collagène\"",
-      "\"grenade-pomme",
+      "Grenade-pomme",
       "Lime",
-      "Raisin\""
+      "Raisin"
     ]
   },
   {
