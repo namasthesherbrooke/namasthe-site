@@ -32,11 +32,13 @@ export default function BeverageRecommender() {
       if (selectedBase && selectedBase.id !== 'tous') {
         const hasBaseKeyword = 
           recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
-          selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase()));
+          selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
+          (recipe.base && selectedBase.keywords.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())));
           
         const hasExcludedKeyword = selectedBase.excludes && selectedBase.excludes.length > 0 && (
           recipe.flavors.some(f => selectedBase.excludes.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
-          selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase()))
+          selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
+          (recipe.base && selectedBase.excludes.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())))
         );
 
         if (!hasBaseKeyword || hasExcludedKeyword) return false;
