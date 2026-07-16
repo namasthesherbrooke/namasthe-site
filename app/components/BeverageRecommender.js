@@ -76,6 +76,9 @@ export default function BeverageRecommender() {
 
   const handleBaseSelect = (base) => {
     setSelectedBase(base);
+    setIncludedFlavors([]);
+    setExcludedFlavors([]);
+    setSearchTerm('');
     setStep(2);
   };
 
@@ -208,7 +211,15 @@ export default function BeverageRecommender() {
             
             {/* Colonne de gauche : Filtres */}
             <div style={{ background: 'white', border: '1px solid #eee', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
-              <h3 style={{ marginBottom: '15px', color: '#2C1810', fontSize: '1.2rem' }}>2. Affinez vos goûts</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0, color: '#2C1810', fontSize: '1.2rem' }}>2. Affinez vos goûts</h3>
+                <button 
+                  onClick={() => { setIncludedFlavors([]); setExcludedFlavors([]); setSearchTerm(''); }} 
+                  style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.9rem' }}
+                >
+                  Réinitialiser
+                </button>
+              </div>
               
               <input 
                 type="text" 
