@@ -4,12 +4,12 @@ import { useState, useMemo } from 'react';
 import recipesData from '../data/recipes.json';
 
 const BASES = [
-  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: [] },
-  { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga', 'Mega', 'Lotus', 'Mindblow', 'Simplicithé', 'Simplicithe', 'Réinventhé', 'Reinventhe', 'Immunithé', 'Immunithe', ' Thé', 'Thé '], excludes: ['Fruithé', 'Fruite'] },
-  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol', 'Blender'], excludes: [] },
-  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'], excludes: [] },
-  { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné', 'Proteine'], excludes: [] },
-  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: [] },
+  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: ['Menu', 'Beigne', 'Namas-tails'] },
+  { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga', 'Mega', 'Lotus', 'Mindblow', 'Simplicithé', 'Simplicithe', 'Réinventhé', 'Reinventhe', 'Immunithé', 'Immunithe', ' Thé', 'Thé '], excludes: ['Fruithé', 'Fruite', 'Beigne', 'Beignes'] },
+  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol', 'Blender'], excludes: ['Menu'] },
+  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'], excludes: ['Frappé', 'Frappe', 'Menu'] },
+  { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné', 'Proteine'], excludes: ['Menu'] },
+  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: ['Namas', 'Namas-tails', 'Menu'] },
   { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] }
 ];
 
