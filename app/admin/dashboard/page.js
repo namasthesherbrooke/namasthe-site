@@ -168,7 +168,7 @@ export default function AdminDashboard() {
       )}
 
       {activeTab === 'anniversaires' && (
-        <BirthdayManager />
+        <BirthdayManager profiles={profiles} />
       )}
     </div>
   );

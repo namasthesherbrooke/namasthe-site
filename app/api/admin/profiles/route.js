@@ -53,7 +53,7 @@ export async function GET(req) {
 
     const { data: profiles, error } = await supabaseAdmin
       .from('profiles')
-      .select('id, prenom, nom, fidelite_points, tickets, tickets_utilises, derniere_visite, telephone:"Telephone", preference_contact')
+      .select('id, prenom, nom, fidelite_points, tickets, tickets_utilises, derniere_visite, telephone:"Telephone", preference_contact, date_naissance')
       .order('prenom', { ascending: true });
 
     if (error) {
