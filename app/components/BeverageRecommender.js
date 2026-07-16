@@ -4,13 +4,14 @@ import { useState, useMemo } from 'react';
 import recipesData from '../data/recipes.json';
 
 const BASES = [
-  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: ['Menu', 'Beigne', 'Namas-tails'] },
+  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: ['Menu', 'Beigne'] },
   { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga', 'Mega', 'Lotus', 'Mindblow', 'Simplicithé', 'Simplicithe', 'Réinventhé', 'Reinventhe', 'Immunithé', 'Immunithe', ' Thé', 'Thé '], excludes: ['Fruithé', 'Fruite', 'Beigne', 'Beignes'] },
   { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol', 'Blender'], excludes: ['Menu'] },
-  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'], excludes: ['Frappé', 'Frappe', 'Menu'] },
   { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné', 'Proteine'], excludes: ['Menu'] },
-  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: ['Namas', 'Namas-tails', 'Menu'] },
-  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] }
+  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: ['Namas', 'Namas-tails', 'Menu', 'Frappé', 'Frappe'] },
+  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] },
+  { id: 'namastails', label: 'Namas-tails', icon: '🍹', keywords: ['Namas-tails', 'Namas', 'Cocktail', 'Virgin'], excludes: [] },
+  { id: 'frappes', label: 'Frappés', icon: '🥤', keywords: ['Frappé', 'Frappe', 'Frappucino'], excludes: [] }
 ];
 
 // Extraction de toutes les saveurs uniques triées alphabétiquement (sauf les bases explicites)
