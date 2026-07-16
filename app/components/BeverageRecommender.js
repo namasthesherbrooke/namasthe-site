@@ -6,12 +6,11 @@ import recipesData from '../data/recipes.json';
 const BASES = [
   { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: [] },
   { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga', 'Mega', 'Lotus', 'Mindblow', 'Simplicithé', 'Simplicithe', 'Réinventhé', 'Reinventhe', 'Immunithé', 'Immunithe', ' Thé', 'Thé '], excludes: ['Fruithé', 'Fruite'] },
-  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol'], excludes: [] },
+  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol', 'Blender'], excludes: [] },
   { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'], excludes: [] },
   { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné', 'Proteine'], excludes: [] },
   { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: [] },
-  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] },
-  { id: 'slush', label: 'Slush', icon: '🍧', keywords: ['Slush'], excludes: [] }
+  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] }
 ];
 
 // Extraction de toutes les saveurs uniques triées alphabétiquement (sauf les bases explicites)
