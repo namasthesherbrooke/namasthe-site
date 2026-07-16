@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import Link from 'next/link';
 import OrderModal from '../components/OrderModal';
 import { useCart } from '../context/CartContext';
+import BeverageRecommender from '../components/BeverageRecommender';
 
 // Les 10 bases permises pour le menu secret
 const ALLOWED_BASES = [
@@ -606,6 +607,23 @@ export default function CreationsPage() {
           >
             🧪 Créer un breuvage
           </button>
+          <button 
+            onClick={() => setActiveTab('recommender')}
+            style={{
+              padding: '12px 30px',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              borderRadius: '30px',
+              border: 'none',
+              cursor: 'pointer',
+              background: activeTab === 'recommender' ? '#B8003E' : '#eee',
+              color: activeTab === 'recommender' ? 'white' : '#5A4A42',
+              transition: 'all 0.3s ease',
+              boxShadow: activeTab === 'recommender' ? '0 4px 15px rgba(184, 0, 62, 0.3)' : 'none'
+            }}
+          >
+            🔍 Trouver mon breuvage
+          </button>
         </div>
 
         {/* SECTION 1 : Le Menu Secret (Liste) */}
@@ -929,6 +947,11 @@ export default function CreationsPage() {
               </form>
             )}
           </div>
+        )}
+
+        {/* SECTION 3 : Assistant Trouver mon Breuvage */}
+        {activeTab === 'recommender' && (
+          <BeverageRecommender />
         )}
 
       </div>

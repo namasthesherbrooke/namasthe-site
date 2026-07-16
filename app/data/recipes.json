@@ -1,0 +1,7794 @@
+[
+  {
+    "id": 1,
+    "name": "Matcha Limonade",
+    "flavors": [
+      "Fraise",
+      "Limonade",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Carl Bubble tea",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Crepe brisure de chocolat",
+    "flavors": [
+      "Cannelle",
+      "Chocolat",
+      "Pistache",
+      "Érable"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Immunithé  Margarita aux bleuets",
+    "flavors": [
+      "Bleuet",
+      "Limonade",
+      "Limonade rose",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Poire vanille",
+    "flavors": [
+      "Poire",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Automne flamboyante",
+    "flavors": [
+      "Fruit de la passion",
+      "Fruit du dragon",
+      "Limonade",
+      "Limonade rose",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Wartermelon crawl",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Harvest punch",
+    "flavors": [
+      "Grenade-pomme",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Sangria aa fraise",
+    "flavors": [
+      "Fraise",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Fall sangria",
+    "flavors": [
+      "Canneberge",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Fall Margarita",
+    "flavors": [
+      "Poire"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Candy Corn",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Matin passion",
+    "flavors": [
+      "Banane",
+      "Fruit de la passion",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "O' Canada update 2025",
+    "flavors": [
+      "Cerise",
+      "Coco",
+      "Fraise",
+      "Grenade-pomme"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Muffin Aux bleuets",
+    "flavors": [
+      "Bleuet",
+      "Framboise",
+      "Pistache"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "J'aime mon canada Canada",
+    "flavors": [
+      "Ananas-coco",
+      "Arc-en-ciel bonbon",
+      "Canneberge",
+      "Cerise",
+      "Lime",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Elle icona",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit de la passion",
+      "Litchi",
+      "Melon d'eau",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Matcha de Dubai",
+    "flavors": [
+      "Chocolat",
+      "Matcha",
+      "Pistache"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Maria Banana",
+    "flavors": [
+      "Banane",
+      "Coco",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Le mely traiteur",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Fruit du dragon",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 21,
+    "name": "Kétrine",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Framboise",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Déesse des îles",
+    "flavors": [
+      "Ananas-coco",
+      "Framboise",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Bueno café",
+    "flavors": [
+      "Cacao",
+      "Café",
+      "Chocolat",
+      "Chocolat blanc",
+      "Moka",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Cherry christmast / Cherry party",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Framboise",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Bubble tea barbe à papa",
+    "flavors": [
+      "Barbe à papa",
+      "Coco",
+      "Fraise",
+      "Framboise bleue",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Gomme balloune",
+    "flavors": [
+      "Cerise",
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 27,
+    "name": "OMG c'est bon ca",
+    "flavors": [
+      "Cantaloup",
+      "Poire",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 28,
+    "name": "Rose bonbon",
+    "flavors": [
+      "Cerise",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 29,
+    "name": "Le breuvage rose (le sensuel pour la St valentin)",
+    "flavors": [
+      "Ananas-coco",
+      "Canneberge",
+      "Coco",
+      "Fraise",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 30,
+    "name": "Douceur rose (pink drink starbuck)",
+    "flavors": [
+      "Coco",
+      "Fruit du dragon",
+      "Lime",
+      "Mangue",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 31,
+    "name": "Banane bleuet",
+    "flavors": [
+      "Banane",
+      "Bleuet",
+      "Citron"
+    ]
+  },
+  {
+    "id": 32,
+    "name": "Banana bread",
+    "flavors": [
+      "Banane",
+      "Chai",
+      "Chocolat",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 33,
+    "name": "Van gogh",
+    "flavors": [
+      "Ananas",
+      "Mangue",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 34,
+    "name": "Pablo picasso",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 35,
+    "name": "Zeste tropical",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Kiwi"
+    ]
+  },
+  {
+    "id": 36,
+    "name": "Fruithé spiruline arc en ciel",
+    "flavors": [
+      "Banane",
+      "Citron",
+      "Kiwi",
+      "Lime",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 37,
+    "name": "Baobab punch",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Fruit de la passion",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 38,
+    "name": "Fruithé Sakura floral",
+    "flavors": [
+      "Fraise",
+      "Mangue",
+      "Pêche",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 39,
+    "name": "Fruithé flow curcuma",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Cannelle",
+      "Chai",
+      "Citron",
+      "Mangue",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 40,
+    "name": "Fruithé Melon frais",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Lime",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 41,
+    "name": "Fruithé croustade aux pommes",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Bleuet",
+      "Cannelle",
+      "Caramel",
+      "Chai",
+      "Citron",
+      "Fraise",
+      "Fruit de la passion",
+      "Kiwi",
+      "Lime",
+      "Mangue",
+      "Menthe",
+      "Pêche",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 42,
+    "name": "Fruithé pain aux bananes",
+    "flavors": [
+      "Banane",
+      "Cannelle",
+      "Caramel",
+      "Chai",
+      "Fraise",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Fruithé bleuet lime",
+    "flavors": [
+      "Ananas",
+      "Bleuet",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 44,
+    "name": "Fruithé",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Menthe",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 45,
+    "name": "Fruithé vitalité",
+    "flavors": [
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 46,
+    "name": "Fruithé banane soleil",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Citron",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 47,
+    "name": "Fruithé verger frais",
+    "flavors": [
+      "Fraise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 48,
+    "name": "Fruithé kiwi boost",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Kiwi",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 49,
+    "name": "Fruithé framboise punch",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 50,
+    "name": "Fruithé Sunrise",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Fraise",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 51,
+    "name": "Fruithé glow mangue",
+    "flavors": [
+      "Ananas",
+      "Kiwi",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 52,
+    "name": "Soleil boreal",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Pamplemousse",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 53,
+    "name": "Banana Chai",
+    "flavors": [
+      "Banane",
+      "Chai",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 54,
+    "name": "Café protéiné",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 55,
+    "name": "Oh que c'est bon",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Kiwi",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 56,
+    "name": "Pink tropical",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Fruit de la passion"
+    ]
+  },
+  {
+    "id": 57,
+    "name": "Surette a souhaits",
+    "flavors": [
+      "Fraise",
+      "Kiwi",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 58,
+    "name": "Mystique bleue",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Bleuet",
+      "Framboise",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 59,
+    "name": "Matcha dragon",
+    "flavors": [
+      "Amande",
+      "Fruit du dragon",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 60,
+    "name": "Amareto sour",
+    "flavors": [
+      "Amande",
+      "Cerise",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 61,
+    "name": "Arc en thé",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Fruit de la passion"
+    ]
+  },
+  {
+    "id": 62,
+    "name": "Spécial Caro",
+    "flavors": [
+      "Cerise",
+      "Fraise",
+      "Limonade",
+      "Poire"
+    ]
+  },
+  {
+    "id": 63,
+    "name": "La barbe de papou",
+    "flavors": [
+      "Barbe à papa",
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Melon d'eau",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 64,
+    "name": "Le kiwi et la cerise se séparent",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Kiwi",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 65,
+    "name": "Bleuet moi ça",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 66,
+    "name": "Surettement magique",
+    "flavors": [
+      "Limonade",
+      "Limonade rose",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 67,
+    "name": "Tequila Sunrise",
+    "flavors": [
+      "Cerise",
+      "Orange",
+      "Pamplemousse",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 68,
+    "name": "Tarte au citron/lime et Cheesecake",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Fraise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 69,
+    "name": "Coffee crisp",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 70,
+    "name": "Shake Whippet",
+    "flavors": [
+      "Cerise",
+      "Chocolat",
+      "Framboise",
+      "Guimauve",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 71,
+    "name": "Ruée vers l'or",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 72,
+    "name": "Pina colada fruithé / douceur des tropiques",
+    "flavors": [
+      "Ananas",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 73,
+    "name": "Matin tropical",
+    "flavors": [
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 74,
+    "name": "Fraise banane",
+    "flavors": [
+      "Banane",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 75,
+    "name": "Béret bol",
+    "flavors": [
+      "Banane",
+      "Bleuet",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 76,
+    "name": "Ring peach surette fruithé",
+    "flavors": [
+      "Cerise",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 77,
+    "name": "Bring me back",
+    "flavors": [
+      "Concombre",
+      "Melon d'eau",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 78,
+    "name": "Minuit le soir",
+    "flavors": [
+      "Framboise bleue",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 79,
+    "name": "Cerise eclaté",
+    "flavors": [
+      "Cerise",
+      "Kiwi",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 80,
+    "name": "Jajoudelidou",
+    "flavors": [
+      "Cerise",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 81,
+    "name": "Bouffe tout (slimer)",
+    "flavors": [
+      "Kiwi",
+      "Limonade",
+      "Pomme verte",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 82,
+    "name": "Trèfle pétillant",
+    "flavors": [
+      "Cantaloup",
+      "Kiwi",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 83,
+    "name": "Pot d'énergie",
+    "flavors": [
+      "Goyave",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 84,
+    "name": "Cheesecake matcha fraise",
+    "flavors": [
+      "Chocolat",
+      "Chocolat blanc",
+      "Fraise",
+      "Framboise",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 85,
+    "name": "Café chocolat de Dubaï",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Moka",
+      "Pistache",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 86,
+    "name": "Red bull gomme balloune",
+    "flavors": [
+      "Barbe à papa"
+    ]
+  },
+  {
+    "id": 87,
+    "name": "Rockstar fraise mangue",
+    "flavors": [
+      "Fraise",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 88,
+    "name": "J'aime ta fraise",
+    "flavors": [
+      "Fraise",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 89,
+    "name": "Tropicalicious",
+    "flavors": [
+      "Coco",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 90,
+    "name": "Tulum",
+    "flavors": [
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 91,
+    "name": "Berry funy",
+    "flavors": [
+      "Framboise",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 92,
+    "name": "Suniset",
+    "flavors": [
+      "Cerise",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 93,
+    "name": "Mango twist",
+    "flavors": [
+      "Cerise",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 94,
+    "name": "Bubblicieux",
+    "flavors": [
+      "Framboise bleue",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 95,
+    "name": "Ismouche/baiser sucré",
+    "flavors": [
+      "Coco",
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Kiwi",
+      "Poire"
+    ]
+  },
+  {
+    "id": 96,
+    "name": "Pêche litchi",
+    "flavors": [
+      "Coco",
+      "Framboise",
+      "Litchi",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 97,
+    "name": "Coeur de chocolat",
+    "flavors": [
+      "Cacao",
+      "Café",
+      "Fraise",
+      "Framboise",
+      "Moka"
+    ]
+  },
+  {
+    "id": 98,
+    "name": "Matcha latté au litchi",
+    "flavors": [
+      "Litchi",
+      "Matcha",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 99,
+    "name": "Frappé matcha litchi",
+    "flavors": [
+      "Litchi",
+      "Matcha",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 100,
+    "name": "Fruithé banane litchi",
+    "flavors": [
+      "Banane",
+      "Litchi",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 101,
+    "name": "Fruithé fraise d'amour",
+    "flavors": [
+      "Fraise",
+      "Litchi"
+    ]
+  },
+  {
+    "id": 102,
+    "name": "Frappucino lotus Cupidon",
+    "flavors": [
+      "Fraise",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 103,
+    "name": "Frappucino coeur glacé",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Caramel"
+    ]
+  },
+  {
+    "id": 104,
+    "name": "Matcha coeur latté",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 105,
+    "name": "Frappucino caramel amoureux",
+    "flavors": [
+      "Cacao",
+      "Café",
+      "Caramel"
+    ]
+  },
+  {
+    "id": 106,
+    "name": "Frappucino fraise Choco",
+    "flavors": [
+      "Cacao",
+      "Café",
+      "Chocolat",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 107,
+    "name": "Baiser gourmand",
+    "flavors": [
+      "Café",
+      "Caramel",
+      "Caramel salé",
+      "Chocolat",
+      "Chocolat blanc",
+      "Coco",
+      "Guimauve"
+    ]
+  },
+  {
+    "id": 108,
+    "name": "Chaleur épicée",
+    "flavors": [
+      "Café",
+      "Chai",
+      "Coco",
+      "Guimauve",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 109,
+    "name": "Coup de foudre",
+    "flavors": [
+      "Fraise",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 110,
+    "name": "Lotus d'amour",
+    "flavors": [
+      "Framboise",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 111,
+    "name": "Gulu Gulu (guru) rouge",
+    "flavors": [
+      "Lime",
+      "Limonade",
+      "Matcha",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 112,
+    "name": "Aurore boréale",
+    "flavors": [
+      "Cerise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 113,
+    "name": "La reine des neiges",
+    "flavors": [
+      "Bleuet",
+      "Coco",
+      "Litchi",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 114,
+    "name": "Gulu Gulu (guru) bleu",
+    "flavors": [
+      "Lime",
+      "Matcha",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 115,
+    "name": "Thé Gulu (guru) vert",
+    "flavors": [
+      "Lime",
+      "Matcha",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 116,
+    "name": "Altesse Royale",
+    "flavors": [
+      "Cerise",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 117,
+    "name": "Red bull",
+    "flavors": [
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 118,
+    "name": "Donkey kong",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Cerise",
+      "Coco",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 119,
+    "name": "Van la valentine",
+    "flavors": [
+      "Coco",
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 120,
+    "name": "Choco framboises",
+    "flavors": [
+      "Chocolat",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 121,
+    "name": "Fruithé; Fraise d'amour",
+    "flavors": [
+      "Fraise",
+      "Litchi"
+    ]
+  },
+  {
+    "id": 122,
+    "name": "Frappucino; Coeur glacé",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Cannelle"
+    ]
+  },
+  {
+    "id": 123,
+    "name": "Frappucino; Caramel amoureux",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Caramel"
+    ]
+  },
+  {
+    "id": 124,
+    "name": "Frappucino; Lotus cupidon",
+    "flavors": [
+      "Fraise"
+    ]
+  },
+  {
+    "id": 125,
+    "name": "Frappucino; Fraise choco",
+    "flavors": [
+      "Café",
+      "Coco",
+      "Fraise",
+      "Moka"
+    ]
+  },
+  {
+    "id": 126,
+    "name": "Matcha choux",
+    "flavors": [
+      "Amande",
+      "Cannelle",
+      "Chai",
+      "Matcha",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 127,
+    "name": "Matchacha",
+    "flavors": [
+      "Chocolat",
+      "Fraise",
+      "Matcha",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 128,
+    "name": "Le préféré a Math",
+    "flavors": [
+      "Ananas",
+      "Fruit du dragon",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 129,
+    "name": "Matcha fouetté",
+    "flavors": [
+      "Chocolat",
+      "Coco",
+      "Matcha",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 130,
+    "name": "Matcha Alex",
+    "flavors": [
+      "Café",
+      "Matcha",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 131,
+    "name": "Matcha latté",
+    "flavors": [
+      "Matcha",
+      "Érable"
+    ]
+  },
+  {
+    "id": 132,
+    "name": "Choco coco",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Coco",
+      "Moka"
+    ]
+  },
+  {
+    "id": 133,
+    "name": "Confort hivernal",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Chocolat",
+      "Chocolat blanc",
+      "Coco",
+      "Moka"
+    ]
+  },
+  {
+    "id": 134,
+    "name": "Délice d'amour",
+    "flavors": [
+      "Café",
+      "Coco",
+      "Framboise",
+      "Moka"
+    ]
+  },
+  {
+    "id": 135,
+    "name": "Jelly bean",
+    "flavors": [
+      "Fraise",
+      "Mangue",
+      "Orange",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 136,
+    "name": "Va y avec passion",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 137,
+    "name": "St valentine",
+    "flavors": [
+      "Canneberge",
+      "Coco",
+      "Framboise",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 138,
+    "name": "Sweet and sour",
+    "flavors": [
+      "Framboise bleue",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 139,
+    "name": "Sour peach/ Ring peach",
+    "flavors": [
+      "Cerise",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 140,
+    "name": "Ice café 24 oz",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 141,
+    "name": "Creamsicle a l'orange",
+    "flavors": [
+      "Citron",
+      "Coco",
+      "Orange",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 142,
+    "name": "Fleure de cactus",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Framboise bleue",
+      "Kiwi",
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 143,
+    "name": "Pride",
+    "flavors": [
+      "Framboise bleue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 144,
+    "name": "Bettle juice",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 145,
+    "name": "Comme faire smoothie bol",
+    "flavors": [
+      "Pêche"
+    ]
+  },
+  {
+    "id": 146,
+    "name": "Forêt tropicale",
+    "flavors": [
+      "Ananas",
+      "Grenade-pomme",
+      "Kiwi",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 147,
+    "name": "\"Latté Chai",
+    "flavors": [
+      "Avec ou sans bubble tapioca\"",
+      "Chai"
+    ]
+  },
+  {
+    "id": 148,
+    "name": "Dirty chai café",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Chai",
+      "Érable"
+    ]
+  },
+  {
+    "id": 149,
+    "name": "Nouveau café sur glace",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 150,
+    "name": "Jack frost",
+    "flavors": [
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 151,
+    "name": "Cherry Blue",
+    "flavors": [
+      "Cerise",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 152,
+    "name": "Daiquiri aux fraises. 16 Oz",
+    "flavors": [
+      "Fraise",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 153,
+    "name": "Pogne moi le melon. OU Folie fuzion",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Framboise bleue",
+      "Kiwi",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 154,
+    "name": "Éclat de lotus",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 155,
+    "name": "Vin chaud épicé",
+    "flavors": [
+      "Cannelle",
+      "Cerise",
+      "Citron",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 156,
+    "name": "Le printanier",
+    "flavors": [
+      "Ananas",
+      "Melon d'eau",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 157,
+    "name": "Le p'tit raisin",
+    "flavors": [
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 158,
+    "name": "Viva l'été",
+    "flavors": [
+      "Goyave",
+      "Grenade-pomme",
+      "Lime",
+      "Litchi",
+      "Melon d'eau",
+      "Poire"
+    ]
+  },
+  {
+    "id": 159,
+    "name": "Fraîcheur d'été",
+    "flavors": [
+      "Concombre",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 160,
+    "name": "Le succulent",
+    "flavors": [
+      "Concombre",
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 161,
+    "name": "Cocologie",
+    "flavors": [
+      "Concombre",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 162,
+    "name": "Jolly Rancher (le ptit frère du rafraîchissant) PLUS POPULAIRE",
+    "flavors": [
+      "Citron",
+      "Concombre",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 163,
+    "name": "Le rafraîchissant",
+    "flavors": [
+      "Cantaloup",
+      "Concombre",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 164,
+    "name": "Le sprinter",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 165,
+    "name": "Sangria",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Orange",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 166,
+    "name": "C'est DIVIN",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Mangue",
+      "Poire",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 167,
+    "name": "Summer vibe",
+    "flavors": [
+      "Ananas-coco",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 168,
+    "name": "Thor",
+    "flavors": [
+      "Cerise",
+      "Fraise",
+      "Framboise",
+      "Grenade-pomme",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 169,
+    "name": "Stitch",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Kiwi"
+    ]
+  },
+  {
+    "id": 170,
+    "name": "Extravaganza Texas",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Fraise",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 171,
+    "name": "Cyclone",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 172,
+    "name": "Bonbon runts",
+    "flavors": [
+      "Ananas",
+      "Arc-en-ciel bonbon",
+      "Banane",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 173,
+    "name": "Snowconut",
+    "flavors": [
+      "Coco",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 174,
+    "name": "Evergreen",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Framboise bleue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 175,
+    "name": "Gummy jelly",
+    "flavors": [
+      "Framboise",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 176,
+    "name": "Sweetheart",
+    "flavors": [
+      "Coco",
+      "Fruit du dragon",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 177,
+    "name": "Pumpkin time",
+    "flavors": [
+      "Cantaloup",
+      "Fruit de la passion",
+      "Orange",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 178,
+    "name": "Le pôle nord",
+    "flavors": [
+      "Canneberge",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 179,
+    "name": "Nuage rose",
+    "flavors": [
+      "Coco",
+      "Framboise",
+      "Grenade-pomme"
+    ]
+  },
+  {
+    "id": 180,
+    "name": "Lotus solaire",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 181,
+    "name": "Le jour de la terre",
+    "flavors": [
+      "Coco",
+      "Framboise bleue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 182,
+    "name": "Printemps bleu",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 183,
+    "name": "Printemps jaune",
+    "flavors": [
+      "Ananas"
+    ]
+  },
+  {
+    "id": 184,
+    "name": "Printemps rose",
+    "flavors": [
+      "Fruit du dragon"
+    ]
+  },
+  {
+    "id": 185,
+    "name": "Winter spritz",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 186,
+    "name": "Blizzard",
+    "flavors": [
+      "Bleuet",
+      "Chocolat",
+      "Chocolat blanc"
+    ]
+  },
+  {
+    "id": 187,
+    "name": "Canneberge d'hiver",
+    "flavors": [
+      "Canneberge",
+      "Orange"
+    ]
+  },
+  {
+    "id": 188,
+    "name": "Ciel de soir",
+    "flavors": [
+      "Grenade-pomme",
+      "Poire"
+    ]
+  },
+  {
+    "id": 189,
+    "name": "Bouquet de tulipe",
+    "flavors": [
+      "Ananas",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 190,
+    "name": "soleil d'hiver",
+    "flavors": [
+      "Fraise",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 191,
+    "name": "au feu !!",
+    "flavors": [
+      "Fruit de la passion",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 192,
+    "name": "winter colada",
+    "flavors": [
+      "Ananas",
+      "Cerise"
+    ]
+  },
+  {
+    "id": 193,
+    "name": "frostbite",
+    "flavors": [
+      "Chocolat",
+      "Chocolat blanc",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 194,
+    "name": "cindylou hohoho",
+    "flavors": [
+      "Fraise",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 195,
+    "name": "tropicalino",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 196,
+    "name": "merry popins",
+    "flavors": [
+      "Fraise",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 197,
+    "name": "Lutin du père noel",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Fraise",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 198,
+    "name": "Boule de neige",
+    "flavors": [
+      "Coco"
+    ]
+  },
+  {
+    "id": 199,
+    "name": "Canne de bonbon",
+    "flavors": [
+      "Cerise",
+      "Fraise",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 200,
+    "name": "Sangria d'hiver",
+    "flavors": [
+      "Cannelle",
+      "Grenade-pomme",
+      "Orange"
+    ]
+  },
+  {
+    "id": 201,
+    "name": "Baisé d'hiver",
+    "flavors": [
+      "Ananas",
+      "Coco"
+    ]
+  },
+  {
+    "id": 202,
+    "name": "Menthe polaire",
+    "flavors": [
+      "Fraise",
+      "Framboise bleue",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 203,
+    "name": "Blizzard d'hiver",
+    "flavors": [
+      "Grenade-pomme",
+      "Poire"
+    ]
+  },
+  {
+    "id": 204,
+    "name": "Canneberge frileuse",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Limonade",
+      "Limonade rose",
+      "Orange"
+    ]
+  },
+  {
+    "id": 205,
+    "name": "Beetlejuice",
+    "flavors": [
+      "Ananas",
+      "Canneberge",
+      "Fraise",
+      "Framboise bleue",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 206,
+    "name": "Blue christmas",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 207,
+    "name": "Merry christmas",
+    "flavors": [
+      "Amande",
+      "Coco",
+      "Framboise",
+      "Litchi",
+      "Matcha",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 208,
+    "name": "La mère Noël",
+    "flavors": [
+      "Ananas-coco",
+      "Framboise",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 209,
+    "name": "The Grinch 24 oz lotus",
+    "flavors": [
+      "Coco",
+      "Limonade",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 210,
+    "name": "Cindylou 24 oz lotus",
+    "flavors": [
+      "Coco",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 211,
+    "name": "Le père nowel 24 oz lotus",
+    "flavors": [
+      "Coco",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 212,
+    "name": "Emeraude",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 213,
+    "name": "jingle bell",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 214,
+    "name": "Sun flower",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 215,
+    "name": "L'été des indiens",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 216,
+    "name": "Very berry",
+    "flavors": [
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 217,
+    "name": "Fièvre de la danse",
+    "flavors": [
+      "Cantaloup",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 218,
+    "name": "Barbie a malibu",
+    "flavors": [
+      "Framboise",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 219,
+    "name": "Purple dream",
+    "flavors": [
+      "Cantaloup",
+      "Poire"
+    ]
+  },
+  {
+    "id": 220,
+    "name": "The love potion",
+    "flavors": [
+      "Cantaloup",
+      "Fruit du dragon"
+    ]
+  },
+  {
+    "id": 221,
+    "name": "Eye of the tiger",
+    "flavors": [
+      "Ananas-coco",
+      "Bleuet",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 222,
+    "name": "Pomme des champs",
+    "flavors": [
+      "Canneberge"
+    ]
+  },
+  {
+    "id": 223,
+    "name": "Harvest moon",
+    "flavors": [
+      "Cantaloup",
+      "Poire"
+    ]
+  },
+  {
+    "id": 224,
+    "name": "Ça va bien aller",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 225,
+    "name": "Le débile mental",
+    "flavors": [
+      "Cerise",
+      "Limonade",
+      "Limonade rose",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 226,
+    "name": "Gender reveal",
+    "flavors": [
+      "Barbe à papa",
+      "Coco",
+      "Fraise",
+      "Framboise bleue",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 227,
+    "name": "Dirty chai",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Caramel",
+      "Chai",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 228,
+    "name": "Frankenstein",
+    "flavors": [
+      "Citron",
+      "Orange",
+      "Pomme verte",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 229,
+    "name": "Ça c'est l'sud",
+    "flavors": [
+      "Coco",
+      "Framboise bleue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 230,
+    "name": "Le tourbillon",
+    "flavors": [
+      "Fruit du dragon",
+      "Lime",
+      "Litchi",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 231,
+    "name": "Cyclone surette à Tracy",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 232,
+    "name": "La Jamaica",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 233,
+    "name": "Bonbons Jolly rancher de lotus",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Kiwi",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 234,
+    "name": "Melon blast",
+    "flavors": [
+      "Cantaloup",
+      "Fraise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 235,
+    "name": "Les fruits oubliés",
+    "flavors": [
+      "Framboise",
+      "Melon d'eau",
+      "Mûre",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 236,
+    "name": "Le turquoise",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 237,
+    "name": "Monsieur freeze",
+    "flavors": [
+      "Concombre",
+      "Framboise bleue",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 238,
+    "name": "La nuun surprise (super malo)",
+    "flavors": [
+      "Barbe à papa",
+      "Bleuet",
+      "Framboise",
+      "Framboise bleue",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 239,
+    "name": "Skinny so peachy",
+    "flavors": [
+      "Fraise",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 240,
+    "name": "Dragon fly",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Fruit du dragon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 241,
+    "name": "Tonere des tropiques",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Coco",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 242,
+    "name": "Goddess tea",
+    "flavors": [
+      "Framboise bleue",
+      "Gingembre",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 243,
+    "name": "Nuit d'automne",
+    "flavors": [
+      "Fraise",
+      "Mangue",
+      "Melon d'eau",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 244,
+    "name": "Festival",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Lime",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 245,
+    "name": "Thé pref a math",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Framboise bleue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 246,
+    "name": "Canneberge épicés",
+    "flavors": [
+      "Canneberge",
+      "Chai",
+      "Gingembre",
+      "Grenade-pomme",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 247,
+    "name": "Sunshine d'autonme",
+    "flavors": [
+      "Fraise",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 248,
+    "name": "All the kit Anne Marie",
+    "flavors": [
+      "Cerise",
+      "Coco",
+      "Framboise bleue",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 249,
+    "name": "All thé kit",
+    "flavors": [
+      "Cerise",
+      "Coco",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 250,
+    "name": "Tornado (linda)",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 251,
+    "name": "Sunfresh",
+    "flavors": [
+      "Cerise",
+      "Concombre",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 252,
+    "name": "Ice capp",
+    "flavors": [
+      "Café",
+      "Moka",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 253,
+    "name": "Candy Apple",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 254,
+    "name": "Harvest sangria",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Lime",
+      "Pêche",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 255,
+    "name": "Feuilles d'automne",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 256,
+    "name": "Feu de camp",
+    "flavors": [
+      "Ananas",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 257,
+    "name": "Punch d'automne",
+    "flavors": [
+      "Cerise",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 258,
+    "name": "Mai tai",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 259,
+    "name": "Jamaicain sun",
+    "flavors": [
+      "Canneberge",
+      "Coco",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 260,
+    "name": "Jamaican me crazy",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 261,
+    "name": "Yummy doudi",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 262,
+    "name": "Sucré surette",
+    "flavors": [
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 263,
+    "name": "Sangria automnale",
+    "flavors": [
+      "Fruit du dragon",
+      "Lime",
+      "Mangue",
+      "Pêche",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 264,
+    "name": "Come on dream on",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 265,
+    "name": "Watermelon sugar HI",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Limonade",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 266,
+    "name": "Le beautifull",
+    "flavors": [
+      "Concombre",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 267,
+    "name": "Taste a souhait",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 268,
+    "name": "Mango colada",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Banane",
+      "Mangue",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 269,
+    "name": "Le ré Hydratant",
+    "flavors": [
+      "Ananas-coco",
+      "Concombre",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 270,
+    "name": "La Rozéeee",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 271,
+    "name": "OMG Jcapote",
+    "flavors": [
+      "Caramel",
+      "Chocolat"
+    ]
+  },
+  {
+    "id": 272,
+    "name": "Mango passion",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 273,
+    "name": "Orange épicé",
+    "flavors": [
+      "Canneberge",
+      "Cannelle",
+      "Chai",
+      "Citron",
+      "Orange"
+    ]
+  },
+  {
+    "id": 274,
+    "name": "Hot pumkin latté",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Chocolat"
+    ]
+  },
+  {
+    "id": 275,
+    "name": "Moka blanc d'automne",
+    "flavors": [
+      "Chocolat",
+      "Moka",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 276,
+    "name": "L'explosion d'automne",
+    "flavors": [
+      "Café",
+      "Chai",
+      "Chocolat",
+      "Chocolat blanc",
+      "Moka",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 277,
+    "name": "Automnale",
+    "flavors": [
+      "Chai",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 278,
+    "name": "Valerie la coquine",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 279,
+    "name": "Thé ève",
+    "flavors": [
+      "Ananas",
+      "Canneberge",
+      "Cerise",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 280,
+    "name": "Coco melon",
+    "flavors": [
+      "Concombre",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 281,
+    "name": "La poire de barbarie",
+    "flavors": [
+      "Ananas",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Poire",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 282,
+    "name": "Tango",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 283,
+    "name": "Le vertendre",
+    "flavors": [
+      "Ananas",
+      "Concombre",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 284,
+    "name": "Le dwebile",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 285,
+    "name": "Bacon de licorne",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Lime",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 286,
+    "name": "Sunset",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 287,
+    "name": "Fraise-coco",
+    "flavors": [
+      "Canneberge",
+      "Coco",
+      "Fraise",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 288,
+    "name": "Sour patch kid",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 289,
+    "name": "Cheesecake banane choco blanc (gars qui veux ca Éric)",
+    "flavors": [
+      "Banane",
+      "Chai",
+      "Chocolat",
+      "Pistache"
+    ]
+  },
+  {
+    "id": 290,
+    "name": "Taste the rainbow",
+    "flavors": [
+      "Ananas",
+      "Arc-en-ciel bonbon",
+      "Framboise",
+      "Framboise bleue",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 291,
+    "name": "Soleil couchant",
+    "flavors": [
+      "Cerise",
+      "Citron"
+    ]
+  },
+  {
+    "id": 292,
+    "name": "Bubble tea café",
+    "flavors": [
+      "Banane",
+      "Café",
+      "Chai",
+      "Coco",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 293,
+    "name": "Caramello",
+    "flavors": [
+      "Café",
+      "Caramel",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 294,
+    "name": "L'éclathé",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 295,
+    "name": "Le Hawaiian",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 296,
+    "name": "No mamus",
+    "flavors": [
+      "Citron",
+      "Framboise bleue",
+      "Melon d'eau",
+      "Poire"
+    ]
+  },
+  {
+    "id": 297,
+    "name": "Le sexy",
+    "flavors": [
+      "Concombre",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 298,
+    "name": "Les îles Hawaïenne",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Fruit du dragon",
+      "Limonade",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 299,
+    "name": "Alanis moricette",
+    "flavors": [
+      "Ananas",
+      "Canneberge",
+      "Cerise",
+      "Fraise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 300,
+    "name": "Le spécial à Rox 🩷",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 301,
+    "name": "Its raining man",
+    "flavors": [
+      "Bleuet",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 302,
+    "name": "Shrek",
+    "flavors": [
+      "Framboise bleue",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 303,
+    "name": "Long island icetea",
+    "flavors": [
+      "Citron",
+      "Limonade",
+      "Orange",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 304,
+    "name": "Pinky",
+    "flavors": [
+      "Cantaloup",
+      "Citron",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 305,
+    "name": "Black and white",
+    "flavors": [
+      "Coco",
+      "Framboise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 306,
+    "name": "Coco de pâques",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 307,
+    "name": "Baby boss",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Canneberge",
+      "Coco",
+      "Fraise",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 308,
+    "name": "Girly",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Barbe à papa",
+      "Coco",
+      "Grenade-pomme",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 309,
+    "name": "Ricky boy",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Poire"
+    ]
+  },
+  {
+    "id": 310,
+    "name": "Twizler cerise limonade",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Coco",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 311,
+    "name": "Crémeux surette",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Canneberge",
+      "Coco",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 312,
+    "name": "Chips aux cornichons",
+    "flavors": [
+      "Citron",
+      "Concombre",
+      "Lime"
+    ]
+  },
+  {
+    "id": 313,
+    "name": "Summer ends",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Banane",
+      "Cerise",
+      "Coco",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 314,
+    "name": "Van",
+    "flavors": [
+      "Citron",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 315,
+    "name": "Party de candy",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 316,
+    "name": "Pina colada VIVIANE",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Lime",
+      "Mangue",
+      "Pêche",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 317,
+    "name": "Pina colada",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Citron",
+      "Coco",
+      "Mangue",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 318,
+    "name": "Rosita",
+    "flavors": [
+      "Citron",
+      "Coco",
+      "Framboise",
+      "Fruit du dragon",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 319,
+    "name": "Princesse Jess",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 320,
+    "name": "Ça sent le printemps",
+    "flavors": [
+      "Concombre",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 321,
+    "name": "Bleu avatar",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 322,
+    "name": "Queen Summer",
+    "flavors": [
+      "Coco",
+      "Fruit du dragon",
+      "Lime",
+      "Litchi",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 323,
+    "name": "Freedom",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Framboise bleue",
+      "Kiwi",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 324,
+    "name": "Peeps",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 325,
+    "name": "Bad bunny",
+    "flavors": [
+      "Cantaloup",
+      "Framboise",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 326,
+    "name": "Pot of gold",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Lime",
+      "Orange",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 327,
+    "name": "St patrick",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 328,
+    "name": "Hasta la vista",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Pomme verte",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 329,
+    "name": "Coco la licorne 🦄",
+    "flavors": [
+      "Framboise bleue",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 330,
+    "name": "Blue avatar",
+    "flavors": [
+      "Canneberge",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 331,
+    "name": "Hot immunité",
+    "flavors": [
+      "Melon d'eau",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 332,
+    "name": "Blue océan",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Fruit de la passion",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 333,
+    "name": "L'ensoleiller",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Fruit de la passion",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 334,
+    "name": "Café chai pain d'épice",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Cannelle",
+      "Chai"
+    ]
+  },
+  {
+    "id": 335,
+    "name": "Key lime pie (thé tarte à la lime)",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Kiwi",
+      "Lime"
+    ]
+  },
+  {
+    "id": 336,
+    "name": "La grenade",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 337,
+    "name": "Passion Melon",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Fruit de la passion"
+    ]
+  },
+  {
+    "id": 338,
+    "name": "Le petit laid",
+    "flavors": [
+      "Banane",
+      "Bleuet",
+      "Canneberge",
+      "Fraise",
+      "Fruit de la passion",
+      "Lime"
+    ]
+  },
+  {
+    "id": 339,
+    "name": "Pêche et crème",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 340,
+    "name": "Infinithé",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 341,
+    "name": "The Sky",
+    "flavors": [
+      "Canneberge",
+      "Fruit du dragon",
+      "Lime",
+      "Limonade",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 342,
+    "name": "L'envouthé",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Cantaloup",
+      "Cerise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 343,
+    "name": "Angel",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 344,
+    "name": "Secouer a la canelle",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 345,
+    "name": "Secouer aux framboises",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 346,
+    "name": "Le mentholé (secoué)",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 347,
+    "name": "Rouleau aux fruits (Amour avec un grand A)",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Fraise",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 348,
+    "name": "Le fucked thé",
+    "flavors": [
+      "Barbe à papa",
+      "Fruit du dragon",
+      "Lime",
+      "Mangue",
+      "Poire"
+    ]
+  },
+  {
+    "id": 349,
+    "name": "Batman",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 350,
+    "name": "Foufounes",
+    "flavors": [
+      "Amande",
+      "Citron",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 351,
+    "name": "Infernal",
+    "flavors": [
+      "Canneberge",
+      "Coco",
+      "Framboise",
+      "Lime",
+      "Poire",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 352,
+    "name": "Scooby-doo",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Fraise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 353,
+    "name": "Coucher de soleil (le Jessie)",
+    "flavors": [
+      "Canneberge",
+      "Cantaloup",
+      "Citron",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 354,
+    "name": "Berry sexy",
+    "flavors": [
+      "Fraise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 355,
+    "name": "Refresher limonade a la pêche",
+    "flavors": [
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 356,
+    "name": "Beach party",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 357,
+    "name": "framboise des îles",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 358,
+    "name": "Tropicana +",
+    "flavors": [
+      "Framboise bleue",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 359,
+    "name": "Sunrise",
+    "flavors": [
+      "Cerise",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 360,
+    "name": "Summer passion",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Coco",
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 361,
+    "name": "Spring",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Kiwi",
+      "Lime",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 362,
+    "name": "Sex on the beach (Digestif)",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 363,
+    "name": "Raisin cinglé",
+    "flavors": [
+      "Ananas-coco",
+      "Canneberge",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 364,
+    "name": "Princesse",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 365,
+    "name": "Mojitos du dragon",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Fruit du dragon",
+      "Lime",
+      "Mûre",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 366,
+    "name": "Le free for all",
+    "flavors": [
+      "Bleuet",
+      "Citron",
+      "Lime",
+      "Limonade",
+      "Poire"
+    ]
+  },
+  {
+    "id": 367,
+    "name": "L'osti de thé",
+    "flavors": [
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 368,
+    "name": "L'indécis",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 369,
+    "name": "L'extase",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Litchi",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 370,
+    "name": "L'amateur de surette",
+    "flavors": [
+      "Canneberge",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 371,
+    "name": "Juteux mielleux",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Melon d'eau",
+      "Poire",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 372,
+    "name": "Jacobus",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 373,
+    "name": "Hubba bubba",
+    "flavors": [
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 374,
+    "name": "Harley Quinn",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose",
+      "Melon d'eau",
+      "Orange"
+    ]
+  },
+  {
+    "id": 375,
+    "name": "Fun dip",
+    "flavors": [
+      "Cerise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 376,
+    "name": "Fuego",
+    "flavors": [
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 377,
+    "name": "Flipper",
+    "flavors": [
+      "Bleuet",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert",
+      "Érable"
+    ]
+  },
+  {
+    "id": 378,
+    "name": "Dragon de couleur",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 379,
+    "name": "Dragon paradise",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Fruit du dragon",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 380,
+    "name": "Dirty red chai",
+    "flavors": [
+      "Cerise",
+      "Chai",
+      "Grenade-pomme",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 381,
+    "name": "Candy rush",
+    "flavors": [
+      "Barbe à papa",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 382,
+    "name": "Café pain d'épice",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Caramel",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 383,
+    "name": "C'était dont ben bon",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose",
+      "Melon d'eau",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 384,
+    "name": "Bueno",
+    "flavors": [
+      "Cacao",
+      "Chocolat",
+      "Noisette",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 385,
+    "name": "Boosthé",
+    "flavors": [
+      "Framboise bleue",
+      "Limonade",
+      "Limonade rose",
+      "Orange",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 386,
+    "name": "Bonbon aux cerises sure",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 387,
+    "name": "Blue Mermaid",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 388,
+    "name": "Blue Lagoon",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Framboise",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 389,
+    "name": "Bikini buttom",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise bleue",
+      "Fruit de la passion",
+      "Lime"
+    ]
+  },
+  {
+    "id": 390,
+    "name": "Berry Rush + liftoff $$",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 391,
+    "name": "Bahama Mama party punch",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Orange",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 392,
+    "name": "Baby bottle bop",
+    "flavors": [
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 393,
+    "name": "A la vacancia (DIAMANT BLEU du diamant)",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 394,
+    "name": "Cindylou",
+    "flavors": [
+      "Banane",
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 395,
+    "name": "Le ptit Hawaïen",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Coco",
+      "Mangue",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 396,
+    "name": "Hé karamba",
+    "flavors": [
+      "Banane",
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Poire"
+    ]
+  },
+  {
+    "id": 397,
+    "name": "Le Hawaïen fait la split",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Caramel",
+      "Mangue",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 398,
+    "name": "Bananaco",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Barbe à papa",
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 399,
+    "name": "La limette",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 400,
+    "name": "Caput du tim",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 401,
+    "name": "Pinky freedom",
+    "flavors": [
+      "Cerise",
+      "Lime",
+      "Limonade",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 402,
+    "name": "Le faux jessie",
+    "flavors": [
+      "Canneberge",
+      "Cantaloup",
+      "Citron",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 403,
+    "name": "Lutin",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 404,
+    "name": "La ptite surette",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 405,
+    "name": "Au chocolat ( Café sur glace)",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Moka"
+    ]
+  },
+  {
+    "id": 406,
+    "name": "Bonbon jolly rancher",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 407,
+    "name": "La petite lea",
+    "flavors": [
+      "Banane",
+      "Cerise"
+    ]
+  },
+  {
+    "id": 408,
+    "name": "Melon vert",
+    "flavors": [
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 409,
+    "name": "Turquessa réinventhe avec thé",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Orange",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 410,
+    "name": "Malibu",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Fruit du dragon",
+      "Lime",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 411,
+    "name": "Cheesecake aux fraises",
+    "flavors": [
+      "Fraise"
+    ]
+  },
+  {
+    "id": 412,
+    "name": "Pomme-Poire",
+    "flavors": [
+      "Mangue",
+      "Poire",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 413,
+    "name": "Casanova",
+    "flavors": [
+      "Framboise bleue",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 414,
+    "name": "Barbe a papa (cotton hydratant)",
+    "flavors": [
+      "Barbe à papa",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 415,
+    "name": "Jessica",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Coco",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 416,
+    "name": "Menthe latté",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Menthe"
+    ]
+  },
+  {
+    "id": 417,
+    "name": "Bananas colada",
+    "flavors": [
+      "Ananas-coco",
+      "Banane",
+      "Canneberge",
+      "Coco",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 418,
+    "name": "Blackberry bleeze",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Coco",
+      "Grenade-pomme",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 419,
+    "name": "La poire a vero",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Melon d'eau",
+      "Poire",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 420,
+    "name": "Frappucino melon",
+    "flavors": [
+      "Coco",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Matcha",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 421,
+    "name": "Croustade aux pommes",
+    "flavors": [
+      "Érable"
+    ]
+  },
+  {
+    "id": 422,
+    "name": "Blue hawaiian mai tai",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 423,
+    "name": "Étincelle de Noël",
+    "flavors": [
+      "Barbe à papa",
+      "Cerise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 424,
+    "name": "L'invention d'ailleurs",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Citron",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 425,
+    "name": "Ptit cornichon",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Concombre",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 426,
+    "name": "El karl",
+    "flavors": [
+      "Cerise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 427,
+    "name": "Pikapika",
+    "flavors": [
+      "Ananas",
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 428,
+    "name": "Café chaud",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 429,
+    "name": "Chocolat Chaud enfant",
+    "flavors": [
+      "Chocolat"
+    ]
+  },
+  {
+    "id": 430,
+    "name": "Sour cherry",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 431,
+    "name": "Ça goûte la santée",
+    "flavors": [
+      "Ananas",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Matcha",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 432,
+    "name": "Le surette a souhait",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Kiwi",
+      "Lime"
+    ]
+  },
+  {
+    "id": 433,
+    "name": "Princesse des îles",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 434,
+    "name": "Thé Karlou",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 435,
+    "name": "Bleuet surette",
+    "flavors": [
+      "Bleuet",
+      "Canneberge",
+      "Cerise",
+      "Citron",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 436,
+    "name": "Le sapin a des boules",
+    "flavors": [
+      "Ananas-coco",
+      "Arc-en-ciel bonbon",
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Litchi"
+    ]
+  },
+  {
+    "id": 437,
+    "name": "\"Le kaki Marge simpson (emprunté) (+ 2",
+    "flavors": [
+      "25$ hydratation)\"",
+      "\"ananas",
+      "Framboise",
+      "Framboise bleue",
+      "Mangue",
+      "Orange",
+      "Pêche\""
+    ]
+  },
+  {
+    "id": 438,
+    "name": "Sunkiss",
+    "flavors": [
+      "Fruit de la passion",
+      "Mangue",
+      "Orange",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 439,
+    "name": "Mp funky",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 440,
+    "name": "Chai surette",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Chai"
+    ]
+  },
+  {
+    "id": 441,
+    "name": "Le APPAME",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Kiwi",
+      "Lime",
+      "Litchi",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 442,
+    "name": "Le surette a malo",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pamplemousse"
+    ]
+  },
+  {
+    "id": 443,
+    "name": "Tartes aux pommes digestive",
+    "flavors": [
+      "Chai",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 444,
+    "name": "Starlight",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 445,
+    "name": "Thé à mély",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 446,
+    "name": "Pêche des îles",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Framboise bleue",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 447,
+    "name": "La dosette",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Gingembre",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 448,
+    "name": "Le sapristi",
+    "flavors": [
+      "Canneberge",
+      "Grenade-pomme",
+      "Kiwi",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 449,
+    "name": "La vie en rose",
+    "flavors": [
+      "Coco",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 450,
+    "name": "Mojito",
+    "flavors": [
+      "Lime",
+      "Limonade",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 451,
+    "name": "Jus pomme raisin",
+    "flavors": [
+      "Ananas-coco",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 452,
+    "name": "Pomme cerise",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 453,
+    "name": "Southern belle",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 454,
+    "name": "Snickers latté",
+    "flavors": [
+      "Banane",
+      "Café",
+      "Caramel"
+    ]
+  },
+  {
+    "id": 455,
+    "name": "Ring pop",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 456,
+    "name": "Raisin Crush",
+    "flavors": [
+      "Raisin"
+    ]
+  },
+  {
+    "id": 457,
+    "name": "Pumkin cold brew",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Chocolat blanc",
+      "Moka",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 458,
+    "name": "Proteincandy",
+    "flavors": [
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 459,
+    "name": "Princesse Aurore",
+    "flavors": [
+      "Fruit du dragon",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 460,
+    "name": "Pony",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 461,
+    "name": "Peapbop on ice",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Caramel",
+      "Coco",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 462,
+    "name": "Peapbob on ice",
+    "flavors": [
+      "Café",
+      "Caramel",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 463,
+    "name": "Passionné",
+    "flavors": [
+      "Fruit de la passion",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 464,
+    "name": "Passion Tango",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Fruit de la passion",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 465,
+    "name": "Parfait",
+    "flavors": [
+      "Ananas-coco",
+      "Canneberge",
+      "Framboise",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 466,
+    "name": "Panthère rose",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 467,
+    "name": "Orange sanguine",
+    "flavors": [
+      "Cannelle",
+      "Citron",
+      "Fraise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 468,
+    "name": "Orange crush",
+    "flavors": [
+      "Orange"
+    ]
+  },
+  {
+    "id": 469,
+    "name": "Omg c'est bon",
+    "flavors": [
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 470,
+    "name": "Ocean rose",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 471,
+    "name": "Noisetier",
+    "flavors": [
+      "Café",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 472,
+    "name": "No name à sandy",
+    "flavors": [
+      "Açaï",
+      "Fraise",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 473,
+    "name": "Nerd Digestif (Diamant)",
+    "flavors": [
+      "Melon d'eau",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 474,
+    "name": "Mom mosa",
+    "flavors": [
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 475,
+    "name": "Mokoero",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Chocolat blanc",
+      "Moka",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 476,
+    "name": "Moka blanc epicé",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Citron",
+      "Orange"
+    ]
+  },
+  {
+    "id": 477,
+    "name": "Moka",
+    "flavors": [
+      "Café",
+      "Chocolat",
+      "Moka"
+    ]
+  },
+  {
+    "id": 478,
+    "name": "Maragrita fraise",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 479,
+    "name": "Massathé (Julie masso)",
+    "flavors": [
+      "Citron",
+      "Concombre",
+      "Lime"
+    ]
+  },
+  {
+    "id": 480,
+    "name": "Marécage",
+    "flavors": [
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 481,
+    "name": "Margarita",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 482,
+    "name": "Margarita fraise mangue",
+    "flavors": [
+      "Fraise",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 483,
+    "name": "Margarita aux melon d'eau",
+    "flavors": [
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 484,
+    "name": "Margarita a la cerise",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 485,
+    "name": "Margarita aux fraises",
+    "flavors": [
+      "Concombre",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 486,
+    "name": "Mango fraise daiquiri",
+    "flavors": [
+      "Ananas-coco",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 487,
+    "name": "Mamamillaa",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 488,
+    "name": "Maléfique",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 489,
+    "name": "Machiato caramel ou autre",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 490,
+    "name": "Love potion",
+    "flavors": [
+      "Cannelle",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 491,
+    "name": "Love is in thé air",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Framboise",
+      "Grenade-pomme",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 492,
+    "name": "Meli melo",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Fraise",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 493,
+    "name": "Melon splash",
+    "flavors": [
+      "Cantaloup",
+      "Fraise",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 494,
+    "name": "Melon surette",
+    "flavors": [
+      "Canneberge",
+      "Lime",
+      "Melon d'eau",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 495,
+    "name": "Merci Christmas",
+    "flavors": [
+      "Ananas-coco",
+      "Citron",
+      "Fraise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 496,
+    "name": "Mermaid",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Framboise bleue",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 497,
+    "name": "Mermaid tail",
+    "flavors": [
+      "Citron",
+      "Framboise bleue",
+      "Limonade",
+      "Orange"
+    ]
+  },
+  {
+    "id": 498,
+    "name": "Merman",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 499,
+    "name": "Les papilles gustatives",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Pamplemousse",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 500,
+    "name": "Les caraïbes",
+    "flavors": [
+      "Cantaloup",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 501,
+    "name": "Mexicain sunset",
+    "flavors": [
+      "Amaretto",
+      "Ananas",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 502,
+    "name": "Le zombie",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 503,
+    "name": "Mister freeze",
+    "flavors": [
+      "Citron",
+      "Framboise bleue"
+    ]
+  },
+  {
+    "id": 504,
+    "name": "Le wow !",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Fraise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 505,
+    "name": "Mojitos aux baies",
+    "flavors": [
+      "Bleuet",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mûre",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 506,
+    "name": "Le verger",
+    "flavors": [
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 507,
+    "name": "Le système immunitaire",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Citron",
+      "Orange"
+    ]
+  },
+  {
+    "id": 508,
+    "name": "Le svelte",
+    "flavors": [
+      "Cerise"
+    ]
+  },
+  {
+    "id": 509,
+    "name": "Mountain Dew",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 510,
+    "name": "Mûre cinglé",
+    "flavors": [
+      "Canneberge",
+      "Coco",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 511,
+    "name": "Nerds",
+    "flavors": [
+      "Framboise",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 512,
+    "name": "Ninja",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 513,
+    "name": "Ninja turtle",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 514,
+    "name": "No name/roxx",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 515,
+    "name": "Océan breeze",
+    "flavors": [
+      "Citron",
+      "Concombre",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 516,
+    "name": "Orangine (Diamant)",
+    "flavors": [
+      "Orange"
+    ]
+  },
+  {
+    "id": 517,
+    "name": "Panama",
+    "flavors": [
+      "Fruit de la passion",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 518,
+    "name": "Party melon",
+    "flavors": [
+      "Ananas",
+      "Cantaloup",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 519,
+    "name": "P'tite cerise sure",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Cerise",
+      "Fraise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 520,
+    "name": "Passion razzz",
+    "flavors": [
+      "Framboise",
+      "Fruit de la passion",
+      "Lime"
+    ]
+  },
+  {
+    "id": 521,
+    "name": "Peanut butter jelly time",
+    "flavors": [
+      "Fraise",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 522,
+    "name": "Pêche Sexy",
+    "flavors": [
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 523,
+    "name": "Petite baie des champs",
+    "flavors": [
+      "Bleuet",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 524,
+    "name": "Pina Melon",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Lime",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 525,
+    "name": "Pinapple kiss",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Coco",
+      "Grenade-pomme",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 526,
+    "name": "Pinochio",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 527,
+    "name": "Playa",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Framboise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 528,
+    "name": "Pomme Caramel",
+    "flavors": [
+      "Cannelle",
+      "Caramel"
+    ]
+  },
+  {
+    "id": 529,
+    "name": "Pomme Colada",
+    "flavors": [
+      "Ananas-coco",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 530,
+    "name": "Pomme sur (Diamant)",
+    "flavors": [
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 531,
+    "name": "Popsicle orange",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 532,
+    "name": "Pornstar",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 533,
+    "name": "Princesse Poppy",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Fruit du dragon",
+      "Mangue",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 534,
+    "name": "Prune",
+    "flavors": [
+      "Ananas",
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 535,
+    "name": "Ptit bonheur à vicky",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 536,
+    "name": "Punch ananas",
+    "flavors": [
+      "Ananas",
+      "Lime",
+      "Mangue",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 537,
+    "name": "Punch citronné",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Limonade",
+      "Orange"
+    ]
+  },
+  {
+    "id": 538,
+    "name": "Purple rain",
+    "flavors": [
+      "Citron",
+      "Grenade-pomme",
+      "Lime",
+      "Mûre",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 539,
+    "name": "Raisin colada",
+    "flavors": [
+      "Ananas-coco",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 540,
+    "name": "Rasta",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 541,
+    "name": "Razz passion",
+    "flavors": [
+      "Framboise",
+      "Fruit de la passion",
+      "Lime"
+    ]
+  },
+  {
+    "id": 542,
+    "name": "Requin",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 543,
+    "name": "Rocket",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Orange",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 544,
+    "name": "Rouleau aux fruits",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Melon d'eau",
+      "Orange"
+    ]
+  },
+  {
+    "id": 545,
+    "name": "Sac à bonbon",
+    "flavors": [
+      "Citron",
+      "Melon d'eau",
+      "Orange",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 546,
+    "name": "Sangria canneberge",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 547,
+    "name": "Shake au baies",
+    "flavors": [
+      "Bleuet",
+      "Fraise",
+      "Framboise",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 548,
+    "name": "Shark bite",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 549,
+    "name": "Skittle Arc en ciel",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Citron",
+      "Fraise",
+      "Fruit de la passion",
+      "Orange"
+    ]
+  },
+  {
+    "id": 550,
+    "name": "Skittle's",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 551,
+    "name": "Soirée d'fille",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 552,
+    "name": "Sour poush",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 553,
+    "name": "Sous l'océan",
+    "flavors": [
+      "Açaï",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 554,
+    "name": "Splash framboise",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 555,
+    "name": "Spring fever",
+    "flavors": [
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 556,
+    "name": "Spring fling",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Grenade-pomme",
+      "Kiwi",
+      "Lime"
+    ]
+  },
+  {
+    "id": 557,
+    "name": "St jean ou Schtroumpf",
+    "flavors": [
+      "Bleuet",
+      "Chocolat",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 558,
+    "name": "Starbust",
+    "flavors": [
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 559,
+    "name": "Stroumph",
+    "flavors": [
+      "Bleuet",
+      "Citron",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 560,
+    "name": "Summer dream",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 561,
+    "name": "Sunnyrise",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mangue",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 562,
+    "name": "Super mom",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Lime",
+      "Melon d'eau",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 563,
+    "name": "Superman (Captaine América DIAMANT)",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 564,
+    "name": "Le surette",
+    "flavors": [
+      "Citron",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 565,
+    "name": "Le sublime",
+    "flavors": [
+      "Cantaloup",
+      "Concombre",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 566,
+    "name": "Le rosé",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Lime",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 567,
+    "name": "Le ptit irlandais (secoué) extra $ crème fouetté",
+    "flavors": [
+      "Café",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 568,
+    "name": "Le ptit coeur a la canelle",
+    "flavors": [
+      "Cannelle"
+    ]
+  },
+  {
+    "id": 569,
+    "name": "Thé sympathique",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Framboise",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 570,
+    "name": "Le namasthé 20 oz",
+    "flavors": [
+      "Citron"
+    ]
+  },
+  {
+    "id": 571,
+    "name": "Le latté (secoué)",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 572,
+    "name": "Tiana",
+    "flavors": [
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 573,
+    "name": "Le gummi",
+    "flavors": [
+      "Canneberge",
+      "Grenade-pomme",
+      "Lime",
+      "Pêche",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 574,
+    "name": "Le farmer",
+    "flavors": [
+      "Cerise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 575,
+    "name": "Tiramisu",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 576,
+    "name": "Le canelle",
+    "flavors": [
+      "Cannelle",
+      "Pomme verte",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 577,
+    "name": "Le bobi",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Citron",
+      "Fraise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 578,
+    "name": "Le Tiramisu",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 579,
+    "name": "Le Simone",
+    "flavors": [
+      "Citron",
+      "Concombre"
+    ]
+  },
+  {
+    "id": 580,
+    "name": "Totaly Spice",
+    "flavors": [
+      "Ananas-coco",
+      "Cantaloup",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 581,
+    "name": "Le Shawny",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 582,
+    "name": "Le Diamant",
+    "flavors": [
+      "Banane",
+      "Framboise",
+      "Framboise bleue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 583,
+    "name": "Le Coco style",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 584,
+    "name": "Tropical",
+    "flavors": [
+      "Ananas",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 585,
+    "name": "Lavande de Sarah",
+    "flavors": [
+      "Ananas-coco",
+      "Bleuet",
+      "Citron",
+      "Lavande",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 586,
+    "name": "Lait de poule",
+    "flavors": [
+      "Cannelle",
+      "Rhum",
+      "Érable"
+    ]
+  },
+  {
+    "id": 587,
+    "name": "Turtle",
+    "flavors": [
+      "Caramel",
+      "Chocolat"
+    ]
+  },
+  {
+    "id": 588,
+    "name": "Lagon au citron",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 589,
+    "name": "Twist thé",
+    "flavors": [
+      "Banane",
+      "Citron",
+      "Coco",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 590,
+    "name": "La vomissure a valerie",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pamplemousse",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 591,
+    "name": "Valerie l'a Ben aimé",
+    "flavors": [
+      "Cerise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 592,
+    "name": "La sangria immunitaire",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Orange",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 593,
+    "name": "Valerie la surette",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Pamplemousse"
+    ]
+  },
+  {
+    "id": 594,
+    "name": "La salade de fruit",
+    "flavors": [
+      "Cerise",
+      "Lime",
+      "Poire",
+      "Pêche",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 595,
+    "name": "La petite sirène",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 596,
+    "name": "Vamos a la playa",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 597,
+    "name": "Vanillo",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 598,
+    "name": "La papaya",
+    "flavors": [
+      "Mangue",
+      "Orange",
+      "Papaye",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 599,
+    "name": "La belle",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Cerise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 600,
+    "name": "Vibe (20 oz seulement)",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 601,
+    "name": "L'orange de la Floride",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 602,
+    "name": "L'oasis",
+    "flavors": [
+      "Cerise",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 603,
+    "name": "L'irlandais",
+    "flavors": [
+      "Café",
+      "Moka"
+    ]
+  },
+  {
+    "id": 604,
+    "name": "Vino",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 605,
+    "name": "L'expresso",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 606,
+    "name": "Violette",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 607,
+    "name": "Viva la papaya",
+    "flavors": [
+      "Ananas-coco",
+      "Lime",
+      "Mangue",
+      "Papaye",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 608,
+    "name": "L'exotique (Diamant)",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Limonade",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 609,
+    "name": "Winnie l'ourson",
+    "flavors": [
+      "Banane",
+      "Canneberge",
+      "Cerise",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 610,
+    "name": "L'athlétisme",
+    "flavors": [
+      "Gingembre",
+      "Matcha"
+    ]
+  },
+  {
+    "id": 611,
+    "name": "Wonderwoman",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 612,
+    "name": "Key west",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Orange",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 613,
+    "name": "yummy",
+    "flavors": [
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 614,
+    "name": "Ken",
+    "flavors": [
+      "Bleuet",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 615,
+    "name": "Jujubes",
+    "flavors": [
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 616,
+    "name": "Jujube",
+    "flavors": [
+      "Cerise",
+      "Citron"
+    ]
+  },
+  {
+    "id": 617,
+    "name": "Jolly rancher au melon d'eau surette",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 618,
+    "name": "Island beach",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 619,
+    "name": "Jelly beans",
+    "flavors": [
+      "Fraise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 620,
+    "name": "Iron man",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Grenade-pomme",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 621,
+    "name": "Infinity",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Barbe à papa",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 622,
+    "name": "Immunidigest + Fibres $$",
+    "flavors": [
+      "Cantaloup",
+      "Concombre",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 623,
+    "name": "Jamaica freezer",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Banane",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 624,
+    "name": "Îles turquoise",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 625,
+    "name": "Îles fidji",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Coco",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 626,
+    "name": "Hurricanes cocktail",
+    "flavors": [
+      "Citron",
+      "Fruit de la passion",
+      "Lime",
+      "Orange",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 627,
+    "name": "Hulk",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 628,
+    "name": "Cooler aux fraises",
+    "flavors": [
+      "Concombre",
+      "Fraise",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 629,
+    "name": "Cassis lover",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 630,
+    "name": "Horimiya",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Lime",
+      "Mangue",
+      "Pamplemousse",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 631,
+    "name": "Tuti fruty",
+    "flavors": [
+      "Banane",
+      "Fraise",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 632,
+    "name": "Holly molly macaronis",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 633,
+    "name": "Hocus pocus",
+    "flavors": [
+      "Mangue",
+      "Orange",
+      "Pêche",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 634,
+    "name": "Hakuna Matata",
+    "flavors": [
+      "Canneberge",
+      "Cantaloup",
+      "Citron",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 635,
+    "name": "Gummy bear",
+    "flavors": [
+      "Cerise",
+      "Citron"
+    ]
+  },
+  {
+    "id": 636,
+    "name": "Gueule de bois  + extra liftoff et collagène",
+    "flavors": [
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 637,
+    "name": "Grinch",
+    "flavors": [
+      "Ananas",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 638,
+    "name": "Goute l'arc en ciel",
+    "flavors": [
+      "Ananas",
+      "Arc-en-ciel bonbon",
+      "Framboise bleue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 639,
+    "name": "Good vibe",
+    "flavors": [
+      "Framboise bleue",
+      "Lavande",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 640,
+    "name": "Gomme raisin",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 641,
+    "name": "\"Galaxy + 2",
+    "flavors": [
+      "25$ collagène\"",
+      "\"grenade-pomme",
+      "Lime",
+      "Raisin\""
+    ]
+  },
+  {
+    "id": 642,
+    "name": "Fuzzy peach",
+    "flavors": [
+      "Lime",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 643,
+    "name": "Funky",
+    "flavors": [
+      "Canneberge",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 644,
+    "name": "Fun party",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 645,
+    "name": "Fruits en folie",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Limonade",
+      "Melon d'eau",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 646,
+    "name": "Froot loops",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 647,
+    "name": "Frapucinno barbie",
+    "flavors": [
+      "Framboise",
+      "Fruit du dragon",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 648,
+    "name": "Fraisinette",
+    "flavors": [
+      "Fraise",
+      "Lime",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 649,
+    "name": "Fraise Kiwi",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Limonade",
+      "Limonade rose",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 650,
+    "name": "Fraise banane (Diamant)",
+    "flavors": [
+      "Banane",
+      "Fraise",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 651,
+    "name": "Fraise acai",
+    "flavors": [
+      "Açaï",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 652,
+    "name": "Fraise acaï",
+    "flavors": [
+      "Açaï",
+      "Canneberge",
+      "Fraise",
+      "Framboise",
+      "Lime"
+    ]
+  },
+  {
+    "id": 653,
+    "name": "Fluffy",
+    "flavors": [
+      "Framboise",
+      "Fruit de la passion",
+      "Lime",
+      "Limonade",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 654,
+    "name": "Flamand rose",
+    "flavors": [
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade",
+      "Limonade rose"
+    ]
+  },
+  {
+    "id": 655,
+    "name": "Fiesta",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Fruit de la passion",
+      "Limonade",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 656,
+    "name": "Feeling peach",
+    "flavors": [
+      "Fruit de la passion",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 657,
+    "name": "Expression agrumes",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Mangue",
+      "Orange",
+      "Pamplemousse"
+    ]
+  },
+  {
+    "id": 658,
+    "name": "Érable et noix (secoué)",
+    "flavors": [
+      "Café",
+      "Érable"
+    ]
+  },
+  {
+    "id": 659,
+    "name": "Ensoleillé",
+    "flavors": [
+      "Ananas-coco",
+      "Coco",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 660,
+    "name": "Éléphant rose",
+    "flavors": [
+      "Coco",
+      "Fraise",
+      "Framboise",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Limonade",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 661,
+    "name": "Dream catcher",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Framboise bleue",
+      "Kiwi",
+      "Lime",
+      "Orange"
+    ]
+  },
+  {
+    "id": 662,
+    "name": "Dragonite",
+    "flavors": [
+      "Fruit du dragon",
+      "Lime",
+      "Pêche",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 663,
+    "name": "Drago mango",
+    "flavors": [
+      "Fruit du dragon",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 664,
+    "name": "Digestitropical extra $$ lait et liftoff",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 665,
+    "name": "Diamant noir",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 666,
+    "name": "Dancing queen",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Kiwi",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 667,
+    "name": "Cupidon",
+    "flavors": [
+      "Ananas-coco",
+      "Canneberge",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 668,
+    "name": "Cupcake au bleuet",
+    "flavors": [
+      "Bleuet",
+      "Chocolat"
+    ]
+  },
+  {
+    "id": 669,
+    "name": "Crépuscule",
+    "flavors": [
+      "Canneberge",
+      "Cerise",
+      "Framboise bleue",
+      "Lime",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 670,
+    "name": "Crème soda",
+    "flavors": [
+      "Citron"
+    ]
+  },
+  {
+    "id": 671,
+    "name": "Crème de caramel",
+    "flavors": [
+      "Caramel"
+    ]
+  },
+  {
+    "id": 672,
+    "name": "Crayon melon",
+    "flavors": [
+      "Cantaloup",
+      "Lime",
+      "Melon d'eau",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 673,
+    "name": "Cotton candy",
+    "flavors": [
+      "Barbe à papa",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 674,
+    "name": "Coco Banane + $ the",
+    "flavors": [
+      "Ananas-coco",
+      "Banane",
+      "Coco",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 675,
+    "name": "Coco anano",
+    "flavors": [
+      "Ananas",
+      "Coco",
+      "Lime",
+      "Limonade",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 676,
+    "name": "Chocolat chaud",
+    "flavors": [
+      "Chocolat",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 677,
+    "name": "Choco fraise",
+    "flavors": [
+      "Chocolat",
+      "Fraise"
+    ]
+  },
+  {
+    "id": 678,
+    "name": "Cheesecake épicé",
+    "flavors": [
+      "Cannelle"
+    ]
+  },
+  {
+    "id": 679,
+    "name": "Charizard",
+    "flavors": [
+      "Ananas",
+      "Fraise",
+      "Fraise-kiwi",
+      "Kiwi",
+      "Orange",
+      "Pamplemousse",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 680,
+    "name": "Chai latté",
+    "flavors": [
+      "Café",
+      "Cannelle",
+      "Chai",
+      "Érable"
+    ]
+  },
+  {
+    "id": 681,
+    "name": "Chai",
+    "flavors": [
+      "Cannelle",
+      "Chai",
+      "Vanille",
+      "Érable"
+    ]
+  },
+  {
+    "id": 682,
+    "name": "Cassonade et cannelle (secoué)",
+    "flavors": [
+      "Café",
+      "Cannelle"
+    ]
+  },
+  {
+    "id": 683,
+    "name": "Casse noisette",
+    "flavors": [
+      "Café",
+      "Noisette",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 684,
+    "name": "Casper",
+    "flavors": [
+      "Ananas-coco",
+      "Bleuet",
+      "Coco",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 685,
+    "name": "Caramel latté (salé)",
+    "flavors": [
+      "Café",
+      "Caramel",
+      "Caramel salé",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 686,
+    "name": "Candy apple colada",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Citron",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 687,
+    "name": "Café cold brew Aux pommes",
+    "flavors": [
+      "Amande",
+      "Café",
+      "Noisette",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 688,
+    "name": "Café brioché",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 689,
+    "name": "bunny tail colada",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Barbe à papa",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 690,
+    "name": "Bunny tail",
+    "flavors": [
+      "Barbe à papa",
+      "Canneberge",
+      "Coco"
+    ]
+  },
+  {
+    "id": 691,
+    "name": "Bunny hop",
+    "flavors": [
+      "Ananas",
+      "Barbe à papa",
+      "Citron",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 692,
+    "name": "Bubble yummy",
+    "flavors": [
+      "Grenade-pomme",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 693,
+    "name": "Bubble gum",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Limonade",
+      "Limonade rose",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 694,
+    "name": "Boss Babe",
+    "flavors": [
+      "Citron",
+      "Fraise",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 695,
+    "name": "Bonbon melon d'eau",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 696,
+    "name": "bonbon dragon",
+    "flavors": [
+      "Barbe à papa",
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 697,
+    "name": "Bonbon aux pêche (L'extrem aux pêches Diamant)",
+    "flavors": [
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 698,
+    "name": "Bonbon arc en ciel",
+    "flavors": [
+      "Ananas-coco",
+      "Arc-en-ciel bonbon",
+      "Citron",
+      "Framboise bleue",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 699,
+    "name": "Bonbon a cannelle",
+    "flavors": [
+      "Ananas-coco",
+      "Canneberge",
+      "Cannelle",
+      "Framboise",
+      "Orange"
+    ]
+  },
+  {
+    "id": 700,
+    "name": "Bomb pop",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 701,
+    "name": "Boca amora",
+    "flavors": [
+      "Citron",
+      "Lime",
+      "Limonade",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 702,
+    "name": "Blue coconut",
+    "flavors": [
+      "Ananas-coco",
+      "Citron",
+      "Coco",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 703,
+    "name": "Bleue Lavande 20 oz",
+    "flavors": [
+      "Bleuet",
+      "Bleuet-lavande",
+      "Framboise",
+      "Lavande"
+    ]
+  },
+  {
+    "id": 704,
+    "name": "Bleu océan",
+    "flavors": [
+      "Citron",
+      "Coco",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 705,
+    "name": "Blackberry bliss",
+    "flavors": [
+      "Ananas",
+      "Bleuet",
+      "Mûre",
+      "Orange"
+    ]
+  },
+  {
+    "id": 706,
+    "name": "Black Pearl",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 707,
+    "name": "Black pantheres",
+    "flavors": [
+      "Framboise",
+      "Lime",
+      "Limonade",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 708,
+    "name": "Biscottie",
+    "flavors": [
+      "Amande",
+      "Café"
+    ]
+  },
+  {
+    "id": 709,
+    "name": "Beurre de pacane",
+    "flavors": [
+      "Caramel"
+    ]
+  },
+  {
+    "id": 710,
+    "name": "Beauty bubble gum",
+    "flavors": [
+      "Barbe à papa",
+      "Framboise bleue",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 711,
+    "name": "Beach please",
+    "flavors": [
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Melon d'eau"
+    ]
+  },
+  {
+    "id": 712,
+    "name": "Beach Bum",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Coco",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 713,
+    "name": "Bbq party",
+    "flavors": [
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 714,
+    "name": "Barbie girl",
+    "flavors": [
+      "Ananas-coco",
+      "Arc-en-ciel bonbon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 715,
+    "name": "Barbie",
+    "flavors": [
+      "Fraise",
+      "Framboise",
+      "Fruit du dragon",
+      "Lime"
+    ]
+  },
+  {
+    "id": 716,
+    "name": "Barbe a papa",
+    "flavors": [
+      "Barbe à papa",
+      "Guimauve",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 717,
+    "name": "Banana Spritz (Digestif)",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Citron",
+      "Orange"
+    ]
+  },
+  {
+    "id": 718,
+    "name": "Banana Mama roma",
+    "flavors": [
+      "Banane",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 719,
+    "name": "Baies givrés",
+    "flavors": [
+      "Bleuet",
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 720,
+    "name": "Baies des champs",
+    "flavors": [
+      "Bleuet",
+      "Fraise",
+      "Framboise",
+      "Lime",
+      "Mûre"
+    ]
+  },
+  {
+    "id": 721,
+    "name": "Autumn harvest",
+    "flavors": [
+      "Canneberge",
+      "Citron",
+      "Grenade-pomme",
+      "Lime",
+      "Limonade"
+    ]
+  },
+  {
+    "id": 722,
+    "name": "Auquaman",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 723,
+    "name": "Au caramel salé (Café sur glace)",
+    "flavors": [
+      "Café",
+      "Caramel",
+      "Caramel salé"
+    ]
+  },
+  {
+    "id": 724,
+    "name": "Arc en ciel",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime"
+    ]
+  },
+  {
+    "id": 725,
+    "name": "Aquarium",
+    "flavors": [
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 726,
+    "name": "Aquagon",
+    "flavors": [
+      "Framboise bleue",
+      "Fruit du dragon",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 727,
+    "name": "Aqua sur",
+    "flavors": [
+      "Framboise",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 728,
+    "name": "Apple blossom",
+    "flavors": [
+      "Ananas-coco",
+      "Framboise",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Lime",
+      "Pomme verte"
+    ]
+  },
+  {
+    "id": 729,
+    "name": "Anarise",
+    "flavors": [
+      "Ananas",
+      "Cerise",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 730,
+    "name": "Ananas fandago",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Mangue",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 731,
+    "name": "Ananas bleue",
+    "flavors": [
+      "Ananas",
+      "Framboise",
+      "Lime",
+      "Mangue",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 732,
+    "name": "Amazing litchi",
+    "flavors": [
+      "Ananas-coco",
+      "Framboise",
+      "Fruit du dragon",
+      "Lime",
+      "Limonade",
+      "Litchi",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 733,
+    "name": "Amandine latté (secoué)",
+    "flavors": [
+      "Amande",
+      "Café"
+    ]
+  },
+  {
+    "id": 734,
+    "name": "Amaretto sour",
+    "flavors": [
+      "Amaretto",
+      "Lime",
+      "Limonade",
+      "Rhum"
+    ]
+  },
+  {
+    "id": 735,
+    "name": "Amaretto honey",
+    "flavors": [
+      "Amaretto",
+      "Ananas",
+      "Canneberge",
+      "Citron",
+      "Lime",
+      "Mangue",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 736,
+    "name": "Amandine",
+    "flavors": [
+      "Amande",
+      "Chocolat",
+      "Coco"
+    ]
+  },
+  {
+    "id": 737,
+    "name": "Aloha",
+    "flavors": [
+      "Citron",
+      "Framboise",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 738,
+    "name": "Aie aie aie",
+    "flavors": [
+      "Fraise",
+      "Fraise-kiwi",
+      "Framboise",
+      "Kiwi",
+      "Lime",
+      "Raisin"
+    ]
+  },
+  {
+    "id": 739,
+    "name": "A la vanille  (café sur glace)",
+    "flavors": [
+      "Café",
+      "Vanille"
+    ]
+  },
+  {
+    "id": 740,
+    "name": "À la noisette (Café sur glace)",
+    "flavors": [
+      "Café",
+      "Noisette"
+    ]
+  },
+  {
+    "id": 741,
+    "name": "À la framboises ou bleuets (Café sur glace)",
+    "flavors": [
+      "Bleuet",
+      "Café",
+      "Framboise"
+    ]
+  },
+  {
+    "id": 742,
+    "name": "À la cannelle (café sur glace)",
+    "flavors": [
+      "Café"
+    ]
+  },
+  {
+    "id": 743,
+    "name": "Maynard Coco la-the",
+    "flavors": [
+      "Cerise",
+      "Citron",
+      "Limonade",
+      "Orange"
+    ]
+  },
+  {
+    "id": 744,
+    "name": "Le tropical (Diamant)",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Cantaloup",
+      "Melon d'eau",
+      "Orange"
+    ]
+  },
+  {
+    "id": 745,
+    "name": "Ariel",
+    "flavors": [
+      "Bleuet",
+      "Framboise",
+      "Grenade-pomme",
+      "Orange"
+    ]
+  },
+  {
+    "id": 746,
+    "name": "L'Irlande",
+    "flavors": [
+      "Bleuet",
+      "Mangue",
+      "Melon d'eau",
+      "Orange",
+      "Pomme verte",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 747,
+    "name": "Bob marley",
+    "flavors": [
+      "Ananas",
+      "Framboise bleue",
+      "Grenade-pomme",
+      "Melon d'eau",
+      "Orange"
+    ]
+  },
+  {
+    "id": 748,
+    "name": "Fun and fresh",
+    "flavors": [
+      "Framboise",
+      "Fruit de la passion",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 749,
+    "name": "Mellow yellow",
+    "flavors": [
+      "Ananas",
+      "Banane",
+      "Grenade-pomme",
+      "Mangue",
+      "Orange"
+    ]
+  },
+  {
+    "id": 750,
+    "name": "Thomas",
+    "flavors": [
+      "Ananas-coco",
+      "Framboise",
+      "Framboise bleue",
+      "Lime",
+      "Raisin",
+      "Raisin vert"
+    ]
+  },
+  {
+    "id": 751,
+    "name": "Plage de sable",
+    "flavors": [
+      "Framboise bleue",
+      "Lime",
+      "Orange",
+      "Pêche"
+    ]
+  },
+  {
+    "id": 752,
+    "name": "Feel l'océan",
+    "flavors": [
+      "Ananas",
+      "Ananas-coco",
+      "Citron",
+      "Lime"
+    ]
+  },
+  {
+    "id": 753,
+    "name": "Bonbon sur",
+    "flavors": [
+      "Arc-en-ciel bonbon",
+      "Framboise",
+      "Framboise bleue",
+      "Lime"
+    ]
+  },
+  {
+    "id": 754,
+    "name": "Hot mamacita",
+    "flavors": [
+      "Cerise",
+      "Framboise",
+      "Melon d'eau",
+      "Orange"
+    ]
+  },
+  {
+    "id": 755,
+    "name": "Popscle a la banane",
+    "flavors": [
+      "Ananas-coco",
+      "Banane",
+      "Grenade-pomme",
+      "Lime",
+      "Mangue"
+    ]
+  },
+  {
+    "id": 756,
+    "name": "Le p'tit bonheur a vicky",
+    "flavors": [
+      "Ananas-coco",
+      "Cerise",
+      "Lime",
+      "Pêche"
+    ]
+  }
+]
