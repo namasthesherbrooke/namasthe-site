@@ -4,14 +4,14 @@ import { useState, useMemo } from 'react';
 import recipesData from '../data/recipes.json';
 
 const BASES = [
-  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [] },
-  { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga thé', 'Megathe', 'Lotus', 'Mindblow', 'Simplicithé', 'Thé'] },
-  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol'] },
-  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'] },
-  { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné'] },
-  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Moka', 'Expresso', 'Cappucino'] },
-  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'] },
-  { id: 'slush', label: 'Slush', icon: '🍧', keywords: ['Slush'] }
+  { id: 'tous', label: 'Surprenez-moi !', icon: '🎲', keywords: [], excludes: [] },
+  { id: 'the', label: 'Thé', icon: '🧋', keywords: ['Méga', 'Mega', 'Lotus', 'Mindblow', 'Simplicithé', 'Simplicithe', 'Réinventhé', 'Reinventhe', 'Immunithé', 'Immunithe', ' Thé', 'Thé '], excludes: ['Fruithé', 'Fruite'] },
+  { id: 'fruite', label: 'Fruithé', icon: '🍓', keywords: ['Fruithé', 'Fruité', 'Smoothie', 'Bol'], excludes: [] },
+  { id: 'limonade', label: 'Limonade', icon: '🍋', keywords: ['Limonade', 'Citron'], excludes: [] },
+  { id: 'shake', label: 'Shake', icon: '🥛', keywords: ['Shake', 'Protéiné', 'Proteine'], excludes: [] },
+  { id: 'cafe', label: 'Café', icon: '☕', keywords: ['Café', 'Cafe', 'Moka', 'Expresso', 'Cappucino', 'Coffee'], excludes: [] },
+  { id: 'matcha', label: 'Matcha', icon: '🍵', keywords: ['Matcha'], excludes: [] },
+  { id: 'slush', label: 'Slush', icon: '🍧', keywords: ['Slush'], excludes: [] }
 ];
 
 // Extraction de toutes les saveurs uniques triées alphabétiquement (sauf les bases explicites)
@@ -35,7 +35,12 @@ export default function BeverageRecommender() {
           recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
           selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase()));
           
-        if (!hasBaseKeyword) return false;
+        const hasExcludedKeyword = selectedBase.excludes && selectedBase.excludes.length > 0 && (
+          recipe.flavors.some(f => selectedBase.excludes.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
+          selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase()))
+        );
+
+        if (!hasBaseKeyword || hasExcludedKeyword) return false;
       }
 
       // 2. Filtrer par saveurs incluses (doit contenir TOUTES les saveurs incluses)
