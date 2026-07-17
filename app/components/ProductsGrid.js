@@ -190,6 +190,14 @@ export default function ProductsGrid({ items, type }) {
             </div>
             <div className="product-card-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <h3 style={{ fontSize: '1.45rem', marginBottom: '8px', lineHeight: '1.3', textAlign: 'center' }}>{item.name}</h3>
+              {item.desc && item.desc !== 'Aucune description disponible.' && (
+                <p style={{ 
+                  fontSize: '0.9rem', color: '#666', textAlign: 'center', marginBottom: '15px', 
+                  display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' 
+                }}>
+                  {item.desc}
+                </p>
+              )}
               <button 
                 className="product-card-btn"
                 onClick={() => setSelectedProduct({ ...item, index: i })}

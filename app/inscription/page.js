@@ -38,7 +38,7 @@ export default function InscriptionPage() {
     { valeur: '10', nom: 'Octobre' }, { valeur: '11', nom: 'Novembre' }, { valeur: '12', nom: 'Décembre' }
   ];
   const currentYear = new Date().getFullYear();
-  const annees = Array.from({ length: 100 }, (_, i) => currentYear - i);
+  const annees = Array.from({ length: 100 }, (_, i) => currentYear - 18 - i);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,6 +146,16 @@ export default function InscriptionPage() {
 
             {error && <div style={{ background: '#FDECEA', color: '#D32F2F', padding: '12px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>{error}</div>}
 
+            <div style={{ background: '#FFF0F5', border: '1px solid var(--crimson)', padding: '20px', borderRadius: '12px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#2C1810', marginBottom: '12px', textAlign: 'center', fontWeight: 'bold' }}>En créant ton compte, tu reçois :</h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '1rem', color: '#5A4A42', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
+                <li>🎁 Ton breuvage d'anniversaire</li>
+                <li>✨ Des offres VIP</li>
+                <li>🌸 Un code de bienvenue de 10 %</li>
+                <li>📱 Tes points et récompenses au même endroit</li>
+              </ul>
+            </div>
+
             <div className="form-grid">
               <div className="form-group">
                 <label htmlFor="prenom">Prénom</label>
@@ -177,8 +187,8 @@ export default function InscriptionPage() {
                 <input type="email" id="signup-email" name="email" placeholder="votre@email.com" value={formData.email} onChange={handleChange} required />
               </div>
               <div className="form-group">
-                <label htmlFor="telephone">Numéro de téléphone</label>
-                <input type="tel" id="telephone" name="telephone" placeholder="Ex: 819-123-4567" value={formData.telephone} onChange={handleChange} required />
+                <label htmlFor="telephone">Numéro de téléphone {formData.preference_contact !== 'texto' && <span style={{ color: '#888', fontWeight: 'normal', fontSize: '0.85em' }}>(Optionnel)</span>}</label>
+                <input type="tel" id="telephone" name="telephone" placeholder="Ex: 819-123-4567" value={formData.telephone} onChange={handleChange} required={formData.preference_contact === 'texto'} />
               </div>
               <div className="form-group">
                 <label htmlFor="signup-password">Mot de passe</label>
@@ -196,11 +206,11 @@ export default function InscriptionPage() {
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="codePostal">Nom de la ville</label>
-                <input type="text" id="codePostal" name="codePostal" placeholder="Ex: Sherbrooke (optionnel)" value={formData.codePostal} onChange={handleChange} />
+                <label htmlFor="codePostal">Nom de la ville <span style={{ color: '#888', fontWeight: 'normal', fontSize: '0.85em' }}>(Optionnel)</span></label>
+                <input type="text" id="codePostal" name="codePostal" placeholder="Ex: Sherbrooke" value={formData.codePostal} onChange={handleChange} />
               </div>
               <div className="form-group full">
-                <label htmlFor="source">Comment avez-vous découvert Namasthé ?</label>
+                <label htmlFor="source">Comment avez-vous découvert Namasthé ? <span style={{ color: '#888', fontWeight: 'normal', fontSize: '0.85em' }}>(Optionnel)</span></label>
                 <select id="source" name="source" value={formData.source} onChange={handleChange}>
                   <option value="">Sélectionnez...</option>
                   <option value="reseaux">Réseaux sociaux</option>

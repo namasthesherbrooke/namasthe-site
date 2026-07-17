@@ -1,6 +1,4 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 export const metadata = {
   title: 'Politique de Confidentialité | Café Namasthé',
@@ -10,7 +8,6 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <div style={{ background: '#fdfcfb', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
       
       <main style={{ flex: 1, padding: '120px 20px 60px', fontFamily: 'var(--font-body)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', background: 'white', padding: '40px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
@@ -74,8 +71,6 @@ export default function PrivacyPolicyPage() {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }

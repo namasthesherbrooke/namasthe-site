@@ -122,7 +122,7 @@ export default function Home() {
           </div>
 
           {/* Titre principal du site (h1 unique pour le SEO) */}
-          <h1>Bienvenue au Café Namasthé.</h1>
+          <h1>Le café santé coloré et gourmand de Sherbrooke</h1>
 
           {/* BANNER VACANCES */}
           <div style={{ background: '#FFC107', color: '#2C1810', padding: '15px 24px', borderRadius: '12px', fontWeight: 'bold', fontSize: '1.15rem', marginBottom: '24px', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '2px solid rgba(255,255,255,0.5)' }}>
@@ -130,7 +130,7 @@ export default function Home() {
           </div>
 
           <p>
-          Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l'esprit s'accorde avec une énergie vibrante. Que vous veniez pour un café de spécialité ou une pause suspendue, infusez votre journée de bonnes ondes et de lumière !
+          Bubble teas, breuvages énergisants, shakes protéinés, cafés, matchas et créations personnalisées sans sucre ajouté.
           </p>
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '32px', flexWrap: 'wrap' }}>
@@ -160,7 +160,7 @@ export default function Home() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
           {/* Produit 1 */}
-          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+          <Link href="/commande" style={{ textDecoration: 'none', display: 'block', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
             <div style={{ height: '220px', overflow: 'hidden' }}>
               <img src="/images/products/Bubble tea.jpeg" alt="Bubble Tea" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
@@ -168,9 +168,9 @@ export default function Home() {
               <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Bubble Tea Signature</h3>
               <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 6.50 $</p>
             </div>
-          </div>
+          </Link>
           {/* Produit 2 */}
-          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+          <Link href="/commande" style={{ textDecoration: 'none', display: 'block', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
             <div style={{ height: '220px', overflow: 'hidden' }}>
               <img src="/images/products/Matcha glace.jpeg" alt="Matcha Glacé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
@@ -178,9 +178,9 @@ export default function Home() {
               <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Matcha Glacé</h3>
               <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 5.75 $</p>
             </div>
-          </div>
+          </Link>
           {/* Produit 3 */}
-          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+          <Link href="/commande" style={{ textDecoration: 'none', display: 'block', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
             <div style={{ height: '220px', overflow: 'hidden' }}>
               <img src="/images/products/Smoothie bol.jpeg" alt="Smoothie Bol" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
@@ -188,9 +188,9 @@ export default function Home() {
               <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Smoothie Bol</h3>
               <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 12.00 $</p>
             </div>
-          </div>
+          </Link>
           {/* Produit 4 */}
-          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+          <Link href="/commande" style={{ textDecoration: 'none', display: 'block', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
             <div style={{ height: '220px', overflow: 'hidden' }}>
               <img src="/images/products/Café glacé.jpeg" alt="Café Glacé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
@@ -198,7 +198,7 @@ export default function Home() {
               <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Café Glacé Spécialité</h3>
               <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 5.50 $</p>
             </div>
-          </div>
+          </Link>
         </div>
         
         <div style={{ textAlign: 'center', marginTop: '40px' }}>
@@ -272,33 +272,30 @@ export default function Home() {
       </section>
 
       {/* ========================================
-          SECTION PARTENAIRES (Marquee Défilant)
+          SECTION PARTENAIRES
           ======================================== */}
-      <section className="section fade-in-hidden" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
+      <section className="section fade-in-hidden" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
         <div className="section-header" style={{ marginBottom: '40px' }}>
-          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Nos collaborateurs locaux</h2>
+          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Fièrement entourés de partenaires d'ici</h2>
           <p style={{ textAlign: 'center', color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
             Fiers d'encourager les créateurs et producteurs d'ici.
           </p>
         </div>
 
-        <div className="marquee-wrapper">
-          <div className="marquee-track">
-            {/* On double la liste pour créer l'effet infini */}
-            {[...partners, ...partners].map((partner, i) => (
-              <div key={i} className="marquee-card">
-                <div className="marquee-initial">{partner.initials}</div>
-                <div className="marquee-info">
-                  <span className="marquee-type">{partner.type}</span>
-                  <h4 className="marquee-name">{partner.name}</h4>
-                  <span className="marquee-loc">📍 {partner.location}</span>
-                </div>
-                <div className="marquee-hover">
-                  <p>{partner.description}</p>
-                </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
+          {partners.slice(0, 6).map((partner, i) => (
+            <div key={i} style={{ background: 'white', borderRadius: '12px', padding: '20px', textAlign: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#F9F7F4', color: 'var(--crimson)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold', margin: '0 auto 15px' }}>
+                {partner.initials}
               </div>
-            ))}
-          </div>
+              <h4 style={{ color: '#2C1810', margin: '0 0 5px 0', fontSize: '1rem' }}>{partner.name}</h4>
+              <span style={{ color: '#888', fontSize: '0.85rem' }}>{partner.type}</span>
+            </div>
+          ))}
+        </div>
+        
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+          <Link href="/#partenaires-section" className="btn btn-outline" style={{ padding: '10px 24px' }}>Découvrir tous nos partenaires</Link>
         </div>
       </section>
 
@@ -494,9 +491,9 @@ export default function Home() {
           maxWidth: '800px',
           margin: '60px auto 0'
         }}>
-          <h3 style={{ fontSize: '2rem', color: '#2C1810', marginBottom: '16px', fontWeight: 'bold' }}>⭐ Votre avis nous est précieux !</h3>
+          <h3 style={{ fontSize: '2rem', color: '#2C1810', marginBottom: '16px', fontWeight: 'bold' }}>🌸 Votre expérience nous tient à cœur</h3>
           <p style={{ fontSize: '1.2rem', color: '#4A2A18', marginBottom: '24px', maxWidth: '600px', margin: '0 auto 24px', lineHeight: '1.6' }}>
-            <strong>Laissez-nous un avis sur Google</strong> et obtenez <strong>10% de rabais</strong> sur votre prochaine commande en ligne, ou bien <strong>2 points de fidélité</strong> lors de votre prochaine visite en succursale ! 🎁
+            Vous avez aimé votre visite ? Partagez votre expérience sur Google pour aider d'autres personnes de Sherbrooke à découvrir NamasThé.
           </p>
           <a 
             href="https://g.page/r/CWMyHp9OQAqGEAE/review" 
