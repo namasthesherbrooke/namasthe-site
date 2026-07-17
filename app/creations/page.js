@@ -609,9 +609,30 @@ export default function CreationsPage() {
           <h1 style={{ fontFamily: 'var(--font-heading)', color: '#2C1810', fontSize: '3rem', marginBottom: '10px' }}>
             Menu Secret 🤫
           </h1>
-          <p style={{ color: '#5A4A42', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
+          <p style={{ color: '#5A4A42', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto 24px', lineHeight: '1.6' }}>
             Découvrez les créations virales de notre communauté ou inventez le prochain breuvage vedette du Namasthé !
           </p>
+
+          <Link 
+            href="/quiz" 
+            style={{ 
+              display: 'inline-block', 
+              background: 'linear-gradient(135deg, #FFC107 0%, #FF9800 100%)', 
+              color: '#2C1810', 
+              padding: '12px 28px', 
+              borderRadius: '30px', 
+              fontWeight: 'bold', 
+              fontSize: '1.1rem',
+              textDecoration: 'none', 
+              boxShadow: '0 4px 15px rgba(255, 152, 0, 0.3)', 
+              transition: 'transform 0.2s',
+              marginBottom: '20px'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            🪄 Trouver mon breuvage idéal
+          </Link>
         </header>
 
         {/* Onglets */}
