@@ -316,34 +316,44 @@ export default function ProductsGrid({ items, type }) {
                   <h4 style={{ color: '#2C1810', fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>💪</span> Valeurs nutritives
                   </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#2C1810' }}>{nutritionData[selectedProduct.name].calories}</div>
-                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Calories</div>
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#B8003E' }}>{nutritionData[selectedProduct.name].proteines}g</div>
-                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Protéines</div>
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#FFA000' }}>{nutritionData[selectedProduct.name].glucides}g</div>
-                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Glucides</div>
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#4CAF50' }}>{nutritionData[selectedProduct.name].lipides}g</div>
-                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Lipides</div>
-                    </div>
-                  </div>
                   
-                  {/* Vitamines et minéraux optionnels */}
-                  {nutritionData[selectedProduct.name].vitamines && (
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #Eae4d8' }}>
-                      <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '8px' }}>Vitamines & Minéraux</div>
-                      <div style={{ fontSize: '1rem', color: '#2C1810', fontWeight: '500' }}>
-                        {nutritionData[selectedProduct.name].vitamines}
+                  {(Array.isArray(nutritionData[selectedProduct.name]) ? nutritionData[selectedProduct.name] : [nutritionData[selectedProduct.name]]).map((nutrition, idx) => (
+                    <div key={idx} style={{ marginBottom: idx !== (Array.isArray(nutritionData[selectedProduct.name]) ? nutritionData[selectedProduct.name].length - 1 : 0) ? '24px' : '0' }}>
+                      {nutrition.variant && (
+                        <div style={{ fontWeight: 'bold', color: '#B8003E', marginBottom: '12px', fontSize: '1.05rem', borderBottom: '1px solid #Eae4d8', paddingBottom: '4px' }}>
+                          {nutrition.variant}
+                        </div>
+                      )}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#2C1810' }}>{nutrition.calories}</div>
+                          <div style={{ fontSize: '0.85rem', color: '#888' }}>Calories</div>
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#B8003E' }}>{nutrition.proteines}g</div>
+                          <div style={{ fontSize: '0.85rem', color: '#888' }}>Protéines</div>
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#FFA000' }}>{nutrition.glucides}g</div>
+                          <div style={{ fontSize: '0.85rem', color: '#888' }}>Glucides</div>
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#4CAF50' }}>{nutrition.lipides}g</div>
+                          <div style={{ fontSize: '0.85rem', color: '#888' }}>Lipides</div>
+                        </div>
                       </div>
+                      
+                      {/* Vitamines et minéraux optionnels */}
+                      {nutrition.vitamines && (
+                        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px dashed #Eae4d8' }}>
+                          <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '4px' }}>Vitamines & Minéraux</div>
+                          <div style={{ fontSize: '1rem', color: '#2C1810', fontWeight: '500' }}>
+                            {nutrition.vitamines}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
               )}
             </div>

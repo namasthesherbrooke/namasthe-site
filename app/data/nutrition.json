@@ -1,17 +1,21 @@
 {
-  "Fruithés": {
-    "calories": 140,
-    "proteines": 3,
-    "glucides": 34,
-    "lipides": 1.3,
-    "vitamines": "Vitamine C, Antioxydants"
-  },
-  "Fruithé protéiné": {
-    "calories": 113,
-    "proteines": 10.5,
-    "glucides": 38.5,
-    "lipides": 1.5
-  },
+  "Fruithés": [
+    {
+      "variant": "Fruithé régulier",
+      "calories": 140,
+      "proteines": 3,
+      "glucides": 34,
+      "lipides": 1.3,
+      "vitamines": "Vitamine C, Antioxydants"
+    },
+    {
+      "variant": "Fruithé protéiné",
+      "calories": 113,
+      "proteines": 10.5,
+      "glucides": 38.5,
+      "lipides": 1.5
+    }
+  ],
   "Mindblow": {
     "calories": 0,
     "proteines": 0,
@@ -20,6 +24,7 @@
     "vitamines": "Vitamine C, Vitamine B6, Vitamine B12, Magnésium"
   },
   "Matchas": {
+    "variant": "Matcha Glacé",
     "calories": 44,
     "proteines": 3.8,
     "glucides": 3.1,
