@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import nutritionData from '../data/nutrition.json';
 
 const imageMap = {
   // Breuvages
@@ -305,9 +306,36 @@ export default function ProductsGrid({ items, type }) {
                 {selectedProduct.name}
               </h2>
               <div style={{ width: '50px', height: '4px', background: 'var(--green-tropical)', marginBottom: '20px', borderRadius: '2px' }}></div>
-              <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.7', whiteSpace: 'pre-line' }}>
+              <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.7', whiteSpace: 'pre-line', marginBottom: '24px' }}>
                 {selectedProduct.desc}
               </p>
+
+              {/* Valeurs nutritives */}
+              {nutritionData[selectedProduct.name] && (
+                <div style={{ background: '#Fdfcfb', border: '1px solid #Eae4d8', borderRadius: '16px', padding: '20px', marginTop: '20px' }}>
+                  <h4 style={{ color: '#2C1810', fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>💪</span> Valeurs nutritives
+                  </h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', textAlign: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#2C1810' }}>{nutritionData[selectedProduct.name].calories}</div>
+                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Calories</div>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#B8003E' }}>{nutritionData[selectedProduct.name].proteines}g</div>
+                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Protéines</div>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#FFA000' }}>{nutritionData[selectedProduct.name].glucides}g</div>
+                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Glucides</div>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#4CAF50' }}>{nutritionData[selectedProduct.name].lipides}g</div>
+                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Lipides</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
