@@ -272,30 +272,33 @@ export default function Home() {
       </section>
 
       {/* ========================================
-          SECTION PARTENAIRES
+          SECTION PARTENAIRES (Marquee Défilant)
           ======================================== */}
-      <section className="section fade-in-hidden" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
+      <section className="section fade-in-hidden" id="partenaires-section" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px', overflow: 'hidden' }}>
         <div className="section-header" style={{ marginBottom: '40px' }}>
-          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Fièrement entourés de partenaires d'ici</h2>
+          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Nos collaborateurs locaux</h2>
           <p style={{ textAlign: 'center', color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
             Fiers d'encourager les créateurs et producteurs d'ici.
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '20px', maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
-          {partners.slice(0, 6).map((partner, i) => (
-            <div key={i} style={{ background: 'white', borderRadius: '12px', padding: '20px', textAlign: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#F9F7F4', color: 'var(--crimson)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold', margin: '0 auto 15px' }}>
-                {partner.initials}
+        <div className="marquee-wrapper">
+          <div className="marquee-track">
+            {/* On double la liste pour créer l'effet infini */}
+            {[...partners, ...partners].map((partner, i) => (
+              <div key={i} className="marquee-card">
+                <div className="marquee-initial">{partner.initials}</div>
+                <div className="marquee-info">
+                  <span className="marquee-type">{partner.type}</span>
+                  <h4 className="marquee-name">{partner.name}</h4>
+                  <span className="marquee-loc">📍 {partner.location}</span>
+                </div>
+                <div className="marquee-hover">
+                  <p>{partner.description}</p>
+                </div>
               </div>
-              <h4 style={{ color: '#2C1810', margin: '0 0 5px 0', fontSize: '1rem' }}>{partner.name}</h4>
-              <span style={{ color: '#888', fontSize: '0.85rem' }}>{partner.type}</span>
-            </div>
-          ))}
-        </div>
-        
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
-          <Link href="/#partenaires-section" className="btn btn-outline" style={{ padding: '10px 24px' }}>Découvrir tous nos partenaires</Link>
+            ))}
+          </div>
         </div>
       </section>
 
