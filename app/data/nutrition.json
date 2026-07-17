@@ -1,0 +1,50 @@
+{
+  "Fruithés": {
+    "calories": 140,
+    "proteines": 3,
+    "glucides": 34,
+    "lipides": 1.3
+  },
+  "Fruithé protéiné": {
+    "calories": 113,
+    "proteines": 10.5,
+    "glucides": 38.5,
+    "lipides": 1.5
+  },
+  "Mindblow": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0
+  },
+  "Matchas": {
+    "calories": 44,
+    "proteines": 3.8,
+    "glucides": 3.1,
+    "lipides": 2.5
+  },
+  "Matchas glacés": {
+    "calories": 44,
+    "proteines": 3.8,
+    "glucides": 3.1,
+    "lipides": 2.5
+  },
+  "Gaufres protéinées": {
+    "calories": 277,
+    "proteines": 17.4,
+    "glucides": 31.2,
+    "lipides": 7.9
+  },
+  "Beignes protéinés": {
+    "calories": 597,
+    "proteines": 42.7,
+    "glucides": 55.7,
+    "lipides": 19.8
+  },
+  "Namdej": {
+    "calories": 405,
+    "proteines": 25.9,
+    "glucides": 28.1,
+    "lipides": 20.0
+  }
+}

@@ -30,6 +30,26 @@ const partners = [
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
+  const [activeFaq, setActiveFaq] = useState(null);
+
+  const faqs = [
+    {
+      question: "Avez-vous des options véganes et sans lactose ?",
+      answer: "Absolument ! La plupart de nos breuvages peuvent être adaptés avec des laits végétaux et nos ingrédients sont choisis pour convenir à de multiples styles de vie."
+    },
+    {
+      question: "Qu'est-ce qu'un Dirty Soda ?",
+      answer: "C'est une boisson pétillante signature (à base de soda ou d'eau pétillante) rehaussée de sirops gourmands et parfois d'une touche crémeuse. C'est le rafraîchissement parfait pour l'été !"
+    },
+    {
+      question: "Vos produits sont-ils santé ?",
+      answer: "Oui ! Nous privilégions des recettes faibles en sucre, riches en saveur, et nous offrons plusieurs options protéinées (comme nos gaufres et beignes) pour vous soutenir tout au long de la journée."
+    },
+    {
+      question: "Est-ce que je peux accumuler des points de fidélité ?",
+      answer: "Bien sûr ! Créez un compte lors de votre commande en ligne ou demandez à notre Barista en succursale. Vos achats vous donneront droit à de belles surprises VIP."
+    }
+  ];
 
   useEffect(() => {
     if (showModal) {
@@ -377,6 +397,71 @@ export default function Home() {
                 <span style={{ color: 'white', fontSize: '2rem' }}>❤️</span>
               </div>
             </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================
+          SECTION FOIRE AUX QUESTIONS (FAQ)
+          ======================================== */}
+      <section className="section fade-in-hidden" id="faq-section" style={{ background: '#F9F7F4', paddingTop: '60px', paddingBottom: '60px' }}>
+        <div className="section-header" style={{ marginBottom: '40px' }}>
+          <h2 style={{ color: '#2C1810', textAlign: 'center' }}>Questions fréquentes</h2>
+          <p style={{ textAlign: 'center', color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+            Tout ce que vous devez savoir sur nos breuvages et notre concept.
+          </p>
+        </div>
+
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
+          {faqs.map((faq, index) => (
+            <div 
+              key={index} 
+              style={{ 
+                background: 'white', 
+                borderRadius: '12px', 
+                marginBottom: '16px', 
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                overflow: 'hidden'
+              }}
+            >
+              <button 
+                onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '20px 24px',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  color: '#2C1810',
+                  textAlign: 'left'
+                }}
+              >
+                {faq.question}
+                <span style={{ 
+                  transform: activeFaq === index ? 'rotate(180deg)' : 'rotate(0deg)', 
+                  transition: 'transform 0.3s ease',
+                  color: 'var(--crimson)'
+                }}>
+                  ▼
+                </span>
+              </button>
+              
+              <div style={{
+                maxHeight: activeFaq === index ? '200px' : '0',
+                opacity: activeFaq === index ? 1 : 0,
+                transition: 'all 0.3s ease-in-out',
+                padding: activeFaq === index ? '0 24px 20px' : '0 24px 0',
+                color: '#5A4A42',
+                lineHeight: '1.6'
+              }}>
+                {faq.answer}
+              </div>
+            </div>
           ))}
         </div>
       </section>
