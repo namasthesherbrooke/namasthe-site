@@ -140,6 +140,50 @@ export default function EvenementsPage() {
       </section>
 
       {/* ========================================
+          SECTION NOUVELLE : GALERIE DES ÉVÉNEMENTS
+          ======================================== */}
+      <section className="section" id="galerie-evenements" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
+        <div className="section-header" style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <h2 style={{ color: '#2C1810', fontSize: '2.5rem' }}>Nos réalisations passées</h2>
+          <p style={{ color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+            Revivez en images les meilleurs moments de nos événements précédents. De beaux souvenirs de la communauté Namasthé !
+          </p>
+        </div>
+
+        {/* Grille de la galerie (Placeholders temporaires) */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
+          gap: '16px', 
+          maxWidth: '1200px', 
+          margin: '0 auto', 
+          padding: '0 24px' 
+        }}>
+          {/* Les photos seront ajoutées ici plus tard */}
+          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
+              Bientôt : Vos photos ici !
+            </div>
+          </div>
+          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
+              En attente d'images...
+            </div>
+          </div>
+          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
+              En attente d'images...
+            </div>
+          </div>
+          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
+              En attente d'images...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================
           HERO SPLIT — Titre + Image (Depuis Réservez-nous)
           ======================================== */}
       <section className="split-hero" id="reserver-hero" style={{ background: 'linear-gradient(135deg, var(--cream) 0%, #F5E0D0 100%)' }}>
