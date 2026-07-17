@@ -150,7 +150,7 @@ export default function Home() {
       {/* ========================================
           SECTION NOUVELLE : NOS INCONTOURNABLES
           ======================================== */}
-      <section className="section fade-in-hidden" id="incontournables" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
+      <section className="section" id="incontournables" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
         <div className="section-header" style={{ marginBottom: '40px', textAlign: 'center' }}>
           <h2 style={{ color: '#2C1810', fontSize: '2.5rem' }}>Nos Incontournables</h2>
           <p style={{ color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
