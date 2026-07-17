@@ -101,6 +101,12 @@ export async function POST(req) {
         newPoints = newPoints - 10;
         newTickets = currentTickets + 1;
       }
+    } else if (action === 'add_bonus') {
+      newPoints = currentPoints + 2;
+      if (newPoints >= 10) {
+        newPoints = newPoints - 10;
+        newTickets = currentTickets + 1;
+      }
     } else if (action === 'remove') {
       if (currentPoints > 0) {
         newPoints = currentPoints - 1;

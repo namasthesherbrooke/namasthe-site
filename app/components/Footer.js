@@ -24,9 +24,9 @@ export default function Footer() {
         <div style={{ margin: '20px 0' }}>
           <h4 style={{ color: '#2C1810', marginBottom: '15px', fontFamily: 'var(--font-heading)', fontSize: '1.2rem' }}>Liens utiles</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <li><Link href="/boutique" style={{ color: '#B8003E', textDecoration: 'none', fontWeight: 'bold' }}>La Boutique</Link></li>
+            <li><Link href="/boutique" style={{ color: '#B8003E', textDecoration: 'none', fontWeight: 'bold' }}>Boutique et Cadeaux</Link></li>
             <li><Link href="/creations" style={{ color: '#B8003E', textDecoration: 'none', fontWeight: 'bold' }}>Nos créations</Link></li>
-            <li><Link href="/nos-partenaires" style={{ color: '#B8003E', textDecoration: 'none', fontWeight: 'bold' }}>Nos Partenaires</Link></li>
+            <li><Link href="/#partenaires-section" style={{ color: '#B8003E', textDecoration: 'none', fontWeight: 'bold' }}>Nos Partenaires</Link></li>
             <li><Link href="/politique-confidentialite" style={{ color: '#666', textDecoration: 'none', fontSize: '0.9rem' }}>Politique de Confidentialité</Link></li>
           </ul>
         </div>

@@ -550,6 +550,49 @@ export default function CreationsPage() {
 
   const isAdmin = session?.user?.email === 'namasthesherbrooke@gmail.com';
 
+  if (authLoading) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p>Vérification de vos accès VIP...</p>
+      </div>
+    );
+  }
+
+  // Écran verrouillé si non connecté
+  if (!session) {
+    return (
+      <div style={{ background: '#1A1A1A', minHeight: '100vh', padding: '100px 24px', fontFamily: 'var(--font-body)', textAlign: 'center' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto', background: '#2A2A2A', padding: '50px 30px', borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', border: '1px solid #333' }}>
+          <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🤫</div>
+          <span style={{ background: 'linear-gradient(90deg, #FFD700, #FFA500)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontSize: '1.2rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px' }}>
+            Accès Restreint
+          </span>
+          <h1 style={{ color: 'white', marginBottom: '16px', fontSize: '2.5rem', marginTop: '10px' }}>Le Menu Secret</h1>
+          <p style={{ color: '#A0A0A0', fontSize: '1.1rem', marginBottom: '32px', lineHeight: '1.6' }}>
+            Chut... Ce menu exclusif est réservé uniquement à nos membres VIP. 
+            Connectez-vous à votre compte ou inscrivez-vous gratuitement pour débloquer ces recettes cachées !
+          </p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link 
+              href="/connexion" 
+              className="btn"
+              style={{ background: '#FFD700', color: '#1A1A1A', padding: '12px 30px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold' }}
+            >
+              Me connecter
+            </Link>
+            <Link 
+              href="/inscription" 
+              className="btn btn-outline"
+              style={{ padding: '12px 30px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', border: '2px solid #FFD700', color: '#FFD700' }}
+            >
+              Créer un compte
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ background: '#fdfcfb', minHeight: '100vh', padding: '60px 20px', fontFamily: 'var(--font-body)' }}>
       {orderModalCreation && (

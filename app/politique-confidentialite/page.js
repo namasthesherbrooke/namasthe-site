@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
           <div style={{ color: '#4A3B32', lineHeight: '1.6', fontSize: '1.05rem' }}>
             <h2 style={{ color: '#8B002E', fontSize: '1.5rem', marginTop: '30px', marginBottom: '15px' }}>1. Introduction</h2>
             <p style={{ marginBottom: '15px' }}>
-              Bienvenue sur la politique de confidentialité de Café Namasthé. Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles. Cette politique décrit comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre site web (cafnamasthesherbrooke.com) et nos applications mobiles (Client et Barista).
+              Bienvenue sur la politique de confidentialité de Café Namasthé. Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles. Cette politique décrit comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez notre site web (cafenamasthesherbrooke.ca) et nos applications mobiles (Client et Barista).
             </p>
 
             <h2 style={{ color: '#8B002E', fontSize: '1.5rem', marginTop: '30px', marginBottom: '15px' }}>2. Les données que nous collectons</h2>

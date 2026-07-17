@@ -1,18 +1,28 @@
-import fs from 'fs';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
-const envFile = fs.readFileSync('.env.local', 'utf-8');
-const supaUrl = envFile.match(/NEXT_PUBLIC_SUPABASE_URL=(.+)/)[1].trim();
-const supaKey = envFile.match(/SUPABASE_SERVICE_ROLE_KEY=(.+)/)[1].trim();
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 async function test() {
-  const authRes = await fetch(`${supaUrl}/auth/v1/admin/users`, {
-    headers: {
-      'apikey': supaKey,
-      'Authorization': `Bearer ${supaKey}`
-    }
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: 'namasthesherbrooke@gmail.com',
+    password: process.env.ADMIN_PASSWORD || 'NamastheAdmin!'
   });
-  const authData = await authRes.json();
-  const adminUser = authData.users?.find(u => u.email === 'namasthesherbrooke@gmail.com');
-  console.log("Admin user metadata:", adminUser?.user_metadata);
+  
+  if (error) {
+    console.error("SignIn error:", error);
+    return;
+  }
+  
+  const token = data.session.access_token;
+  console.log("Got token.");
+  
+  const { data: userData, error: userError } = await supabase.auth.getUser(token);
+  if (userError) {
+    console.error("getUser error:", userError);
+  } else {
+    console.log("getUser success:", userData.user.email);
+  }
 }
 test();

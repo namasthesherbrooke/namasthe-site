@@ -414,16 +414,40 @@ Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l
           </div>
         </div>
         
-        {/* Bouton Avis clients */}
-        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+        {/* Bouton Avis clients (remplacé par une bannière) */}
+        <div style={{ 
+          marginTop: '60px', 
+          background: 'linear-gradient(135deg, #FFC107 0%, #FF9800 100%)', 
+          borderRadius: '16px', 
+          padding: '40px 24px', 
+          textAlign: 'center',
+          boxShadow: '0 10px 25px rgba(255, 152, 0, 0.3)',
+          maxWidth: '800px',
+          margin: '60px auto 0'
+        }}>
+          <h3 style={{ fontSize: '2rem', color: '#2C1810', marginBottom: '16px', fontWeight: 'bold' }}>⭐ Votre avis nous est précieux !</h3>
+          <p style={{ fontSize: '1.2rem', color: '#4A2A18', marginBottom: '24px', maxWidth: '600px', margin: '0 auto 24px', lineHeight: '1.6' }}>
+            <strong>Laissez-nous un avis sur Google</strong> et obtenez <strong>10% de rabais</strong> sur votre prochaine commande en ligne, ou bien <strong>2 points de fidélité</strong> lors de votre prochaine visite en succursale ! 🎁
+          </p>
           <a 
-            href="https://www.google.com/search?sca_esv=515e544df15d7837&sxsrf=ANbL-n4UpgIxkwI2OwOkI6IycEpsxue71g:1779972991333&q=caf%C3%A9+namasth%C3%A9&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOYg-s64i1GkDwfiJFWjrBDztlARJNvZcli9CuJRqkQQxyu0Nt23HlA1i0uFJ4XwCwUEc4P1wmHSYYCy7v3Rv5MSs95hh&sa=X&ved=2ahUKEwi-wO6OhNyUAxWmMlkFHQDnOBQQrrQLegQIHBAA&biw=1613&bih=897&dpr=1" 
+            href="https://g.page/r/CWMyHp9OQAqGEAE/review" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="btn btn-outline"
-            style={{ display: 'inline-block' }}
+            className="btn"
+            style={{ 
+              display: 'inline-block',
+              background: '#2C1810',
+              color: 'white',
+              padding: '14px 32px',
+              borderRadius: '30px',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              textDecoration: 'none',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+              transition: 'transform 0.2s'
+            }}
           >
-            Lire d'autres avis clients
+            Donner mon avis
           </a>
         </div>
       </section>

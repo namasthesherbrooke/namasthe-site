@@ -45,7 +45,8 @@ with open(csv_path, 'r', encoding='utf-8') as f:
             'id': row.get('recipe_id', str(i)),
             'name': name,
             'base': base,
-            'flavors': unique_flavors
+            'flavors': unique_flavors,
+            'ingredients': row.get('ingredients', '')
         })
 
 with open(out_path, 'w', encoding='utf-8') as f:

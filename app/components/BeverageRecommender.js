@@ -31,11 +31,11 @@ export default function BeverageRecommender() {
     return recipesData.filter(recipe => {
       // 1. Filtrer par base (si ce n'est pas "Surprenez-moi")
       if (selectedBase && selectedBase.id !== 'tous') {
-        const hasBaseKeyword = 
+        const hasBaseKeyword =
           recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
           selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
           (recipe.base && selectedBase.keywords.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())));
-          
+
         const hasExcludedKeyword = selectedBase.excludes && selectedBase.excludes.length > 0 && (
           recipe.flavors.some(f => selectedBase.excludes.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
           selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
@@ -56,7 +56,7 @@ export default function BeverageRecommender() {
 
       // 2. Filtrer par saveurs incluses (doit contenir TOUTES les saveurs incluses)
       if (includedFlavors.length > 0) {
-        const hasAllInclusions = includedFlavors.every(inc => 
+        const hasAllInclusions = includedFlavors.every(inc =>
           recipe.flavors.includes(inc)
         );
         if (!hasAllInclusions) return false;
@@ -64,7 +64,7 @@ export default function BeverageRecommender() {
 
       // 3. Filtrer par saveurs exclues (ne doit contenir AUCUNE saveur exclue)
       if (excludedFlavors.length > 0) {
-        const hasExclusions = excludedFlavors.some(exc => 
+        const hasExclusions = excludedFlavors.some(exc =>
           recipe.flavors.includes(exc)
         );
         if (hasExclusions) return false;
@@ -76,9 +76,6 @@ export default function BeverageRecommender() {
 
   const handleBaseSelect = (base) => {
     setSelectedBase(base);
-    setIncludedFlavors([]);
-    setExcludedFlavors([]);
-    setSearchTerm('');
     setStep(2);
   };
 
@@ -86,7 +83,7 @@ export default function BeverageRecommender() {
     if (excludedFlavors.includes(flavor)) {
       setExcludedFlavors(prev => prev.filter(f => f !== flavor));
     }
-    setIncludedFlavors(prev => 
+    setIncludedFlavors(prev =>
       prev.includes(flavor) ? prev.filter(f => f !== flavor) : [...prev, flavor]
     );
   };
@@ -95,7 +92,7 @@ export default function BeverageRecommender() {
     if (includedFlavors.includes(flavor)) {
       setIncludedFlavors(prev => prev.filter(f => f !== flavor));
     }
-    setExcludedFlavors(prev => 
+    setExcludedFlavors(prev =>
       prev.includes(flavor) ? prev.filter(f => f !== flavor) : [...prev, flavor]
     );
   };
@@ -111,14 +108,14 @@ export default function BeverageRecommender() {
   // Saveurs possibles pour la catégorie sélectionnée
   const possibleFlavors = useMemo(() => {
     if (!selectedBase || selectedBase.id === 'tous') return ALL_FLAVORS;
-    
+
     // On prend toutes les recettes de cette catégorie (avant les filtres de saveurs)
     const baseRecipes = recipesData.filter(recipe => {
-      const hasBaseKeyword = 
+      const hasBaseKeyword =
         recipe.flavors.some(f => selectedBase.keywords.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
         selectedBase.keywords.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
         (recipe.base && selectedBase.keywords.some(k => recipe.base.toLowerCase().includes(k.toLowerCase())));
-        
+
       const hasExcludedKeyword = selectedBase.excludes && selectedBase.excludes.length > 0 && (
         recipe.flavors.some(f => selectedBase.excludes.some(k => f.toLowerCase().includes(k.toLowerCase()))) ||
         selectedBase.excludes.some(k => recipe.name.toLowerCase().includes(k.toLowerCase())) ||
@@ -142,13 +139,13 @@ export default function BeverageRecommender() {
     return Array.from(new Set(baseRecipes.flatMap(r => r.flavors))).sort();
   }, [selectedBase]);
 
-  const displayedFlavors = possibleFlavors.filter(f => 
+  const displayedFlavors = possibleFlavors.filter(f =>
     f.toLowerCase().includes(searchTerm.toLowerCase())
   ).slice(0, 40); // Limiter pour ne pas polluer l'interface
 
   return (
     <div style={{ background: 'white', padding: '40px', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', maxWidth: '900px', margin: '0 auto' }}>
-      
+
       {/* En-tête de l'assistant */}
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ color: '#2C1810', fontSize: '2rem', marginBottom: '10px' }}>🔍 Trouvez votre breuvage idéal</h2>
@@ -198,7 +195,7 @@ export default function BeverageRecommender() {
       {/* ÉTAPE 2 & 3 : Inclusions / Exclusions et Résultats */}
       {step >= 2 && (
         <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-          
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f9f9f9', padding: '15px 20px', borderRadius: '12px' }}>
             <div>
               <span style={{ color: '#666', fontSize: '0.9rem' }}>Filtre actif :</span>
@@ -208,22 +205,14 @@ export default function BeverageRecommender() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-            
+
             {/* Colonne de gauche : Filtres */}
             <div style={{ background: 'white', border: '1px solid #eee', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0, color: '#2C1810', fontSize: '1.2rem' }}>2. Affinez vos goûts</h3>
-                <button 
-                  onClick={() => { setIncludedFlavors([]); setExcludedFlavors([]); setSearchTerm(''); }} 
-                  style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.9rem' }}
-                >
-                  Réinitialiser
-                </button>
-              </div>
-              
-              <input 
-                type="text" 
-                placeholder="Rechercher une saveur (ex: Mangue)..." 
+              <h3 style={{ marginBottom: '15px', color: '#2C1810', fontSize: '1.2rem' }}>2. Affinez vos goûts</h3>
+
+              <input
+                type="text"
+                placeholder="Rechercher une saveur (ex: Mangue)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '20px' }}
@@ -233,17 +222,17 @@ export default function BeverageRecommender() {
                 {displayedFlavors.map(flavor => {
                   const isIncluded = includedFlavors.includes(flavor);
                   const isExcluded = excludedFlavors.includes(flavor);
-                  
+
                   return (
                     <div key={flavor} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: isIncluded ? '#E8F5E9' : isExcluded ? '#FFEBEE' : '#f9f9f9', borderRadius: '8px', border: `1px solid ${isIncluded ? 'var(--green-tropical)' : isExcluded ? '#E53935' : '#eee'}`, transition: 'all 0.2s' }}>
                       <span style={{ fontWeight: isIncluded || isExcluded ? 'bold' : 'normal', color: '#333' }}>{flavor}</span>
                       <div style={{ display: 'flex', gap: '5px' }}>
-                        <button 
+                        <button
                           onClick={() => toggleIncluded(flavor)}
                           style={{ background: isIncluded ? 'var(--green-tropical)' : 'white', color: isIncluded ? 'white' : '#666', border: '1px solid #ddd', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                           title="J'en veux"
                         >✓</button>
-                        <button 
+                        <button
                           onClick={() => toggleExcluded(flavor)}
                           style={{ background: isExcluded ? '#E53935' : 'white', color: isExcluded ? 'white' : '#666', border: '1px solid #ddd', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                           title="Je déteste"

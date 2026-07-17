@@ -62,12 +62,10 @@ export default function Header() {
 
   const navLinks = [
     { href: '/', label: 'Accueil' },
-    { href: '/evenements', label: 'Événements' },
+    { href: '/produits', label: 'Menu' },
     { href: '/promotions', label: 'Promotions' },
-    { href: '/produits', label: 'Produits' },
-    { href: '/boutique', label: 'Boutique' },
-    { href: '/creations', label: 'Menu Secret' },
-    { href: '/commande', label: 'Commande' },
+    { href: '/creations', label: 'Menu VIP 🔒' },
+    { href: '/evenements', label: 'Événements' },
   ];
 
   // Liste des promotions pour la banderole
@@ -114,6 +112,21 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/commande"
+              style={{
+                background: 'var(--crimson)',
+                color: 'white',
+                padding: '8px 20px',
+                borderRadius: '20px',
+                fontWeight: 'bold',
+                marginLeft: '15px',
+                textDecoration: 'none',
+                boxShadow: '0 4px 10px rgba(184, 0, 62, 0.3)'
+              }}
+            >
+              Commander
+            </Link>
           </div>
 
           {/* Section Droite */}
@@ -210,6 +223,23 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
+        <Link
+          href="/commande"
+          onClick={() => setMenuOpen(false)}
+          style={{
+            background: 'var(--crimson)',
+            color: 'white',
+            padding: '12px 30px',
+            borderRadius: '30px',
+            fontWeight: 'bold',
+            marginTop: '20px',
+            fontSize: '1.2rem',
+            textAlign: 'center',
+            textDecoration: 'none'
+          }}
+        >
+          🛍️ Commander
+        </Link>
       </div>
     </>
   );

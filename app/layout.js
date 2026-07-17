@@ -23,7 +23,10 @@ import { CartProvider } from './context/CartContext';
 /* Métadonnées SEO globales du site */
 export const metadata = {
   metadataBase: new URL('https://cafenamasthesherbrooke.ca'),
-  title: "Café Namasthé — Éveillez vos sens. Nourrissez votre âme.",
+  title: {
+    template: '%s | Café NamasThé Sherbrooke',
+    default: 'Café santé à Sherbrooke | Café NamasThé',
+  },
   description: "Café Namasthé est une oasis urbaine proposant des boissons vibrantes, des créations tropicales et une ambiance zen. Découvrez nos jus pressés, thés signatures et événements bien-être à Sherbrooke.",
   keywords: "café, namasthé, sherbrooke, jus pressé, thé, bien-être, tropical, zen, boissons naturelles, bubble tea",
   manifest: "/manifest.json",
