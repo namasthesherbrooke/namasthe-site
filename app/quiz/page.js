@@ -7,59 +7,92 @@ const questions = [
   {
     question: "Quel est ton objectif principal aujourd'hui ?",
     options: [
-      { text: "⚡ Un gros boost d'énergie !", points: { energie: 2, rafraichissant: 0, gourmand: 0 } },
-      { text: "🌊 Me rafraîchir et relaxer", points: { energie: 0, rafraichissant: 2, gourmand: 0 } },
-      { text: "🧁 Me gâter avec une petite douceur", points: { energie: 0, rafraichissant: 0, gourmand: 2 } }
+      { text: "⚡ Avoir un MAX d'énergie", points: { megathe: 2, lotus: 1, matcha: 0, bubble: 0, fruithe: 0, namastail: 0 } },
+      { text: "🧘‍♀️ Me concentrer et rester zen", points: { megathe: 0, lotus: 1, matcha: 2, bubble: 0, fruithe: 0, namastail: 0 } },
+      { text: "🧁 Me gâter avec une douceur", points: { megathe: 0, lotus: 0, matcha: 0, bubble: 2, fruithe: 0, namastail: 1 } },
+      { text: "🌊 Me désaltérer simplement", points: { megathe: 0, lotus: 0, matcha: 0, bubble: 0, fruithe: 2, namastail: 1 } }
     ]
   },
   {
-    question: "Préfères-tu les textures légères ou crémeuses ?",
+    question: "Quelle texture as-tu envie de boire ?",
     options: [
-      { text: "🍓 100% Léger et fruité", points: { energie: 1, rafraichissant: 2, gourmand: 0 } },
-      { text: "🥛 Crémeux et onctueux", points: { energie: 0, rafraichissant: 0, gourmand: 2 } },
-      { text: "🧋 Un mix amusant (avec des perles !)", points: { energie: 0, rafraichissant: 1, gourmand: 2 } }
+      { text: "🧃 Super léger (style jus)", points: { megathe: 1, lotus: 0, matcha: 0, bubble: 0, fruithe: 2, namastail: 1 } },
+      { text: "🥛 Crémeux ou laiteux", points: { megathe: 0, lotus: 0, matcha: 2, bubble: 1, fruithe: 0, namastail: 0 } },
+      { text: "🫧 Pétillant !", points: { megathe: 0, lotus: 2, matcha: 0, bubble: 0, fruithe: 0, namastail: 1 } },
+      { text: "🧋 Amusante (avec des perles à mâcher)", points: { megathe: 0, lotus: 0, matcha: 0, bubble: 2, fruithe: 0, namastail: 0 } }
     ]
   },
   {
-    question: "Es-tu plutôt du genre aventure ou classique ?",
+    question: "Quel niveau de goût sucré recherches-tu ?",
     options: [
-      { text: "🤠 Aventure ! Fais-moi découvrir quelque chose", points: { energie: 1, rafraichissant: 1, gourmand: 1 } },
-      { text: "🧘 Classique ! Une valeur sûre", points: { energie: 1, rafraichissant: 1, gourmand: 0 } }
+      { text: "🍃 Très peu ou sans sucre ajouté", points: { megathe: 1, lotus: 0, matcha: 2, bubble: 0, fruithe: 1, namastail: 0 } },
+      { text: "⚖️ Juste un bel équilibre", points: { megathe: 1, lotus: 2, matcha: 0, bubble: 0, fruithe: 1, namastail: 2 } },
+      { text: "🤤 100% Gourmand !", points: { megathe: 0, lotus: 0, matcha: 0, bubble: 2, fruithe: 0, namastail: 0 } }
+    ]
+  },
+  {
+    question: "Quelle est ton humeur de couleur aujourd'hui ?",
+    options: [
+      { text: "🌿 Vert nature", points: { megathe: 0, lotus: 0, matcha: 2, bubble: 0, fruithe: 0, namastail: 0 } },
+      { text: "🌺 Rose ou Rouge vibrant", points: { megathe: 1, lotus: 0, matcha: 0, bubble: 0, fruithe: 2, namastail: 0 } },
+      { text: "🌌 Bleu océan ou Mauve magique", points: { megathe: 0, lotus: 2, matcha: 0, bubble: 0, fruithe: 0, namastail: 2 } },
+      { text: "🧋 Caramel ou Brun classique", points: { megathe: 0, lotus: 0, matcha: 0, bubble: 2, fruithe: 0, namastail: 0 } }
     ]
   }
 ];
 
 const results = [
   {
-    id: 'energie',
+    id: 'lotus',
+    name: "Lotus Plant Power",
+    description: "La force des plantes ! Une boisson pétillante qui te donnera une belle énergie végétale grâce aux extraits de fleurs de lotus et de superfruits.",
+    image: "/images/products/Lotus.jpeg"
+  },
+  {
+    id: 'matcha',
+    name: "Matcha Glacé",
+    description: "Zénitude et concentration au menu. Notre matcha de première qualité t'apportera une énergie calme et prolongée, avec une texture douce et réconfortante.",
+    image: "/images/products/Matcha glace.jpeg"
+  },
+  {
+    id: 'bubble',
+    name: "Bubble Tea Signature",
+    description: "Tu mérites une pause gourmande et amusante ! Un savoureux Bubble Tea avec ses fameuses perles saura combler tes envies sucrées.",
+    image: "/images/products/Bubble tea.jpeg"
+  },
+  {
+    id: 'fruithe',
+    name: "Fruithé Rafraîchissant",
+    description: "Léger, coloré et ultra-désaltérant. C'est le breuvage parfait pour faire le plein de fraîcheur sans alourdir ta journée !",
+    image: "/images/products/Fruithé.jpeg"
+  },
+  {
+    id: 'megathe',
     name: "Méga-Thé Énergie",
-    description: "Tu as besoin d'un vrai coup de fouet ! Le Méga-Thé t'apportera toute l'énergie nécessaire avec des saveurs fruitées éclatantes, sans la chute d'énergie du sucre.",
-    image: "/images/products/M%C3%A9ga-Th%C3%A9s.jpeg"
+    description: "Besoin d'un vrai coup de fouet ? Le Méga-Thé est ton allié ultime. De l'énergie explosive avec des saveurs fruitées éclatantes.",
+    image: "/images/products/Mega-the.jpeg"
   },
   {
-    id: 'rafraichissant',
-    name: "Fruithé Signature",
-    description: "Rafraîchissant, léger et coloré. C'est le breuvage parfait pour se désaltérer et profiter d'un pur moment de fraîcheur !",
-    image: "/images/products/Fruith%C3%A9s.jpeg"
-  },
-  {
-    id: 'gourmand',
-    name: "Bubble Tea ou Dirty Soda",
-    description: "Tu mérites une pause gourmande ! Un savoureux Bubble Tea ou un Dirty Soda onctueux saura combler tes envies sucrées (tout en restant sain !).",
-    image: "/images/products/Bubble%20tea.jpeg"
+    id: 'namastail',
+    name: "Namas-Tails",
+    description: "L'élégance d'un cocktail, sans l'alcool. Un mélange sophistiqué, souvent pétillant, qui te donnera l'impression d'être en terrasse !",
+    image: "/images/products/Namast-tails.jpeg"
   }
 ];
 
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState({ energie: 0, rafraichissant: 0, gourmand: 0 });
+  const [scores, setScores] = useState({ megathe: 0, lotus: 0, matcha: 0, bubble: 0, fruithe: 0, namastail: 0 });
   const [showResult, setShowResult] = useState(false);
 
   const handleAnswer = (points) => {
     const newScores = {
-      energie: scores.energie + points.energie,
-      rafraichissant: scores.rafraichissant + points.rafraichissant,
-      gourmand: scores.gourmand + points.gourmand
+      megathe: scores.megathe + (points.megathe || 0),
+      lotus: scores.lotus + (points.lotus || 0),
+      matcha: scores.matcha + (points.matcha || 0),
+      bubble: scores.bubble + (points.bubble || 0),
+      fruithe: scores.fruithe + (points.fruithe || 0),
+      namastail: scores.namastail + (points.namastail || 0)
     };
     setScores(newScores);
 
@@ -72,12 +105,12 @@ export default function QuizPage() {
 
   const getWinner = () => {
     const winnerId = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-    return results.find(r => r.id === winnerId) || results[1];
+    return results.find(r => r.id === winnerId) || results[0];
   };
 
   const resetQuiz = () => {
     setCurrentQuestion(0);
-    setScores({ energie: 0, rafraichissant: 0, gourmand: 0 });
+    setScores({ megathe: 0, lotus: 0, matcha: 0, bubble: 0, fruithe: 0, namastail: 0 });
     setShowResult(false);
   };
 
