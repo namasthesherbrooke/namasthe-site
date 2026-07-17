@@ -161,9 +161,14 @@ export default function EvenementsPage() {
         }}>
           {/* Les photos seront ajoutées ici plus tard */}
           <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
-              Bientôt : Vos photos ici !
-            </div>
+            <video 
+              src="/images/historique-evenements/Soiree_privee_MNP.mp4" 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
           <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5A4A42', fontStyle: 'italic', padding: '20px', textAlign: 'center' }}>
