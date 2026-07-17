@@ -6,7 +6,10 @@
       "proteines": 3,
       "glucides": 34,
       "lipides": 1.3,
-      "vitamines": "Vitamine C, Antioxydants"
+      "vitamines": [
+        { "nom": "Vitamine C", "quantite": "20%" },
+        { "nom": "Antioxydants", "quantite": "Élevé" }
+      ]
     },
     {
       "variant": "Fruithé protéiné",
@@ -21,10 +24,14 @@
     "proteines": 0,
     "glucides": 0,
     "lipides": 0,
-    "vitamines": "Vitamine C, Vitamine B6, Vitamine B12, Magnésium"
+    "vitamines": [
+      { "nom": "Vitamine C", "quantite": "100%" },
+      { "nom": "Vitamine B6", "quantite": "200%" },
+      { "nom": "Vitamine B12", "quantite": "200%" },
+      { "nom": "Magnésium", "quantite": "15%" }
+    ]
   },
   "Matchas": {
-    "variant": "Matcha Glacé",
     "calories": 44,
     "proteines": 3.8,
     "glucides": 3.1,

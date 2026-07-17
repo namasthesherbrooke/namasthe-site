@@ -311,14 +311,14 @@ export default function ProductsGrid({ items, type }) {
               </p>
 
               {/* Valeurs nutritives */}
-              {nutritionData[selectedProduct.name] && (
+              {nutritionData[selectedProduct.name.trim()] && (
                 <div style={{ background: '#Fdfcfb', border: '1px solid #Eae4d8', borderRadius: '16px', padding: '20px', marginTop: '20px' }}>
                   <h4 style={{ color: '#2C1810', fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>💪</span> Valeurs nutritives
                   </h4>
                   
-                  {(Array.isArray(nutritionData[selectedProduct.name]) ? nutritionData[selectedProduct.name] : [nutritionData[selectedProduct.name]]).map((nutrition, idx) => (
-                    <div key={idx} style={{ marginBottom: idx !== (Array.isArray(nutritionData[selectedProduct.name]) ? nutritionData[selectedProduct.name].length - 1 : 0) ? '24px' : '0' }}>
+                  {(Array.isArray(nutritionData[selectedProduct.name.trim()]) ? nutritionData[selectedProduct.name.trim()] : [nutritionData[selectedProduct.name.trim()]]).map((nutrition, idx) => (
+                    <div key={idx} style={{ marginBottom: idx !== (Array.isArray(nutritionData[selectedProduct.name.trim()]) ? nutritionData[selectedProduct.name.trim()].length - 1 : 0) ? '24px' : '0' }}>
                       {nutrition.variant && (
                         <div style={{ fontWeight: 'bold', color: '#B8003E', marginBottom: '12px', fontSize: '1.05rem', borderBottom: '1px solid #Eae4d8', paddingBottom: '4px' }}>
                           {nutrition.variant}
@@ -346,10 +346,22 @@ export default function ProductsGrid({ items, type }) {
                       {/* Vitamines et minéraux optionnels */}
                       {nutrition.vitamines && (
                         <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px dashed #Eae4d8' }}>
-                          <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '4px' }}>Vitamines & Minéraux</div>
-                          <div style={{ fontSize: '1rem', color: '#2C1810', fontWeight: '500' }}>
-                            {nutrition.vitamines}
-                          </div>
+                          <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '8px' }}>Vitamines & Minéraux</div>
+                          
+                          {Array.isArray(nutrition.vitamines) ? (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '8px' }}>
+                              {nutrition.vitamines.map((vit, vIdx) => (
+                                <div key={vIdx} style={{ background: '#FFF5F7', padding: '8px 12px', borderRadius: '8px', fontSize: '0.85rem', color: '#B8003E', fontWeight: '600', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <span>{vit.nom}</span>
+                                  {vit.quantite && <span style={{ color: '#2C1810', background: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>{vit.quantite}</span>}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: '1rem', color: '#2C1810', fontWeight: '500' }}>
+                              {nutrition.vitamines}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
