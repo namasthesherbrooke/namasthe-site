@@ -159,43 +159,57 @@ export default function EvenementsPage() {
           margin: '0 auto', 
           padding: '0 24px' 
         }}>
-          {/* Les photos seront ajoutées ici plus tard */}
-          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
-            <video 
-              src="/images/historique-evenements/Soiree_privee_MNP.mp4" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--text-dark)', margin: 0, textAlign: 'center' }}>Soirée privée MNP</h3>
+            <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+              <video 
+                src="/images/historique-evenements/Soiree_privee_MNP.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
-          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
-            <video 
-              src="/images/historique-evenements/Soiree_Placettes_JC_Bresses.mp4" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--text-dark)', margin: 0, textAlign: 'center' }}>Soirée Placettes J-C</h3>
+            <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+              <video 
+                src="/images/historique-evenements/Soiree_Placettes_JC_Bresses.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
-          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
-            <video 
-              src="/images/historique-evenements/Lancement_livre_2_oiseaux_rares.mp4" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--text-dark)', margin: 0, textAlign: 'center' }}>Lancement de Livre</h3>
+            <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+              <video 
+                src="/images/historique-evenements/Lancement_livre_2_oiseaux_rares.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
-          <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
-            <img 
-              src="/images/historique-evenements/CEPWE_Fin_de_semaine_equestre.jpeg" 
-              alt="CEPWE Fin de semaine équestre" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--text-dark)', margin: 0, textAlign: 'center' }}>Compétition Équestre</h3>
+            <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
+              <img 
+                src="/images/historique-evenements/CEPWE_Fin_de_semaine_equestre.jpeg" 
+                alt="CEPWE Fin de semaine équestre" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
         </div>
       </section>
