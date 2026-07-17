@@ -164,10 +164,12 @@ export default function EvenementsPage() {
             <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
               <video 
                 src="/images/historique-evenements/Soiree_privee_MNP.mp4" 
-                autoPlay 
                 loop 
                 muted 
                 playsInline 
+                controls
+                onMouseEnter={(e) => e.target.play()}
+                onMouseLeave={(e) => e.target.pause()}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
@@ -178,10 +180,12 @@ export default function EvenementsPage() {
             <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
               <video 
                 src="/images/historique-evenements/Soiree_Placettes_JC_Bresses.mp4" 
-                autoPlay 
                 loop 
                 muted 
                 playsInline 
+                controls
+                onMouseEnter={(e) => e.target.play()}
+                onMouseLeave={(e) => e.target.pause()}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
@@ -192,10 +196,12 @@ export default function EvenementsPage() {
             <div style={{ background: '#Eae4d8', borderRadius: '12px', overflow: 'hidden', aspectRatio: '1/1', position: 'relative' }}>
               <video 
                 src="/images/historique-evenements/Lancement_livre_2_oiseaux_rares.mp4" 
-                autoPlay 
                 loop 
                 muted 
                 playsInline 
+                controls
+                onMouseEnter={(e) => e.target.play()}
+                onMouseLeave={(e) => e.target.pause()}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
