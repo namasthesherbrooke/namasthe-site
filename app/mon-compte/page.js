@@ -30,8 +30,8 @@ export default function MonComptePage() {
       }
       
       if (!session) {
-        // Rediriger si non connecté en forçant le rechargement pour contourner les bugs Safari
-        window.location.href = '/connexion';
+        // Rediriger si non connecté
+        router.replace('/connexion');
         return;
       }
 

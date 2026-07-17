@@ -18,6 +18,7 @@ import SignupPopup from './components/SignupPopup';
 import Cart from './components/Cart';
 import IosInstallPrompt from './components/IosInstallPrompt';
 import TabTitleChanger from './components/TabTitleChanger';
+import FloatingOrderButton from './components/FloatingOrderButton';
 import { CartProvider } from './context/CartContext';
 
 /* Métadonnées SEO globales du site */
@@ -89,10 +90,8 @@ export default function RootLayout({ children }) {
           {/* Easter egg de l'onglet du navigateur */}
           <TabTitleChanger />
 
-          {/* Bouton Commander Flottant (Mobile uniquement) */}
-          <a href="/commande" className="floating-order-btn">
-            🛍️ Commander
-          </a>
+          {/* Bouton Commander Flottant (Mobile uniquement, masqué sur certaines pages) */}
+          <FloatingOrderButton />
         </CartProvider>
       </body>
     </html>
