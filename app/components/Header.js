@@ -224,23 +224,6 @@ export default function Header() {
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/commande"
-          onClick={() => setMenuOpen(false)}
-          style={{
-            background: 'var(--crimson)',
-            color: 'white',
-            padding: '12px 30px',
-            borderRadius: '30px',
-            fontWeight: 'bold',
-            marginTop: '20px',
-            fontSize: '1.2rem',
-            textAlign: 'center',
-            textDecoration: 'none'
-          }}
-        >
-          🛍️ Commander
-        </Link>
       </div>
     </>
   );
