@@ -88,6 +88,11 @@ export default function RootLayout({ children }) {
 
           {/* Easter egg de l'onglet du navigateur */}
           <TabTitleChanger />
+
+          {/* Bouton Commander Flottant (Mobile uniquement) */}
+          <a href="/commande" className="floating-order-btn">
+            🛍️ Commander
+          </a>
         </CartProvider>
       </body>
     </html>

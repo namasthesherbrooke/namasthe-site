@@ -1835,3 +1835,29 @@ p { color: var(--text-medium); line-height: 1.7; }
 .boutique-card-img-container:hover .boutique-card-img {
   transform: scale(1.05);
 }
+
+/* Bouton de commande flottant (Mobile) */
+.floating-order-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--crimson);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(184, 0, 62, 0.4);
+  z-index: 999;
+  text-decoration: none;
+  display: none; /* Masqué par défaut sur Desktop */
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .floating-order-btn {
+    display: block; /* Affiché sur mobile */
+  }
+}
+

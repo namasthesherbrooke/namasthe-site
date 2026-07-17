@@ -63,6 +63,7 @@ export default function Header() {
   const navLinks = [
     { href: '/', label: 'Accueil' },
     { href: '/produits', label: 'Menu' },
+    { href: '/boutique', label: 'Boutique' },
     { href: '/promotions', label: 'Promotions' },
     { href: '/creations', label: 'Menu VIP 🔒' },
     { href: '/evenements', label: 'Événements' },

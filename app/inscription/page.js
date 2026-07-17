@@ -238,6 +238,15 @@ export default function InscriptionPage() {
                   </div>
                 </div>
               )}
+              
+              <div className="form-group full">
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, cursor: 'pointer', background: 'rgba(211, 47, 47, 0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(211, 47, 47, 0.2)' }}>
+                  <input type="checkbox" required style={{ marginTop: '2px', width: '20px', height: '20px' }} />
+                  <span style={{ fontSize: '0.95rem', lineHeight: '1.4' }}>
+                    <strong>Je confirme avoir 18 ans ou plus. *</strong>
+                  </span>
+                </label>
+              </div>
             </div>
 
             <button type="submit" className="btn btn-primary form-submit">Créer mon compte</button>

@@ -129,11 +129,80 @@ export default function Home() {
             🏖️ Avis à notre clientèle : Nous sommes en vacances du 26 juillet au 3 août inclusivement.
           </div>
 
-<p>
-          
-Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l'esprit s'accorde avec une énergie vibrante. Que vous veniez pour un café de spécialité ou une pause suspendue, infusez votre journée de bonnes ondes et de lumière !
+          <p>
+          Entrez, respirez et laissez-vous envelopper par notre oasis zen où la paix de l'esprit s'accorde avec une énergie vibrante. Que vous veniez pour un café de spécialité ou une pause suspendue, infusez votre journée de bonnes ondes et de lumière !
           </p>
 
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '32px', flexWrap: 'wrap' }}>
+            <Link href="/commande" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '1.1rem', background: 'var(--crimson)' }}>
+              🛍️ Commander en ligne
+            </Link>
+            <a href="https://www.ubereats.com/ca/store/cafe-namasthe/sYwF26zFVPKzNlM-z9A1Lw" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+              🚗 Uber Eats
+            </a>
+            <a href="https://www.doordash.com/store/cafe-namasthe-sherbrooke-29369903/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+              🚲 DoorDash
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================
+          SECTION NOUVELLE : NOS INCONTOURNABLES
+          ======================================== */}
+      <section className="section fade-in-hidden" id="incontournables" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
+        <div className="section-header" style={{ marginBottom: '40px', textAlign: 'center' }}>
+          <h2 style={{ color: '#2C1810', fontSize: '2.5rem' }}>Nos Incontournables</h2>
+          <p style={{ color: '#5A4A42', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+            Les coups de cœur de notre communauté pour vous donner l'eau à la bouche.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          {/* Produit 1 */}
+          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+            <div style={{ height: '220px', overflow: 'hidden' }}>
+              <img src="/images/products/Bubble tea.jpeg" alt="Bubble Tea" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Bubble Tea Signature</h3>
+              <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 6.50 $</p>
+            </div>
+          </div>
+          {/* Produit 2 */}
+          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+            <div style={{ height: '220px', overflow: 'hidden' }}>
+              <img src="/images/products/Matcha glace.jpeg" alt="Matcha Glacé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Matcha Glacé</h3>
+              <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 5.75 $</p>
+            </div>
+          </div>
+          {/* Produit 3 */}
+          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+            <div style={{ height: '220px', overflow: 'hidden' }}>
+              <img src="/images/products/Smoothie bol.jpeg" alt="Smoothie Bol" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Smoothie Bol</h3>
+              <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 12.00 $</p>
+            </div>
+          </div>
+          {/* Produit 4 */}
+          <div style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s' }} className="zoom-on-hover">
+            <div style={{ height: '220px', overflow: 'hidden' }}>
+              <img src="/images/products/Café glacé.jpeg" alt="Café Glacé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: '#2C1810' }}>Café Glacé Spécialité</h3>
+              <p style={{ color: 'var(--crimson)', fontWeight: 'bold', fontSize: '1.1rem' }}>À partir de 5.50 $</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+          <Link href="/produits" className="btn btn-outline" style={{ padding: '12px 32px' }}>Voir tout le menu</Link>
         </div>
       </section>
 

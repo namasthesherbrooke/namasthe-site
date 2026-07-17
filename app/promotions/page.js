@@ -38,16 +38,7 @@ const autresPromos = [
     description: '10% de rabais pour tous les étudiants', 
     duree: 'En tout temps' 
   },
-  { 
-    nom: 'Promo à venir', 
-    description: '', 
-    duree: '' 
-  },
-  { 
-    nom: 'Promo à venir', 
-    description: '', 
-    duree: '' 
-  },
+
 ];
 
 export default function PromotionsPage() {

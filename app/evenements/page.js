@@ -108,12 +108,6 @@ export default function EvenementsPage() {
         <div style={{ textAlign: 'left', background: 'var(--bg-light)', padding: '32px', borderRadius: '16px', marginBottom: '32px', boxShadow: 'var(--shadow-sm)' }}>
           <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
-            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>11 et 12 Juillet</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Compétition équestre à Richmond</span>
-              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 128, Qc-143, Cleveland, QC J0B 2H0</span>
-              <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
-            </li>
 
             <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
               <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>7, 14, 21 et 28 Août — 18h30 à 20h30</span>
