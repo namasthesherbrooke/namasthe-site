@@ -3,7 +3,8 @@
     "calories": 140,
     "proteines": 3,
     "glucides": 34,
-    "lipides": 1.3
+    "lipides": 1.3,
+    "vitamines": "Vitamine C, Antioxydants"
   },
   "Fruithé protéiné": {
     "calories": 113,
@@ -15,7 +16,8 @@
     "calories": 0,
     "proteines": 0,
     "glucides": 0,
-    "lipides": 0
+    "lipides": 0,
+    "vitamines": "Vitamine C, Vitamine B6, Vitamine B12, Magnésium"
   },
   "Matchas": {
     "calories": 44,

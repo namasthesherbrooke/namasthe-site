@@ -334,6 +334,16 @@ export default function ProductsGrid({ items, type }) {
                       <div style={{ fontSize: '0.85rem', color: '#888' }}>Lipides</div>
                     </div>
                   </div>
+                  
+                  {/* Vitamines et minéraux optionnels */}
+                  {nutritionData[selectedProduct.name].vitamines && (
+                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #Eae4d8' }}>
+                      <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '8px' }}>Vitamines & Minéraux</div>
+                      <div style={{ fontSize: '1rem', color: '#2C1810', fontWeight: '500' }}>
+                        {nutritionData[selectedProduct.name].vitamines}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
