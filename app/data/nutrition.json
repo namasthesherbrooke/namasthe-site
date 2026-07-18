@@ -312,7 +312,25 @@
     "proteines": 3.9,
     "glucides": 44.5,
     "lipides": 4.3,
-    "ingredients": "Mangues congelées, Fraises entière congelé, Crème lotus, Graines de chia"
+    "ingredients": "Mangues congelées, Fraises entière congelé, Crème lotus, Graines de chia",
+    "vitamines": [
+      {
+        "nom": "Vitamine C",
+        "quantite": "Élevé"
+      },
+      {
+        "nom": "Fibres",
+        "quantite": "Élevé"
+      },
+      {
+        "nom": "Oméga-3",
+        "quantite": "Source (Chia)"
+      },
+      {
+        "nom": "Antioxydants",
+        "quantite": "Élevé"
+      }
+    ]
   },
   "Café glacé": {
     "calories": 66,
