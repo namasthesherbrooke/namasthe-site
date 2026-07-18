@@ -173,48 +173,12 @@
     "lipides": 0,
     "vitamines": [
       {
-        "nom": "Cholestérol",
-        "quantite": "0 mg"
+        "nom": "Calories",
+        "quantite": "-90% vs l'industrie"
       },
       {
-        "nom": "Sodium",
-        "quantite": "4 mg"
-      },
-      {
-        "nom": "Vitamine A",
-        "quantite": "0 mcg"
-      },
-      {
-        "nom": "B1 - Thiamine",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "B2 - Riboflavine",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "B3 - Niacine",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "B5 - Acide pantothénique",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "B6 - Pyridoxine",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "B12 - Cobalamine",
-        "quantite": "0 mcg"
-      },
-      {
-        "nom": "Vitamine C",
-        "quantite": "0 mg"
-      },
-      {
-        "nom": "Vitamine D",
-        "quantite": "0 mcg"
+        "nom": "Digestion",
+        "quantite": "Légère"
       }
     ],
     "ingredients": "Thé, Bubble tea"
@@ -224,14 +188,34 @@
     "proteines": 0.4,
     "glucides": 19.3,
     "lipides": 0.2,
-    "ingredients": "Limonde lotus (0,5 oz), Lotus (0,5 oz), fruits lyophilisés (10 g)"
+    "ingredients": "Limonde lotus (0,5 oz), Lotus (0,5 oz), fruits lyophilisés (10 g)",
+    "vitamines": [
+      {
+        "nom": "Fruits",
+        "quantite": "Lyophilisés 100% naturels"
+      },
+      {
+        "nom": "Énergie",
+        "quantite": "Douce"
+      }
+    ]
   },
   "Smoothie Bubble": {
     "calories": 145,
     "proteines": 1,
     "glucides": 38.5,
     "lipides": 0,
-    "ingredients": "Mangues congelées, Bubble tea, Crème lotus"
+    "ingredients": "Mangues congelées, Bubble tea, Crème lotus",
+    "vitamines": [
+      {
+        "nom": "Fruits",
+        "quantite": "Vrais (Mangues/Fraises)"
+      },
+      {
+        "nom": "Texture",
+        "quantite": "Onctueuse"
+      }
+    ]
   },
   "Simplicithé": {
     "calories": 0,
@@ -247,7 +231,17 @@
       "proteines": 2.5,
       "glucides": 5.4,
       "lipides": 11,
-      "ingredients": "Espresso, Lait amande, Half and half"
+      "ingredients": "Espresso, Lait amande, Half and half",
+      "vitamines": [
+        {
+          "nom": "Caféine",
+          "quantite": "Idéale"
+        },
+        {
+          "nom": "Réconfort",
+          "quantite": "Santé"
+        }
+      ]
     },
     {
       "variant": "Café Protéiné (Aussi disponible)",
@@ -255,7 +249,17 @@
       "proteines": 11.7,
       "glucides": 5.7,
       "lipides": 4.9,
-      "ingredients": "Café, Lait amande"
+      "ingredients": "Café, Lait amande",
+      "vitamines": [
+        {
+          "nom": "Protéines",
+          "quantite": "11.7g"
+        },
+        {
+          "nom": "Satiété",
+          "quantite": "Élevée"
+        }
+      ]
     }
   ],
   "Matcha signature": {
@@ -305,7 +309,17 @@
     "proteines": 0,
     "glucides": 10,
     "lipides": 15,
-    "ingredients": "Eau Plate, Half and half"
+    "ingredients": "Eau Plate, Half and half",
+    "vitamines": [
+      {
+        "nom": "Hydratation",
+        "quantite": "Gourmande"
+      },
+      {
+        "nom": "Rafraîchissant",
+        "quantite": "Oui"
+      }
+    ]
   },
   "Smoothie bol": {
     "calories": 228,
@@ -339,12 +353,12 @@
     "lipides": 2.6,
     "vitamines": [
       {
-        "nom": "Sodium",
-        "quantite": "74 mg"
+        "nom": "Énergie",
+        "quantite": "Pure"
       },
       {
-        "nom": "Potassium",
-        "quantite": "268 mg"
+        "nom": "Lait végétal",
+        "quantite": "Inclus"
       }
     ],
     "ingredients": "Espresso, Lait de soya"
@@ -354,14 +368,38 @@
     "proteines": 0,
     "glucides": 0,
     "lipides": 0,
-    "ingredients": "Glace, Base neutre ou saveur sans sucre"
+    "ingredients": "Glace, Base neutre ou saveur sans sucre",
+    "vitamines": [
+      {
+        "nom": "Sucre ajouté",
+        "quantite": "0g"
+      },
+      {
+        "nom": "Gourmandise",
+        "quantite": "Zéro culpabilité"
+      }
+    ]
   },
   "Hydra-thé": {
     "calories": 0,
     "proteines": 0,
     "glucides": 0,
     "lipides": 0,
-    "ingredients": "Eau, Électrolytes, Saveurs sans sucre"
+    "ingredients": "Eau, Électrolytes, Saveurs sans sucre",
+    "vitamines": [
+      {
+        "nom": "Électrolytes",
+        "quantite": "Vrais"
+      },
+      {
+        "nom": "Vitamines B",
+        "quantite": "Source"
+      },
+      {
+        "nom": "Hydratation",
+        "quantite": "Maximale"
+      }
+    ]
   },
   "Lotus": {
     "calories": 10,
