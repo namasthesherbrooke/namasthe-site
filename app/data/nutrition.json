@@ -277,5 +277,19 @@
       }
     ],
     "ingredients": "Espresso, Lait de soya"
+  },
+  "Frappé givré": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0,
+    "ingredients": "Glace, Base neutre ou saveur sans sucre"
+  },
+  "Hydra-thé": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0,
+    "ingredients": "Eau, Électrolytes, Saveurs sans sucre"
   }
 }

@@ -179,8 +179,9 @@ export default function ProductsGrid({ items, type }) {
                 style={{ 
                   width: '100%', 
                   height: '100%', 
-                  objectFit: 'cover', 
+                  objectFit: 'contain', 
                   pointerEvents: 'none',
+                  padding: '16px'
                 }}
               />
               {item.tag && (
@@ -290,7 +291,8 @@ export default function ProductsGrid({ items, type }) {
                 style={{ 
                   width: '100%', 
                   height: '100%', 
-                  objectFit: 'cover',
+                  objectFit: 'contain',
+                  padding: '24px'
                 }}
               />
               {selectedProduct.tag && (
