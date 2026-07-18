@@ -99,7 +99,21 @@
       "proteines": 7.1,
       "glucides": 9.3,
       "lipides": 3.3,
-      "ingredients": "Substitut de repas vanille, Préparation à boisson protéique vanille, Oeuf entier, Farine tout usage"
+      "ingredients": "Substitut de repas vanille, Préparation à boisson protéique vanille, Oeuf entier, Farine tout usage",
+      "vitamines": [
+        {
+          "nom": "Cholestérol",
+          "quantite": "45 mg"
+        },
+        {
+          "nom": "Sodium",
+          "quantite": "41 mg"
+        },
+        {
+          "nom": "Potassium",
+          "quantite": "38 mg"
+        }
+      ]
     },
     {
       "variant": "6 beignes",
@@ -107,7 +121,21 @@
       "proteines": 42.7,
       "glucides": 55.7,
       "lipides": 19.8,
-      "ingredients": "Substitut de repas vanille, Préparation à boisson protéique vanille, Oeuf entier, Farine tout usage"
+      "ingredients": "Substitut de repas vanille, Préparation à boisson protéique vanille, Oeuf entier, Farine tout usage",
+      "vitamines": [
+        {
+          "nom": "Cholestérol",
+          "quantite": "270 mg"
+        },
+        {
+          "nom": "Sodium",
+          "quantite": "246 mg"
+        },
+        {
+          "nom": "Potassium",
+          "quantite": "228 mg"
+        }
+      ]
     }
   ],
   "Namdej": {
