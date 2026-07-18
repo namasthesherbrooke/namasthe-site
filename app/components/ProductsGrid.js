@@ -327,6 +327,8 @@ export default function ProductsGrid({ items, type }) {
                   if (searchName.includes('lotus')) matchedKey = 'Lotus';
                   else if (searchName.includes('mega')) matchedKey = 'Méga thé';
                   else if (searchName.includes('mindblow')) matchedKey = 'Mindblow';
+                  else if (searchName.includes('rafraichi') || searchName.includes('raffraichi')) matchedKey = 'Raffraichi-Thé';
+                  else if (searchName.includes('simplici')) matchedKey = 'Simplicithé';
                 }
                 
                 if (!matchedKey || !nutritionData[matchedKey]) return null;
