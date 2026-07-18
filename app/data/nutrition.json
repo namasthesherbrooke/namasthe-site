@@ -300,17 +300,61 @@
     "ingredients": "Eau, Électrolytes, Saveurs sans sucre"
   },
   "Lotus": {
-    "calories": 0,
+    "calories": 10,
     "proteines": 0,
     "glucides": 0,
     "lipides": 0,
-    "ingredients": "Extrait végétal Lotus, Eau gazéifiée"
+    "ingredients": "Extrait végétal Lotus, Eau gazéifiée",
+    "vitamines": [
+      {
+        "nom": "Vitamine C",
+        "quantite": "100%"
+      },
+      {
+        "nom": "Vitamine B6",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Vitamine B12",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Magnésium",
+        "quantite": "15%"
+      },
+      {
+        "nom": "Antioxydants",
+        "quantite": "Élevé"
+      }
+    ]
   },
   "Méga thé": {
     "calories": 0,
     "proteines": 0,
     "glucides": 0,
     "lipides": 0,
-    "ingredients": "Thé énergisant, Aloès, Saveurs sans sucre"
+    "ingredients": "Thé énergisant, Aloès, Saveurs sans sucre",
+    "vitamines": [
+      {
+        "nom": "Vitamine C",
+        "quantite": "100%"
+      },
+      {
+        "nom": "Vitamine B6",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Vitamine B12",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Magnésium",
+        "quantite": "15%"
+      },
+      {
+        "nom": "Antioxydants",
+        "quantite": "Élevé"
+      }
+    ]
   }
 }
