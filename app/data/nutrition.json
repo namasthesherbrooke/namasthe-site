@@ -280,7 +280,25 @@
     "proteines": 16.9,
     "glucides": 11.9,
     "lipides": 4.1,
-    "ingredients": "Substitut de repas vanille, préparation pour boisson protéique vanille, pudding sans sucre"
+    "ingredients": "Substitut de repas vanille, préparation pour boisson protéique vanille, pudding sans sucre",
+    "vitamines": [
+      {
+        "nom": "Calcium",
+        "quantite": "45 mg"
+      },
+      {
+        "nom": "Potassium",
+        "quantite": "180 mg"
+      },
+      {
+        "nom": "Sodium",
+        "quantite": "220 mg"
+      },
+      {
+        "nom": "Vitamines",
+        "quantite": "21 essentielles"
+      }
+    ]
   },
   "Dirty soda": {
     "calories": 150,

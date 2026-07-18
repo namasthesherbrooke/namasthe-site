@@ -330,6 +330,7 @@ export default function ProductsGrid({ items, type }) {
                   else if (searchName.includes('rafraichi') || searchName.includes('raffraichi')) matchedKey = 'Raffraichi-Thé';
                   else if (searchName.includes('simplici')) matchedKey = 'Simplicithé';
                   else if (searchName.includes('bol') || searchName.includes('bowl')) matchedKey = 'Smoothie bol';
+                  else if (searchName.includes('shake')) matchedKey = 'Shake';
                 }
                 
                 if (!matchedKey || !nutritionData[matchedKey]) return null;
