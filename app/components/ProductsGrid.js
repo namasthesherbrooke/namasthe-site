@@ -320,9 +320,16 @@ export default function ProductsGrid({ items, type }) {
                 };
                 
                 const searchName = normalizeString(selectedProduct.name);
-                const matchedKey = Object.keys(nutritionData).find(key => normalizeString(key) === searchName);
+                let matchedKey = Object.keys(nutritionData).find(key => normalizeString(key) === searchName);
                 
-                if (!matchedKey) return null;
+                // Logique de fallback si le nom de la base de données est différent
+                if (!matchedKey) {
+                  if (searchName.includes('lotus')) matchedKey = 'Lotus';
+                  else if (searchName.includes('mega')) matchedKey = 'Méga thé';
+                  else if (searchName.includes('mindblow')) matchedKey = 'Mindblow';
+                }
+                
+                if (!matchedKey || !nutritionData[matchedKey]) return null;
                 const data = Array.isArray(nutritionData[matchedKey]) ? nutritionData[matchedKey] : [nutritionData[matchedKey]];
 
                 return (
