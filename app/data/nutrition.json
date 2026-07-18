@@ -1,5 +1,5 @@
 {
-  "Fruithés": [
+  "Fruithé": [
     {
       "variant": "Fruithé régulier",
       "calories": 140,
@@ -31,25 +31,25 @@
       { "nom": "Magnésium", "quantite": "15%" }
     ]
   },
-  "Matchas": {
+  "Matcha": {
     "calories": 44,
     "proteines": 3.8,
     "glucides": 3.1,
     "lipides": 2.5
   },
-  "Matchas glacés": {
+  "Matcha glacé": {
     "calories": 44,
     "proteines": 3.8,
     "glucides": 3.1,
     "lipides": 2.5
   },
-  "Gaufres protéinées": {
+  "Gaufre protéinée": {
     "calories": 277,
     "proteines": 17.4,
     "glucides": 31.2,
     "lipides": 7.9
   },
-  "Beignes protéinés": {
+  "Beigne protéiné": {
     "calories": 597,
     "proteines": 42.7,
     "glucides": 55.7,
