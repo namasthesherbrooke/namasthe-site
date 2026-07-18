@@ -313,14 +313,26 @@ export default function ProductsGrid({ items, type }) {
               </p>
 
               {/* Valeurs nutritives */}
-              {nutritionData[selectedProduct.name.trim()] && (
+              {(() => {
+                const normalizeString = (str) => {
+                  if (!str) return '';
+                  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                };
+                
+                const searchName = normalizeString(selectedProduct.name);
+                const matchedKey = Object.keys(nutritionData).find(key => normalizeString(key) === searchName);
+                
+                if (!matchedKey) return null;
+                const data = Array.isArray(nutritionData[matchedKey]) ? nutritionData[matchedKey] : [nutritionData[matchedKey]];
+
+                return (
                 <div style={{ background: '#Fdfcfb', border: '1px solid #Eae4d8', borderRadius: '16px', padding: '20px', marginTop: '20px' }}>
                   <h4 style={{ color: '#2C1810', fontSize: '1.1rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span>💪</span> Valeurs nutritives
                   </h4>
                   
-                  {(Array.isArray(nutritionData[selectedProduct.name.trim()]) ? nutritionData[selectedProduct.name.trim()] : [nutritionData[selectedProduct.name.trim()]]).map((nutrition, idx) => (
-                    <div key={idx} style={{ marginBottom: idx !== (Array.isArray(nutritionData[selectedProduct.name.trim()]) ? nutritionData[selectedProduct.name.trim()].length - 1 : 0) ? '24px' : '0' }}>
+                  {data.map((nutrition, idx) => (
+                    <div key={idx} style={{ marginBottom: idx !== data.length - 1 ? '24px' : '0' }}>
                       {nutrition.variant && (
                         <div style={{ fontWeight: 'bold', color: '#B8003E', marginBottom: '12px', fontSize: '1.05rem', borderBottom: '1px solid #Eae4d8', paddingBottom: '4px' }}>
                           {nutrition.variant}
@@ -369,7 +381,8 @@ export default function ProductsGrid({ items, type }) {
                     </div>
                   ))}
                 </div>
-              )}
+                );
+              })()}
             </div>
           </div>
         </div>

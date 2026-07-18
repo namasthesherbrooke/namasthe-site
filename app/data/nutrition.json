@@ -25,24 +25,31 @@
       "lipides": 1.5
     }
   ],
-  "Mindblow": [
-    {
-      "variant": "1 portion",
-      "calories": 0,
-      "proteines": 0,
-      "glucides": 0,
-      "lipides": 0,
-      "ingredients": "Mindblow, Eau"
-    },
-    {
-      "variant": "6 portions",
-      "calories": 0,
-      "proteines": 0,
-      "glucides": 0,
-      "lipides": 0,
-      "ingredients": "Mindblow, Eau"
-    }
-  ],
+  "Mindblow": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0,
+    "vitamines": [
+      {
+        "nom": "Vitamine C",
+        "quantite": "100%"
+      },
+      {
+        "nom": "Vitamine B6",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Vitamine B12",
+        "quantite": "200%"
+      },
+      {
+        "nom": "Magnésium",
+        "quantite": "15%"
+      }
+    ],
+    "ingredients": "Concentré énergétique, Eau"
+  },
   "Matcha": {
     "calories": 44,
     "proteines": 3.8,
@@ -291,5 +298,19 @@
     "glucides": 0,
     "lipides": 0,
     "ingredients": "Eau, Électrolytes, Saveurs sans sucre"
+  },
+  "Lotus": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0,
+    "ingredients": "Extrait végétal Lotus, Eau gazéifiée"
+  },
+  "Méga thé": {
+    "calories": 0,
+    "proteines": 0,
+    "glucides": 0,
+    "lipides": 0,
+    "ingredients": "Thé énergisant, Aloès, Saveurs sans sucre"
   }
 }
