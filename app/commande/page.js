@@ -645,57 +645,25 @@ export default function OrderBuilder() {
 
         <div className="order-cards" id="order-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', marginBottom: '40px' }}>
           {/* --- Carte Uber Eats --- */}
-          <div className="order-card" id="order-ubereats" style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '1.8rem', marginBottom: '20px', color: '#2C1810' }}>Uber Eats</h3>
-            <div className="order-app-links" style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://apps.apple.com/us/app/uber-eats-food-groceries/id1058959277" 
-                  alt="QR App Store Uber Eats" 
-                  style={{ width: '100px', height: '100px', borderRadius: '12px', border: '1px solid #eee' }}
-                />
-                <a href="https://apps.apple.com/us/app/uber-eats-food-groceries/id1058959277" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '120px', height: '40px' }}>
-                  <img src="/app-store-new.png" alt="App Store" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </a>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://play.google.com/store/apps/details?id=com.ubercab.eats" 
-                  alt="QR Play Store Uber Eats" 
-                  style={{ width: '100px', height: '100px', borderRadius: '12px', border: '1px solid #eee' }}
-                />
-                <a href="https://play.google.com/store/apps/details?id=com.ubercab.eats" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '120px', height: '40px' }}>
-                  <img src="/google-play-new.png" alt="Google Play" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </a>
-              </div>
-            </div>
+          <div className="order-card" id="order-ubereats" style={{ background: 'white', padding: '40px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '2rem', marginBottom: '20px', color: '#06C167', fontWeight: 'bold' }}>Uber Eats</h3>
+            <p style={{ color: '#666', marginBottom: '24px', fontSize: '1.05rem' }}>Commandez vos produits préférés via l'application Uber Eats pour une livraison rapide.</p>
+            <a href="https://www.ubereats.com/ca/store/cafe-namasthe/sYwF26zFVPKzNlM-z9A1Lw" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(6, 193, 103, 0.3)' }}
+               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+              Commander sur Uber Eats
+            </a>
           </div>
 
           {/* --- Carte DoorDash --- */}
-          <div className="order-card" id="order-doordash" style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '1.8rem', marginBottom: '20px', color: '#2C1810' }}>DoorDash</h3>
-            <div className="order-app-links" style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://apps.apple.com/us/app/doordash-food-grocery-more/id719972451" 
-                  alt="QR App Store DoorDash" 
-                  style={{ width: '100px', height: '100px', borderRadius: '12px', border: '1px solid #eee' }}
-                />
-                <a href="https://apps.apple.com/us/app/doordash-food-grocery-more/id719972451" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '120px', height: '40px' }}>
-                  <img src="/app-store-new.png" alt="App Store" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </a>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://play.google.com/store/apps/details?id=com.dd.doordash" 
-                  alt="QR Play Store DoorDash" 
-                  style={{ width: '100px', height: '100px', borderRadius: '12px', border: '1px solid #eee' }}
-                />
-                <a href="https://play.google.com/store/apps/details?id=com.dd.doordash" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '120px', height: '40px' }}>
-                  <img src="/google-play-new.png" alt="Google Play" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </a>
-              </div>
-            </div>
+          <div className="order-card" id="order-doordash" style={{ background: 'white', padding: '40px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h3 style={{ fontSize: '2rem', marginBottom: '20px', color: '#FF3008', fontWeight: 'bold' }}>DoorDash</h3>
+            <p style={{ color: '#666', marginBottom: '24px', fontSize: '1.05rem' }}>Faites-vous livrer directement à votre porte grâce à notre partenaire DoorDash.</p>
+            <a href="https://www.doordash.com/store/cafe-namasthe-sherbrooke-29369903/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(255, 48, 8, 0.3)' }}
+               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+              Commander sur DoorDash
+            </a>
           </div>
         </div>
 
