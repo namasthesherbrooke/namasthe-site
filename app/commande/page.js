@@ -648,7 +648,7 @@ export default function OrderBuilder() {
           <div className="order-card" id="order-ubereats" style={{ background: 'white', padding: '40px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h3 style={{ fontSize: '2rem', marginBottom: '20px', color: '#06C167', fontWeight: 'bold' }}>Uber Eats</h3>
             <p style={{ color: '#666', marginBottom: '24px', fontSize: '1.05rem' }}>Commandez vos produits préférés via l'application Uber Eats pour une livraison rapide.</p>
-            <a href="https://www.ubereats.com/ca/store/cafe-namasthe/sYwF26zFVPKzNlM-z9A1Lw" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(6, 193, 103, 0.3)' }}
+            <a href="https://www.ubereats.com/store-browse-uuid/6f35c309-04f2-5b68-9e1d-4727b06d474d?diningMode=DELIVERY" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(6, 193, 103, 0.3)' }}
                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
               Commander sur Uber Eats
@@ -659,7 +659,7 @@ export default function OrderBuilder() {
           <div className="order-card" id="order-doordash" style={{ background: 'white', padding: '40px 30px', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h3 style={{ fontSize: '2rem', marginBottom: '20px', color: '#FF3008', fontWeight: 'bold' }}>DoorDash</h3>
             <p style={{ color: '#666', marginBottom: '24px', fontSize: '1.05rem' }}>Faites-vous livrer directement à votre porte grâce à notre partenaire DoorDash.</p>
-            <a href="https://www.doordash.com/store/cafe-namasthe-sherbrooke-29369903/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(255, 48, 8, 0.3)' }}
+            <a href="https://www.doordash.com/store/33383693?utm_source=mx_share_android" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: 'white', padding: '14px 30px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(255, 48, 8, 0.3)' }}
                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
               Commander sur DoorDash

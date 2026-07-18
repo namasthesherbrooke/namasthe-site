@@ -157,10 +157,10 @@ export default function Home() {
             <Link href="/commande" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '1.1rem', background: 'var(--crimson)' }}>
               🛍️ Commander en ligne
             </Link>
-            <a href="https://www.ubereats.com/ca/store/cafe-namasthe/sYwF26zFVPKzNlM-z9A1Lw" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+            <a href="https://www.ubereats.com/store-browse-uuid/6f35c309-04f2-5b68-9e1d-4727b06d474d?diningMode=DELIVERY" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#06C167', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
               🚗 Uber Eats
             </a>
-            <a href="https://www.doordash.com/store/cafe-namasthe-sherbrooke-29369903/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+            <a href="https://www.doordash.com/store/33383693?utm_source=mx_share_android" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#FF3008', color: '#fff', padding: '12px 24px', borderRadius: '50px', textDecoration: 'none', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
               🚲 DoorDash
             </a>
           </div>
