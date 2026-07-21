@@ -10,13 +10,42 @@ export default function RecipesPage() {
   // Recipe form state
   const [recipeName, setRecipeName] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
+  const [wasteMargin, setWasteMargin] = useState(0); // Marge de perte en %
   
-  // Dynamic list of ingredients added to this recipe: { ingId, quantity }
+  // Dynamic list of ingredients added to this recipe
   const [recipeIngredients, setRecipeIngredients] = useState([]);
   
   // Select state for adding new ingredient to recipe
   const [selectedIngId, setSelectedIngId] = useState('');
   const [addQuantity, setAddQuantity] = useState('');
+  const [measurementUnit, setMeasurementUnit] = useState('base'); // base, 1/4_tsp, 1_tsp, etc.
+
+  // Conversion table for Barista Measurements to base unit (ml/g)
+  const measurementMultipliers = {
+    'base': 1,
+    '1/4_tsp': 1.25,
+    '1/2_tsp': 2.5,
+    '3/4_tsp': 3.75,
+    '1_tsp': 5,
+    '1_tbsp': 15,
+    '1/2_oz': 15,
+    '1_oz': 30,
+    '100_ml': 100,
+    '250_ml': 250
+  };
+
+  const measurementLabels = {
+    'base': 'Unité de base (g/ml/portion/pièce)',
+    '1/4_tsp': '1/4 c. à thé (1.25)',
+    '1/2_tsp': '1/2 c. à thé (2.5)',
+    '3/4_tsp': '3/4 c. à thé (3.75)',
+    '1_tsp': '1 c. à thé (5)',
+    '1_tbsp': '1 c. à soupe (15)',
+    '1/2_oz': '1/2 oz (15)',
+    '1_oz': '1 oz (30)',
+    '100_ml': '100 ml/g',
+    '250_ml': '1 tasse (250 ml)'
+  };
 
   useEffect(() => {
     fetchIngredients();
@@ -37,22 +66,27 @@ export default function RecipesPage() {
   const handleAddIngredientToRecipe = () => {
     if (!selectedIngId || !addQuantity) return;
     
-    // Check if already in list
-    if (recipeIngredients.some(ri => ri.id === selectedIngId)) {
-      alert("Cet ingrédient est déjà dans la recette.");
-      return;
-    }
-    
+    // Allow same ingredient multiple times if different measurement, but to keep it simple, just add it with a unique index.
     const ing = ingredientsDb.find(i => i.id === selectedIngId);
     if (ing) {
-      setRecipeIngredients([...recipeIngredients, { ...ing, recipeQty: parseFloat(addQuantity) }]);
+      const multiplier = measurementMultipliers[measurementUnit];
+      // Quantité réelle en g/ml/portions
+      const realQuantity = parseFloat(addQuantity) * multiplier;
+      
+      setRecipeIngredients([...recipeIngredients, { 
+        ...ing, 
+        recipeQty: realQuantity, 
+        displayQty: parseFloat(addQuantity),
+        displayUnit: measurementUnit 
+      }]);
       setSelectedIngId('');
       setAddQuantity('');
+      setMeasurementUnit('base');
     }
   };
 
-  const removeIngredient = (id) => {
-    setRecipeIngredients(recipeIngredients.filter(ri => ri.id !== id));
+  const removeIngredient = (indexToRemove) => {
+    setRecipeIngredients(recipeIngredients.filter((_, index) => index !== indexToRemove));
   };
 
   // --- CALCULATIONS ---
@@ -60,21 +94,8 @@ export default function RecipesPage() {
     // Calcul coût
     acc.cost += item.cost_per_unit * item.recipeQty;
     
-    // Calcul macros (basé sur /100)
-    // Si c'est en piece, on assume que la DB stocke les macros par pièce (1) ou pour 100g de cette pièce, 
-    // mais dans l'UI on a dit "pour 100 unités" si c'est des pièces pour être consistant, ou pour 1 pièce.
-    // L'idéal est de dire : macros donnés pour 100, donc :
-    let factor = item.unit === 'piece' ? item.recipeQty : (item.recipeQty / 100);
-    // Si l'utilisateur a entré les macros pour 1 pièce quand unit='piece', on ajuste :
-    // On va assumer factor = recipeQty / 100 pour ml/g, et recipeQty / 1 si piece.
-    factor = item.unit === 'piece' ? item.recipeQty : (item.recipeQty / 100);
-    // Wait, let's keep it simple: the prompt in the UI said "pour 100 unités". 
-    // So factor is always recipeQty / 100, except if it's piece maybe it's just per piece?
-    // Let's standardise: always divide by 100 if stored as per_100.
-    factor = item.recipeQty / 100;
-    // Si la DB a des pièces individuelles, on a conseillé d'entrer les macros pour 100.
-    // Mais soyons logique, si unit=piece, les macros sont souvent pour 1 pièce.
-    if (item.unit === 'piece') factor = item.recipeQty;
+    // Calcul macros (basé sur /100 sauf si c'est pièce ou portion)
+    let factor = (item.unit === 'piece' || item.unit === 'portion') ? item.recipeQty : (item.recipeQty / 100);
 
     acc.calories += (item.calories_per_100 || 0) * factor;
     acc.protein += (item.protein_per_100 || 0) * factor;
@@ -85,8 +106,11 @@ export default function RecipesPage() {
     return acc;
   }, { cost: 0, calories: 0, protein: 0, carbs: 0, fat: 0, sugar: 0 });
 
-  const profit = parseFloat(sellingPrice) - totals.cost;
-  const margin = parseFloat(sellingPrice) > 0 ? (profit / parseFloat(sellingPrice)) * 100 : 0;
+  // Ajout de la marge de perte
+  const finalCost = totals.cost * (1 + (wasteMargin / 100));
+
+  const profit = parseFloat(sellingPrice || 0) - finalCost;
+  const margin = parseFloat(sellingPrice || 0) > 0 ? (profit / parseFloat(sellingPrice)) * 100 : 0;
 
   const handleSaveRecipe = async () => {
     if (!recipeName || recipeIngredients.length === 0) {
@@ -117,6 +141,7 @@ export default function RecipesPage() {
       alert("Recette sauvegardée avec succès !");
       setRecipeName('');
       setSellingPrice('');
+      setWasteMargin(0);
       setRecipeIngredients([]);
     } catch (error) {
       alert("Erreur: " + error.message);
@@ -146,30 +171,39 @@ export default function RecipesPage() {
 
           <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', color: '#334155' }}>Ingrédients</h3>
           
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-            <div style={{ flex: 2 }}>
-              <select value={selectedIngId} onChange={(e) => setSelectedIngId(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
-                <option value="">-- Choisir un ingrédient --</option>
-                {ingredientsDb.map(ing => (
-                  <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+            <select value={selectedIngId} onChange={(e) => setSelectedIngId(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
+              <option value="">-- Choisir un ingrédient --</option>
+              {ingredientsDb.map(ing => (
+                <option key={ing.id} value={ing.id}>{ing.name} ({ing.unit})</option>
+              ))}
+            </select>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <input type="number" step="0.1" value={addQuantity} onChange={(e) => setAddQuantity(e.target.value)} placeholder="Quantité" style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              
+              <select value={measurementUnit} onChange={(e) => setMeasurementUnit(e.target.value)} style={{ flex: 2, padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
+                {Object.entries(measurementLabels).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
                 ))}
               </select>
+              
+              <button onClick={handleAddIngredientToRecipe} style={{ background: '#F1F5F9', border: '1px solid #CBD5E1', padding: '0 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
+                +
+              </button>
             </div>
-            <div style={{ flex: 1 }}>
-              <input type="number" step="1" value={addQuantity} onChange={(e) => setAddQuantity(e.target.value)} placeholder="Qté" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
-            </div>
-            <button onClick={handleAddIngredientToRecipe} style={{ background: '#F1F5F9', border: '1px solid #CBD5E1', padding: '0 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
-              +
-            </button>
           </div>
 
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {recipeIngredients.map((ing, index) => (
               <li key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px dashed #E2E8F0' }}>
-                <span style={{ fontWeight: '500', color: '#334155' }}>{ing.recipeQty} {ing.unit} x {ing.name}</span>
+                <span style={{ fontWeight: '500', color: '#334155' }}>
+                  {ing.displayQty} {ing.displayUnit !== 'base' ? measurementLabels[ing.displayUnit].split('(')[0].trim() : ing.unit} x {ing.name}
+                  {ing.displayUnit !== 'base' && <span style={{ fontSize: '0.75rem', color: '#94A3B8', marginLeft: '5px' }}>({ing.recipeQty} {ing.unit})</span>}
+                </span>
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <span style={{ color: '#64748B', fontSize: '0.9rem' }}>{(ing.cost_per_unit * ing.recipeQty).toFixed(2)}$</span>
-                  <button onClick={() => removeIngredient(ing.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.1rem' }}>×</button>
+                  <button onClick={() => removeIngredient(index)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem', padding: '0 5px' }}>×</button>
                 </div>
               </li>
             ))}
@@ -188,12 +222,27 @@ export default function RecipesPage() {
           {/* CARTE COSTING */}
           <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', borderTop: '4px solid #10B981' }}>
             <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#334155' }}>Finances (Costing)</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem' }}>
-              <span style={{ color: '#64748B' }}>Coûtant total :</span>
-              <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{totals.cost.toFixed(2)} $</span>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
+              <span>Coût ingrédients de base :</span>
+              <span>{totals.cost.toFixed(2)} $</span>
             </div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
+              <span>Marge de perte (gaspillage) :</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="number" min="0" max="100" value={wasteMargin} onChange={(e) => setWasteMargin(parseFloat(e.target.value) || 0)} style={{ width: '60px', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'right' }} />
+                <span>%</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem', paddingTop: '10px', borderTop: '1px solid #E2E8F0' }}>
+              <span style={{ color: '#475569', fontWeight: 'bold' }}>Coût Réel (avec pertes) :</span>
+              <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{finalCost.toFixed(2)} $</span>
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem' }}>
-              <span style={{ color: '#64748B' }}>Prix de vente :</span>
+              <span style={{ color: '#64748B' }}>Prix de vente final :</span>
               <span style={{ fontWeight: 'bold', color: '#10B981' }}>{parseFloat(sellingPrice || 0).toFixed(2)} $</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #E2E8F0', fontSize: '1.2rem' }}>

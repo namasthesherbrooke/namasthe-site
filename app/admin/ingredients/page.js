@@ -119,15 +119,16 @@ export default function IngredientsPage() {
         const data = await response.json();
         
         if (data.success && data.data) {
+          const isServing = formData.unit === 'portion' || formData.unit === 'piece';
           setFormData(prev => ({
             ...prev,
-            calories_per_100: data.data.calories_per_100 || '',
-            protein_per_100: data.data.protein_per_100 || '',
-            carbs_per_100: data.data.carbs_per_100 || '',
-            fat_per_100: data.data.fat_per_100 || '',
-            sugar_per_100: data.data.sugar_per_100 || ''
+            calories_per_100: isServing ? data.data.calories_per_serving : data.data.calories_per_100,
+            protein_per_100: isServing ? data.data.protein_per_serving : data.data.protein_per_100,
+            carbs_per_100: isServing ? data.data.carbs_per_serving : data.data.carbs_per_100,
+            fat_per_100: isServing ? data.data.fat_per_serving : data.data.fat_per_100,
+            sugar_per_100: isServing ? data.data.sugar_per_serving : data.data.sugar_per_100
           }));
-          alert("Succès ! L'IA a rempli les informations nutritionnelles.");
+          alert(`Succès ! L'IA a rempli les informations nutritionnelles (${isServing ? 'Par portion' : 'Pour 100g/ml'}).`);
         } else {
           alert("Erreur de l'IA : " + data.error);
         }
@@ -183,26 +184,47 @@ export default function IngredientsPage() {
               <input type="text" name="supplier" value={formData.supplier} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
             </div>
             
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-              <div style={{ flex: 2 }}>
-                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Coût d'achat ($) *</label>
-                <input type="number" step="0.01" name="cost_per_unit" value={formData.cost_per_unit} onChange={handleChange} required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 4.50" />
+            <h3 style={{ fontSize: '1rem', marginTop: '25px', marginBottom: '15px', color: '#334155', borderBottom: '1px solid #E2E8F0', paddingBottom: '5px' }}>Format d'achat (Calculateur)</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '5px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Prix payé ($) *</label>
+                <input type="number" step="0.01" name="total_price" value={formData.total_price || ''} onChange={(e) => {
+                  const price = parseFloat(e.target.value) || 0;
+                  const qty = parseFloat(formData.total_quantity) || 1;
+                  setFormData({...formData, total_price: e.target.value, cost_per_unit: (price / qty).toFixed(4)});
+                }} required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 29.00" />
               </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Pour 1...</label>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Quantité totale *</label>
+                <input type="number" step="0.01" name="total_quantity" value={formData.total_quantity || ''} onChange={(e) => {
+                  const qty = parseFloat(e.target.value) || 1;
+                  const price = parseFloat(formData.total_price) || 0;
+                  setFormData({...formData, total_quantity: e.target.value, cost_per_unit: (price / qty).toFixed(4)});
+                }} required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 200" />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Unité *</label>
                 <select name="unit" value={formData.unit} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
-                  <option value="g">Gramme (g)</option>
-                  <option value="ml">Millilitre (ml)</option>
-                  <option value="piece">Unité/Pièce</option>
+                  <option value="g">Grammes (g)</option>
+                  <option value="ml">Millilitres (ml)</option>
+                  <option value="portion">Portions</option>
+                  <option value="piece">Pièces / Unités</option>
                 </select>
               </div>
             </div>
             
+            <div style={{ background: '#F8FAFC', padding: '10px', borderRadius: '6px', marginBottom: '20px', fontSize: '0.9rem', color: '#334155', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Coût calculé pour la recette :</span>
+              <strong>{formData.cost_per_unit || '0.0000'} $ / {formData.unit === 'piece' ? 'pièce' : formData.unit}</strong>
+            </div>
+
             <p style={{ fontSize: '0.8rem', color: '#64748B', fontStyle: 'italic', marginBottom: '20px' }}>
-              Astuce : Si vous achetez 1L de lait à 4$, entrez Coût = 0.004 et Unité = ml.
+              Astuce Emballage : Vous pouvez ajouter vos verres ou pailles ! Mettez le prix de la boîte, la quantité, choisissez "Pièces" et laissez les calories à 0.
             </p>
 
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', color: '#334155' }}>Valeurs nutritives (pour 100{formData.unit === 'piece' ? ' unités' : formData.unit})</h3>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', color: '#334155' }}>
+              Valeurs nutritives {formData.unit === 'portion' ? '(Pour 1 portion)' : formData.unit === 'piece' ? '(Pour 1 pièce)' : '(Pour 100g/ml)'}
+            </h3>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '20px' }}>
               <div>

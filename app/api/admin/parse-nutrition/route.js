@@ -21,7 +21,8 @@ export async function POST(request) {
     const prompt = `
       Tu es un expert en nutrition. 
       L'utilisateur te fournit une photo d'une étiquette de valeurs nutritives.
-      Tu dois extraire les informations suivantes et les ramener **obligatoirement pour 100g ou 100ml**, même si la portion sur l'étiquette est différente. Fais les mathématiques nécessaires.
+      Tu dois extraire les informations nutritionnelles pour 100g/ml ET pour 1 portion (serving size).
+      Fais les mathématiques nécessaires si le tableau ne donne qu'une seule des deux colonnes.
       
       Renvoie UNIQUEMENT un objet JSON valide avec les clés exactes suivantes, et aucune autre explication ou texte autour :
       {
@@ -29,7 +30,12 @@ export async function POST(request) {
         "protein_per_100": nombre,
         "carbs_per_100": nombre,
         "fat_per_100": nombre,
-        "sugar_per_100": nombre
+        "sugar_per_100": nombre,
+        "calories_per_serving": nombre,
+        "protein_per_serving": nombre,
+        "carbs_per_serving": nombre,
+        "fat_per_serving": nombre,
+        "sugar_per_serving": nombre
       }
       S'il manque une information, mets 0.
     `;
