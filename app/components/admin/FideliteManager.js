@@ -14,13 +14,21 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
           <h1 style={{ color: '#2C1810', fontSize: '2.5rem', marginBottom: '10px' }}>Gestion des Fidélités</h1>
           <p style={{ color: '#5A4A42' }}>Ajoutez ou retirez des points manuellement à n'importe quel client.</p>
         </div>
-        <input 
-          type="text" 
-          placeholder="Rechercher un client..." 
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          style={{ padding: '12px 20px', borderRadius: '30px', border: '1px solid #ccc', minWidth: '300px', fontSize: '1rem' }}
-        />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <input 
+            type="text" 
+            placeholder="Rechercher un client..." 
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            style={{ padding: '12px 20px', borderRadius: '30px', border: '1px solid #ccc', minWidth: '250px', fontSize: '1rem' }}
+          />
+          <a 
+            href="/admin/scanner" 
+            style={{ background: '#E91E63', color: 'white', padding: '12px 20px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(233, 30, 99, 0.3)' }}
+          >
+            📸 Scanner un client
+          </a>
+        </div>
       </header>
 
       {statusMessage && (
