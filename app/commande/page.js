@@ -310,17 +310,328 @@ export default function OrderBuilder() {
         </div>
       </div>
 
-      
-      {/* SECTION EN MAINTENANCE */}
-      <div style={{ textAlign: 'center', background: '#FFF3F3', padding: '40px 20px', borderRadius: '16px', border: '2px solid var(--crimson)', marginBottom: '40px' }}>
-        <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--crimson)', fontSize: '2.5rem', marginBottom: '20px' }}>🚧 Système en ajustement temporaire</h2>
-        <p style={{ color: '#2C1810', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-          Nous mettons actuellement à niveau notre système de commande en ligne pour mieux vous servir ! 
-          La fonction de commande pour emporter est <strong>temporairement suspendue</strong>.
-        </p>
-        <p style={{ color: '#2C1810', fontSize: '1.1rem', marginTop: '20px', fontWeight: 'bold' }}>
-          Vous pouvez tout de même passer nous voir en boutique ou commander en livraison via nos partenaires ci-dessous ! 👇
-        </p>
+      {/* HISTORIQUE & FAVORIS */}
+      {(favorites.length > 0 || orderHistory.length > 0) && (
+        <div style={{ marginBottom: '40px' }}>
+          {favorites.length > 0 && (
+            <div style={{ marginBottom: '30px' }}>
+              <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>❤️ Mes Favoris</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                {favorites.map(fav => (
+                  <div key={fav.id} style={{ background: 'white', padding: '15px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      {fav.image && <img src={fav.image} alt={fav.name} style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} />}
+                      <div style={{ flex: 1 }}>
+                        <h4 style={{ margin: '0 0 5px 0', color: '#2C1810', fontSize: '1rem' }}>{fav.name}</h4>
+                        <p style={{ margin: 0, fontWeight: 'bold', color: 'var(--green-tropical)' }}>{fav.price.toFixed(2)} $</p>
+                      </div>
+                      <button onClick={() => removeFromFavorites(fav.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#999' }}>✕</button>
+                    </div>
+                    <button 
+                      onClick={() => { addToCart({...fav, id: fav.id + '-' + Date.now()}); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      style={{ padding: '10px', background: 'var(--crimson)', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                      Ajouter au panier 🛍️
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {orderHistory.length > 0 && (
+            <div>
+              <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>🕒 Mes Dernières Commandes</h2>
+              <div style={{ display: 'flex', overflowX: 'auto', gap: '20px', paddingBottom: '10px' }}>
+                {orderHistory.map(order => (
+                  <div key={order.id} style={{ minWidth: '300px', background: 'white', padding: '15px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                      <span style={{ color: '#666', fontSize: '0.9rem' }}>{new Date(order.date).toLocaleDateString('fr-CA')}</span>
+                      <span style={{ fontWeight: 'bold', color: '#2C1810' }}>{order.total.toFixed(2)} $</span>
+                    </div>
+                    <div style={{ marginBottom: '15px' }}>
+                      {order.items.map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '0.9rem', color: '#444', marginBottom: '4px' }}>
+                          • {item.quantity}x {item.name}
+                        </div>
+                      ))}
+                    </div>
+                    <button 
+                      onClick={() => { 
+                        order.items.forEach(item => addToCart({...item, id: item.id + '-' + Date.now()}));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        alert('Commande rajoutée au panier !');
+                      }}
+                      style={{ width: '100%', padding: '10px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}
+                    >
+                      Recommander
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px' }}>
+        
+        {/* ÉTAPE 1 : CHOIX DU PRODUIT */}
+        <div>
+          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>1. Choisissez votre base</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            {(!filteredItems || filteredItems.length === 0) ? (
+              <p>Aucun produit n'est disponible dans ces catégories.</p>
+            ) : (
+              menu.categories
+                .filter(c => allowedCategories.includes(c.name.toLowerCase().trim()))
+                .map(category => {
+                  const categoryItems = filteredItems.filter(item => item.category_id === category.id);
+                  if (categoryItems.length === 0) return null;
+                  
+                  return (
+                    <div key={category.id}>
+                      <h3 style={{ color: 'var(--green-tropical)', marginBottom: '15px', fontSize: '1.4rem' }}>{category.name}</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        {categoryItems.map(p => {
+                          const isSoldOut = p.is_sold_out;
+                          return (
+                            <div 
+                              key={p.id} 
+                              onClick={() => { if (!isSoldOut) handleProductSelect(p); }}
+                              style={{ 
+                                padding: '20px', 
+                                borderRadius: '12px', 
+                                border: selectedProduct?.id === p.id ? '2px solid var(--crimson)' : '1px solid #ddd',
+                                background: selectedProduct?.id === p.id ? '#FFF0F5' : (isSoldOut ? '#f9f9f9' : 'white'),
+                                cursor: isSoldOut ? 'not-allowed' : 'pointer',
+                                transition: 'all 0.2s',
+                                boxShadow: selectedProduct?.id === p.id ? '0 4px 12px rgba(184,0,62,0.1)' : '0 2px 5px rgba(0,0,0,0.05)',
+                                display: 'flex',
+                                gap: '15px',
+                                alignItems: 'center',
+                                opacity: isSoldOut ? 0.6 : 1
+                              }}
+                            >
+                              {p.image_url && (
+                                <img src={p.image_url} alt={p.name} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                              )}
+                              <div style={{ flex: 1 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <h4 style={{ margin: 0, color: '#2C1810', fontSize: '1.1rem' }}>{p.name} {isSoldOut && <span style={{ color: '#D32F2F', fontSize: '0.85rem', marginLeft: '5px' }}>(Épuisé)</span>}</h4>
+                                  <span style={{ fontWeight: 'bold', color: isSoldOut ? '#999' : 'var(--green-tropical)' }}>
+                                    {p.variations && p.variations.length > 1 ? `À partir de ` : ''}{parseFloat(p.variations?.[0]?.price || p.price || 0).toFixed(2)}$
+                                  </span>
+                                </div>
+                                {p.description && <p style={{ margin: '5px 0 0', fontSize: '0.9rem', color: '#666' }}>{p.description}</p>}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  );
+                })
+            )}
+          </div>
+        </div>
+
+        {/* ÉTAPE 2 : PERSONNALISATION (Affiché seulement si un produit est sélectionné) */}
+        <div id="personnalisation-section" style={{ opacity: selectedProduct ? 1 : 0.4, pointerEvents: selectedProduct ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
+          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>2. Personnalisez-le</h2>
+          
+          {!selectedProduct && <p style={{ color: '#888' }}>Veuillez d'abord sélectionner une base.</p>}
+
+          {selectedProduct && (!selectedProduct.modifier_lists || selectedProduct.modifier_lists.length === 0) && (!selectedProduct.variations || selectedProduct.variations.length <= 1) && (
+            <p style={{ color: '#888', fontStyle: 'italic', padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>Aucune personnalisation n'est requise pour ce produit.</p>
+          )}
+
+          {selectedProduct && selectedProduct.variations && selectedProduct.variations.length > 1 && (
+            <div style={{ marginBottom: '30px' }}>
+              <h3 style={{ color: '#5A4A42', margin: '0 0 15px', fontSize: '1.3rem' }}>Format / Option de base</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '15px' }}>
+                {selectedProduct.variations.map(variation => {
+                  const isSelected = selectedVariation?.id === variation.id;
+                  const isSoldOut = variation.is_sold_out;
+                  const price = parseFloat(variation.price || 0);
+                  
+                  return (
+                    <div 
+                      key={variation.id}
+                      onClick={() => { if (!isSoldOut) setSelectedVariation(variation); }}
+                      style={{
+                        padding: '15px',
+                        borderRadius: '8px',
+                        border: isSelected ? '2px solid var(--crimson)' : '1px solid #ddd',
+                        background: isSelected ? '#FFF0F5' : (isSoldOut ? '#f5f5f5' : 'white'),
+                        textAlign: 'center',
+                        cursor: isSoldOut ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s',
+                        boxShadow: isSelected ? '0 4px 12px rgba(184,0,62,0.1)' : 'none',
+                        opacity: isSoldOut ? 0.6 : 1
+                      }}
+                    >
+                      <div style={{ fontWeight: isSelected ? 'bold' : 'normal', color: '#2C1810', fontSize: '1.05rem', marginBottom: '5px' }}>{variation.name}</div>
+                      <div style={{ fontSize: '0.9rem', color: isSoldOut ? '#D32F2F' : 'var(--green-tropical)', fontWeight: 'bold' }}>
+                        {isSoldOut ? 'Épuisé' : `${price.toFixed(2)}$`}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {selectedProduct && CUSTOMIZABLE_DRINKS.includes(selectedProduct.name.toLowerCase().trim()) && (
+            <div style={{ marginBottom: '30px', padding: '20px', background: '#f5f5f5', borderRadius: '12px' }}>
+              <h3 style={{ color: '#5A4A42', margin: '0 0 15px', fontSize: '1.2rem' }}>Type de création</h3>
+              <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                <button 
+                  onClick={() => { setCreationMode('preset'); setSelectedQuantities({}); }}
+                  style={{ flex: 1, padding: '12px', borderRadius: '8px', border: creationMode === 'preset' ? '2px solid var(--crimson)' : '1px solid #ddd', background: creationMode === 'preset' ? '#FFF0F5' : 'white', cursor: 'pointer', fontWeight: 'bold', color: '#2C1810', transition: 'all 0.2s' }}
+                >
+                  Choisir une recette du menu
+                </button>
+                <button 
+                  onClick={() => { setCreationMode('custom'); setSelectedQuantities({}); }}
+                  style={{ flex: 1, padding: '12px', borderRadius: '8px', border: creationMode === 'custom' ? '2px solid var(--crimson)' : '1px solid #ddd', background: creationMode === 'custom' ? '#FFF0F5' : 'white', cursor: 'pointer', fontWeight: 'bold', color: '#2C1810', transition: 'all 0.2s' }}
+                >
+                  Créer mon propre mélange
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* INPUT RECETTE CUSTOM */}
+          {selectedProduct && CUSTOMIZABLE_DRINKS.includes(selectedProduct.name.toLowerCase().trim()) && creationMode === 'preset' && (
+            <div style={{ marginBottom: '30px', padding: '20px', background: '#FFF3E0', borderRadius: '12px', border: '1px solid #FFE0B2' }}>
+              <label style={{ display: 'block', fontWeight: 'bold', color: '#2C1810', marginBottom: '10px', fontSize: '1.1rem' }}>
+                Tu as un nom d'une autre recette qui ne figure pas dans la liste ? Écris-la ici :
+              </label>
+              <input 
+                type="text" 
+                value={customRecipeName}
+                onChange={(e) => setCustomRecipeName(e.target.value)}
+                placeholder="Ex: Le Pikachu, Le Dragon..."
+                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem', fontFamily: 'var(--font-sans)', outline: 'none' }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--crimson)'}
+                onBlur={(e) => e.target.style.borderColor = '#ccc'}
+              />
+            </div>
+          )}
+
+          {selectedProduct && (() => {
+            const isCustomizable = CUSTOMIZABLE_DRINKS.includes(selectedProduct.name.toLowerCase().trim());
+            const listsToRender = (isCustomizable && creationMode === 'custom')
+              ? [JUS_MODIFIER_LIST]
+              : (selectedProduct.modifier_lists || []).map(listId => menu.modifierLists.find(l => l.id === listId)).filter(Boolean);
+
+            return listsToRender.map(list => {
+              if (!list || !list.modifiers || list.modifiers.length === 0) return null;
+            
+            const currentTotal = list.modifiers.reduce((sum, m) => sum + (selectedQuantities[m.id] || 0), 0);
+            const isFull = list.max < 999 && currentTotal >= list.max;
+
+            return (
+              <div key={list.id} style={{ marginBottom: '30px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                  <h3 style={{ color: '#5A4A42', margin: 0, fontSize: '1.3rem' }}>{list.name}</h3>
+                  {list.max < 999 && (
+                    <span style={{ fontSize: '0.85rem', padding: '4px 8px', background: isFull ? '#FFF0F5' : '#E8F5E9', color: isFull ? 'var(--crimson)' : '#2E7D32', borderRadius: '12px', fontWeight: 'bold' }}>
+                      {currentTotal} / {list.max} {currentTotal === 0 && list.min > 0 ? `(Min: ${list.min})` : ''}
+                    </span>
+                  )}
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '15px' }}>
+                  {list.modifiers.map(mod => {
+                    const qty = selectedQuantities[mod.id] || 0;
+                    const price = parseFloat(mod.price || 0);
+                    const isSoldOut = mod.is_sold_out;
+                    const isSelected = qty > 0;
+                    
+                    return (
+                      <div 
+                        key={mod.id}
+                        style={{
+                          padding: '12px 10px',
+                          borderRadius: '8px',
+                          border: isSelected ? '2px solid var(--green-tropical)' : '1px solid #ddd',
+                          background: isSelected ? '#E8F5E9' : (isSoldOut ? '#f5f5f5' : 'white'),
+                          textAlign: 'center',
+                          transition: 'all 0.15s',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          minHeight: '110px',
+                          opacity: isSoldOut ? 0.6 : 1,
+                          pointerEvents: isSoldOut ? 'none' : 'auto'
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontWeight: isSelected ? 'bold' : 'normal', color: '#2C1810', fontSize: '0.95rem', marginBottom: '5px' }}>{mod.name}</div>
+                          <div style={{ fontSize: '0.75rem', color: isSoldOut ? '#D32F2F' : (price > 0 ? 'var(--green-tropical)' : '#666'), minHeight: '30px' }}>
+                            {isSoldOut ? 'Épuisé' : (price > 0 ? `+${price.toFixed(2)}$ ch.` : 'Inclus')}
+                          </div>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); updateModifierQty(list, mod.id, -1); }}
+                            style={{ width: '28px', height: '28px', borderRadius: '50%', border: 'none', background: '#ccc', color: 'white', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
+                            disabled={qty === 0 || isSoldOut}
+                          >-</button>
+                          <span style={{ fontSize: '1.1rem', fontWeight: 'bold', width: '20px' }}>{qty}</span>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); updateModifierQty(list, mod.id, 1); }}
+                            style={{ width: '28px', height: '28px', borderRadius: '50%', border: 'none', background: isFull ? '#ccc' : 'var(--green-tropical)', color: 'white', fontWeight: 'bold', cursor: isFull ? 'not-allowed' : 'pointer', fontSize: '16px' }}
+                            disabled={isFull || isSoldOut}
+                          >+</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          });
+        })()}
+
+          {/* RÉSUMÉ ET AJOUT AU PANIER */}
+          {selectedProduct && (
+            <div style={{ marginTop: '40px', padding: '25px', background: '#2C1810', borderRadius: '16px', color: 'white', position: 'sticky', bottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px' }}>
+                <div>
+                  <h4 style={{ margin: '0 0 5px', color: '#E0E0E0', fontSize: '1rem', fontWeight: 'normal' }}>Votre création :</h4>
+                  <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1.2rem' }}>
+                    {selectedProduct.name}
+                    {selectedVariation && selectedVariation.name !== 'Regular' ? ` - ${selectedVariation.name}` : ''}
+                  </p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <h4 style={{ margin: '0 0 5px', color: '#E0E0E0', fontSize: '1rem', fontWeight: 'normal' }}>Prix estimé :</h4>
+                  <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1.8rem', color: '#4ADE80' }}>{calculateTotal().toFixed(2)} $</p>
+                </div>
+              </div>
+              <button 
+                onClick={handleAddToCart}
+                style={{ width: '100%', padding: '16px', marginBottom: '10px', background: 'var(--crimson)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s', boxShadow: '0 4px 15px rgba(184,0,62,0.4)' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--crimson-light)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'var(--crimson)'}
+              >
+                Ajouter au panier 🛍️
+              </button>
+              <button 
+                onClick={handleSaveFavorite}
+                style={{ width: '100%', padding: '14px', background: 'white', color: '#2C1810', border: '2px solid #E0E0E0', borderRadius: '8px', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--crimson)'; e.currentTarget.style.color = 'var(--crimson)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.color = '#2C1810'; }}
+              >
+                Mettre en favori ❤️
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ========================================

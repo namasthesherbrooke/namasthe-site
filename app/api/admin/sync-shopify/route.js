@@ -37,9 +37,12 @@ export async function POST(req) {
 
     const oldItems = oldCache?.[0]?.catalog_data?.items || [];
     const imageMap = {};
+    const modifierMap = {};
     oldItems.forEach(oldItem => {
-      if (oldItem.name && oldItem.image_url) {
-        imageMap[oldItem.name.toLowerCase()] = oldItem.image_url;
+      if (oldItem.name) {
+        const nameKey = oldItem.name.toLowerCase().trim();
+        if (oldItem.image_url) imageMap[nameKey] = oldItem.image_url;
+        if (oldItem.modifier_lists) modifierMap[nameKey] = oldItem.modifier_lists;
       }
     });
 
@@ -55,15 +58,14 @@ export async function POST(req) {
       name: name
     }));
 
-    const modifierLists = []; // We don't have modifiers natively from standard Shopify CSV easily unless we map them. 
-    // We will leave modifierLists empty for now, or you can manage them in Shopify as Variants.
+    const modifierLists = oldCache?.[0]?.catalog_data?.modifierLists || [];
 
     const items = shopifyEdges.map(({ node }) => {
       const catMatch = categories.find(c => c.name === node.productType);
       
       const imageUrl = (node.images && node.images.edges.length > 0) 
         ? node.images.edges[0].node.url 
-        : imageMap[node.title.toLowerCase()] || null; // Fallback to old image!
+        : imageMap[node.title.toLowerCase().trim()] || null; // Fallback to old image!
 
       const variations = node.variants.edges.map(vNode => {
         return {
@@ -83,7 +85,7 @@ export async function POST(req) {
         price: variations.length > 0 ? variations[0].price : 0,
         category_id: catMatch ? catMatch.id : null,
         image_url: imageUrl,
-        modifier_lists: [], // If needed, we map Shopify options to modifiers
+        modifier_lists: modifierMap[node.title.toLowerCase().trim()] || [], // Restore old modifier lists
         is_sold_out: isSoldOut,
         variations: variations
       };
