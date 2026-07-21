@@ -43,6 +43,7 @@ export default function IngredientsPage() {
           supplier: formData.supplier,
           cost_per_unit: parseFloat(formData.cost_per_unit) || 0,
           unit: formData.unit,
+          type: 'other', // Fix constraint
           calories_per_100: parseFloat(formData.calories_per_100) || 0,
           protein_per_100: parseFloat(formData.protein_per_100) || 0,
           carbs_per_100: parseFloat(formData.carbs_per_100) || 0,
