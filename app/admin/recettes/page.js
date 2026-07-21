@@ -11,6 +11,7 @@ export default function RecipesPage() {
   const [recipeName, setRecipeName] = useState('');
   const [sellingPrice, setSellingPrice] = useState('');
   const [wasteMargin, setWasteMargin] = useState(0); // Marge de perte en %
+  const [packagingCost, setPackagingCost] = useState(0); // Coût fixe de l'emballage
   
   // Dynamic list of ingredients added to this recipe
   const [recipeIngredients, setRecipeIngredients] = useState([]);
@@ -106,8 +107,8 @@ export default function RecipesPage() {
     return acc;
   }, { cost: 0, calories: 0, protein: 0, carbs: 0, fat: 0, sugar: 0 });
 
-  // Ajout de la marge de perte
-  const finalCost = totals.cost * (1 + (wasteMargin / 100));
+  // Ajout de la marge de perte et de l'emballage
+  const finalCost = (totals.cost * (1 + (wasteMargin / 100))) + parseFloat(packagingCost || 0);
 
   const profit = parseFloat(sellingPrice || 0) - finalCost;
   const margin = parseFloat(sellingPrice || 0) > 0 ? (profit / parseFloat(sellingPrice)) * 100 : 0;
@@ -142,6 +143,7 @@ export default function RecipesPage() {
       setRecipeName('');
       setSellingPrice('');
       setWasteMargin(0);
+      setPackagingCost(0);
       setRecipeIngredients([]);
     } catch (error) {
       alert("Erreur: " + error.message);
@@ -236,8 +238,16 @@ export default function RecipesPage() {
               </div>
             </div>
 
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
+              <span>Coût Emballage (Verre, paille, etc) :</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input type="number" step="0.01" min="0" value={packagingCost} onChange={(e) => setPackagingCost(parseFloat(e.target.value) || 0)} style={{ width: '75px', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'right' }} />
+                <span>$</span>
+              </div>
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem', paddingTop: '10px', borderTop: '1px solid #E2E8F0' }}>
-              <span style={{ color: '#475569', fontWeight: 'bold' }}>Coût Réel (avec pertes) :</span>
+              <span style={{ color: '#475569', fontWeight: 'bold' }}>Coût Réel (Total) :</span>
               <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{finalCost.toFixed(2)} $</span>
             </div>
 
