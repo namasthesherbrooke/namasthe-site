@@ -21,7 +21,8 @@ export default function AdminLayout({ children }) {
   const handleLogin = (e) => {
     e.preventDefault();
     // PIN simple pour l'instant (à changer en production si désiré)
-    if (password === 'namasthe2026') {
+    const normalizedPassword = password.toLowerCase().trim();
+    if (normalizedPassword === 'namasthe2026' || normalizedPassword === 'namasthé2026') {
       localStorage.setItem('namasthe_admin_auth', 'true');
       setIsAuthenticated(true);
       setError('');
