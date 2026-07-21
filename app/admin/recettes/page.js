@@ -12,7 +12,7 @@ export default function RecipesPage() {
   const [baseSize, setBaseSize] = useState('16'); // The size of the entered recipe
   const [availableSizes, setAvailableSizes] = useState(['16']); // Array of selected sizes
   const [sellingPrices, setSellingPrices] = useState({}); // { '16': 5.50, '24': 6.50 }
-  const [wasteMargin, setWasteMargin] = useState(0); // Marge de perte en %
+  const [wasteMargin, setWasteMarginState] = useState(0); // Marge de perte en %
   const [packagingCost, setPackagingCost] = useState(0); // Coût fixe de l'emballage
 
   // Configured packaging costs per size (saved in localStorage)
@@ -65,7 +65,16 @@ export default function RecipesPage() {
     if (savedConfig) {
       setPackagingConfig(JSON.parse(savedConfig));
     }
+    const savedWaste = localStorage.getItem('namasthe_waste_margin');
+    if (savedWaste) {
+      setWasteMarginState(parseFloat(savedWaste));
+    }
   }, []);
+
+  const setWasteMargin = (val) => {
+    setWasteMarginState(val);
+    localStorage.setItem('namasthe_waste_margin', val);
+  };
 
   const handleUpdateConfig = (size, value) => {
     const newConfig = { ...packagingConfig, [size]: parseFloat(value) || 0 };

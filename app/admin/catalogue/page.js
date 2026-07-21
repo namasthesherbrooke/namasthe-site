@@ -72,21 +72,32 @@ export default function CataloguePage() {
           };
         }).filter(Boolean);
 
-        // Assume a base 5% waste margin globally for the catalogue display if we want to be safe,
-        // or just use raw cost. We'll stick to raw cost for the core catalogue, 
-        // as waste margin was a recipe-builder-only feature (unless we save it in DB).
-        // Let's just use raw ingredient cost.
+        // Load globals from localStorage to mirror the builder's accurate costing
+        const savedWasteStr = typeof window !== 'undefined' ? localStorage.getItem('namasthe_waste_margin') : null;
+        const wasteMargin = savedWasteStr ? parseFloat(savedWasteStr) : 0;
+        
+        const savedPkgStr = typeof window !== 'undefined' ? localStorage.getItem('namasthe_packaging_config') : null;
+        const packagingConfig = savedPkgStr ? JSON.parse(savedPkgStr) : { '16': 0.35, '20': 0.40, '24': 0.45, '32': 0.55 };
+
+        // Parse size from recipe name (e.g. "Simplicithé 32oz" -> "32")
+        const match = recipe.name.match(/(\d+)oz/i);
+        const size = match ? match[1] : null;
+        const pkgCost = size && packagingConfig[size] !== undefined ? packagingConfig[size] : 0;
+
+        // Calculate REAL cost (ingredients + waste margin + packaging)
+        const realTotalCost = (totalCost * (1 + (wasteMargin / 100))) + pkgCost;
         
         const sellingPrice = recipe.selling_price || 0;
-        const profit = sellingPrice - totalCost;
+        const profit = sellingPrice - realTotalCost;
         const margin = sellingPrice > 0 ? (profit / sellingPrice) * 100 : 0;
         
         // Suggested price for 75% margin = Cost / (1 - 0.75) = Cost / 0.25 = Cost * 4
-        const suggestedPrice = totalCost * 4;
+        const suggestedPrice = realTotalCost * 4;
 
         return {
           ...recipe,
-          totalCost,
+          rawIngCost: totalCost,
+          totalCost: realTotalCost, // now represents the REAL final cost
           profit,
           margin,
           suggestedPrice,
@@ -245,6 +256,9 @@ export default function CataloguePage() {
                     </td>
                     <td style={{ padding: '15px 20px', color: '#EF4444', fontWeight: '500' }}>
                       {recipe.totalCost.toFixed(2)} $
+                      <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px', fontWeight: 'normal' }}>
+                        (Inc. perte et emballage)
+                      </div>
                     </td>
                     <td style={{ padding: '15px 20px' }}>
                       <span style={{ background: '#FEF3C7', color: '#D97706', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold', fontSize: '0.9rem' }}>
