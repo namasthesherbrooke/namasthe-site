@@ -225,6 +225,7 @@ export default function CataloguePage() {
       const { error: updateError } = await supabase
         .from('admin_recipes')
         .update({ selling_price: parseFloat(editingRecipe.selling_price) || 0,
+        uber_price: parseFloat(editingRecipe.uber_price) || null,
       uber_price: parseFloat(editingRecipe.uber_price) || null })
         .eq('id', editingRecipe.id);
         
@@ -419,6 +420,85 @@ export default function CataloguePage() {
                               </ul>
                             </div>
                           )}
+                          
+                          {/* --- ANALYSE LIVRAISON (UBER/DOORDASH) --- */}
+                          <div style={{ marginTop: '20px', background: '#FFF3E0', padding: '20px', borderRadius: '12px', border: '1px solid #FFE0B2', marginBottom: '20px' }}>
+                            <h4 style={{ margin: '0 0 15px 0', color: '#E65100', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span>🛵</span> Analyse Livraison (Uber / DoorDash)
+                            </h4>
+                            
+                            <p style={{ fontSize: '0.85rem', color: '#F57C00', marginBottom: '15px' }}>
+                              Les plateformes de livraison prennent en moyenne <strong>30% de commission</strong> sur le prix affiché. 
+                              En appliquant votre majoration de <strong>{deliveryMarkup}%</strong> sur le prix de vente actuel, voici vos revenus réels :
+                            </p>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '15px' }}>
+                              {(() => {
+                                // Calculs pour la livraison
+                                const isEditing = editingRecipe && editingRecipe.id === recipe.id;
+                                const basePrice = isEditing ? (editingRecipe.selling_price || 0) : recipe.selling_price;
+                                const recipeCost = isEditing ? calculateTotalCost(editingRecipe.ingredients) : recipe.cost;
+                                const customUberPrice = isEditing ? editingRecipe.uber_price : recipe.uber_price;
+                                
+                                const suggestedUberPrice = parseFloat((basePrice * (1 + (deliveryMarkup / 100))).toFixed(2));
+                                const actualUberPrice = parseFloat(customUberPrice) || suggestedUberPrice;
+                                
+                                const uberCommission = parseFloat((actualUberPrice * 0.30).toFixed(2));
+                                const netRevenue = parseFloat((actualUberPrice - uberCommission).toFixed(2));
+                                const netProfit = parseFloat((netRevenue - recipeCost).toFixed(2));
+                                const netMarginPercent = netRevenue > 0 ? ((netProfit / actualUberPrice) * 100).toFixed(1) : 0;
+                                const isProfitable = netProfit > 0;
+                                const isVeryProfitable = netMarginPercent >= 40;
+
+                                return (
+                                  <>
+                                    <div style={{ background: 'white', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', border: '1px solid #FFE0B2' }}>
+                                      <div style={{ fontSize: '0.8rem', color: '#E65100', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Prix Suggéré (App)</div>
+                                      <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#2C1810' }}>{suggestedUberPrice.toFixed(2)} $</div>
+                                    </div>
+                                    
+                                    <div style={{ background: 'white', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', border: isEditing ? '2px dashed #FF9800' : '1px solid #FFCC80' }}>
+                                      <div style={{ fontSize: '0.8rem', color: '#E65100', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Prix RÉEL (App)</div>
+                                      {isEditing ? (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                          <input 
+                                            type="number" 
+                                            step="0.01" 
+                                            value={editingRecipe.uber_price || ''} 
+                                            onChange={(e) => setEditingRecipe({...editingRecipe, uber_price: e.target.value})} 
+                                            placeholder={suggestedUberPrice.toFixed(2)}
+                                            style={{ width: '80px', padding: '5px', borderRadius: '4px', border: '1px solid #FFCC80', fontSize: '1.2rem', fontWeight: 'bold', color: '#E65100' }} 
+                                          />
+                                          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2C1810' }}>$</span>
+                                        </div>
+                                      ) : (
+                                        <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: actualUberPrice !== suggestedUberPrice ? '#E65100' : '#2C1810' }}>
+                                          {actualUberPrice.toFixed(2)} $
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    <div style={{ background: '#FFEBEE', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', border: '1px solid #FFCDD2' }}>
+                                      <div style={{ fontSize: '0.8rem', color: '#D32F2F', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Frais Uber (30%)</div>
+                                      <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#C62828' }}>- {uberCommission.toFixed(2)} $</div>
+                                    </div>
+                                    
+                                    <div style={{ background: '#E8F5E9', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', border: '1px solid #C8E6C9' }}>
+                                      <div style={{ fontSize: '0.8rem', color: '#2E7D32', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Revenu Brut</div>
+                                      <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#1B5E20' }}>{netRevenue.toFixed(2)} $</div>
+                                    </div>
+                                    
+                                    <div style={{ background: isProfitable ? (isVeryProfitable ? '#E8F5E9' : '#FFF8E1') : '#FFEBEE', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)', border: `1px solid ${isProfitable ? (isVeryProfitable ? '#C8E6C9' : '#FFECB3') : '#FFCDD2'}` }}>
+                                      <div style={{ fontSize: '0.8rem', color: isProfitable ? (isVeryProfitable ? '#2E7D32' : '#F57C00') : '#D32F2F', textTransform: 'uppercase', marginBottom: '4px', fontWeight: 'bold' }}>Profit (Marge)</div>
+                                      <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: isProfitable ? (isVeryProfitable ? '#1B5E20' : '#E65100') : '#C62828' }}>
+                                        {netProfit.toFixed(2)} $ <span style={{ fontSize: '1rem', opacity: 0.8 }}>({netMarginPercent}%)</span>
+                                      </div>
+                                    </div>
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </div>
                           
                           {/* Nutritional Values Display */}
                           <div style={{ marginTop: '20px', padding: '15px', background: 'white', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
