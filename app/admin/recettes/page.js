@@ -9,8 +9,9 @@ export default function RecipesPage() {
   
   // Recipe form state
   const [recipeName, setRecipeName] = useState('');
-  const [cupSize, setCupSize] = useState('autre'); // 16, 20, 24, 32, autre
-  const [sellingPrice, setSellingPrice] = useState('');
+  const [baseSize, setBaseSize] = useState('16'); // The size of the entered recipe
+  const [availableSizes, setAvailableSizes] = useState(['16']); // Array of selected sizes
+  const [sellingPrices, setSellingPrices] = useState({}); // { '16': 5.50, '24': 6.50 }
   const [wasteMargin, setWasteMargin] = useState(0); // Marge de perte en %
   const [packagingCost, setPackagingCost] = useState(0); // Coût fixe de l'emballage
 
@@ -70,18 +71,18 @@ export default function RecipesPage() {
     const newConfig = { ...packagingConfig, [size]: parseFloat(value) || 0 };
     setPackagingConfig(newConfig);
     localStorage.setItem('namasthe_packaging_config', JSON.stringify(newConfig));
-    // Update current packaging cost if the size is selected
-    if (cupSize === size) {
-      setPackagingCost(newConfig[size]);
+  };
+
+  const handleAvailableSizeToggle = (size) => {
+    if (availableSizes.includes(size)) {
+      setAvailableSizes(availableSizes.filter(s => s !== size));
+    } else {
+      setAvailableSizes([...availableSizes, size].sort((a, b) => parseInt(a) - parseInt(b)));
     }
   };
 
-  const handleCupSizeChange = (e) => {
-    const size = e.target.value;
-    setCupSize(size);
-    if (size !== 'autre' && packagingConfig[size] !== undefined) {
-      setPackagingCost(packagingConfig[size]);
-    }
+  const handleSellingPriceChange = (size, value) => {
+    setSellingPrices({ ...sellingPrices, [size]: value });
   };
 
   const fetchIngredients = async () => {
@@ -124,7 +125,7 @@ export default function RecipesPage() {
 
   // --- CALCULATIONS ---
   const totals = recipeIngredients.reduce((acc, item) => {
-    // Calcul coût
+    // Calcul coût de base
     acc.cost += item.cost_per_unit * item.recipeQty;
     
     // Calcul macros (basé sur /100 sauf si c'est pièce ou portion)
@@ -139,11 +140,30 @@ export default function RecipesPage() {
     return acc;
   }, { cost: 0, calories: 0, protein: 0, carbs: 0, fat: 0, sugar: 0 });
 
-  // Ajout de la marge de perte et de l'emballage
-  const finalCost = (totals.cost * (1 + (wasteMargin / 100))) + parseFloat(packagingCost || 0);
-
-  const profit = parseFloat(sellingPrice || 0) - finalCost;
-  const margin = parseFloat(sellingPrice || 0) > 0 ? (profit / parseFloat(sellingPrice)) * 100 : 0;
+  const getScaledCosting = (size) => {
+    let scalingFactor = 1;
+    if (baseSize !== 'autre' && size !== 'autre') {
+      scalingFactor = parseInt(size) / parseInt(baseSize);
+    }
+    
+    const scaledIngCost = totals.cost * scalingFactor;
+    const finalCost = (scaledIngCost * (1 + (wasteMargin / 100))) + (packagingConfig[size] || 0);
+    const sp = parseFloat(sellingPrices[size] || 0);
+    const profit = sp - finalCost;
+    const margin = sp > 0 ? (profit / sp) * 100 : 0;
+    
+    return {
+      scaledIngCost,
+      finalCost,
+      profit,
+      margin,
+      calories: totals.calories * scalingFactor,
+      protein: totals.protein * scalingFactor,
+      carbs: totals.carbs * scalingFactor,
+      fat: totals.fat * scalingFactor,
+      sugar: totals.sugar * scalingFactor
+    };
+  };
 
   const handleSaveRecipe = async () => {
     if (!recipeName || recipeIngredients.length === 0) {
@@ -152,31 +172,38 @@ export default function RecipesPage() {
     }
 
     try {
-      // 1. Insert recipe
-      const { data: recipeData, error: recipeError } = await supabase.from('admin_recipes').insert([
-        { name: recipeName, selling_price: parseFloat(sellingPrice) || 0 }
-      ]).select();
+      const sizesToSave = availableSizes.length > 0 ? availableSizes : ['autre'];
       
-      if (recipeError) throw recipeError;
-      
-      const newRecipeId = recipeData[0].id;
-      
-      // 2. Insert ingredients
-      const recipeIngsToInsert = recipeIngredients.map(ri => ({
-        recipe_id: newRecipeId,
-        ingredient_id: ri.id,
-        quantity: ri.recipeQty
-      }));
-      
-      const { error: ingError } = await supabase.from('admin_recipe_ingredients').insert(recipeIngsToInsert);
-      if (ingError) throw ingError;
+      for (const size of sizesToSave) {
+        const recipeNameToSave = size === 'autre' ? recipeName : `${recipeName} ${size}oz`;
+        const scalingFactor = (baseSize !== 'autre' && size !== 'autre') ? (parseInt(size) / parseInt(baseSize)) : 1;
+        
+        // 1. Insert recipe
+        const { data: recipeData, error: recipeError } = await supabase.from('admin_recipes').insert([
+          { name: recipeNameToSave, selling_price: parseFloat(sellingPrices[size]) || 0 }
+        ]).select();
+        
+        if (recipeError) throw recipeError;
+        
+        const newRecipeId = recipeData[0].id;
+        
+        // 2. Insert ingredients (scaled)
+        const recipeIngsToInsert = recipeIngredients.map(ri => ({
+          recipe_id: newRecipeId,
+          ingredient_id: ri.id,
+          quantity: ri.recipeQty * scalingFactor
+        }));
+        
+        const { error: ingError } = await supabase.from('admin_recipe_ingredients').insert(recipeIngsToInsert);
+        if (ingError) throw ingError;
+      }
 
-      alert("Recette sauvegardée avec succès !");
-      setCupSize('autre');
+      alert("Recette sauvegardée avec succès pour tous les formats sélectionnés !");
+      setBaseSize('16');
+      setAvailableSizes(['16']);
+      setSellingPrices({});
       setRecipeName('');
-      setSellingPrice('');
       setWasteMargin(0);
-      setPackagingCost(0);
       setRecipeIngredients([]);
     } catch (error) {
       alert("Erreur: " + error.message);
@@ -222,19 +249,41 @@ export default function RecipesPage() {
               <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: Frappé Glacé" />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Format</label>
-              <select value={cupSize} onChange={handleCupSizeChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: cupSize !== 'autre' ? '#F0FDF4' : 'white' }}>
-                <option value="autre">Autre / Aucun</option>
+              <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Format de base (recette saisie)</label>
+              <select value={baseSize} onChange={(e) => setBaseSize(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#F0FDF4' }}>
                 <option value="16">16 oz</option>
                 <option value="20">20 oz</option>
                 <option value="24">24 oz</option>
                 <option value="32">32 oz</option>
+                <option value="autre">Autre / Aucun</option>
               </select>
             </div>
           </div>
+          
+          {baseSize !== 'autre' && (
+            <div style={{ marginBottom: '20px', padding: '15px', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+              <label style={{ display: 'block', fontSize: '0.95rem', color: '#334155', fontWeight: 'bold', marginBottom: '10px' }}>Formats disponibles à la vente</label>
+              <div style={{ display: 'flex', gap: '15px' }}>
+                {['16', '20', '24', '32'].map(size => (
+                  <label key={size} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={availableSizes.includes(size)} onChange={() => handleAvailableSizeToggle(size)} style={{ width: '18px', height: '18px' }} />
+                    <span style={{ fontSize: '0.95rem', color: '#475569' }}>{size} oz</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div style={{ marginBottom: '25px' }}>
-            <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Prix de vente final ($)</label>
-            <input type="number" step="0.01" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 5.50" />
+            <label style={{ display: 'block', fontSize: '0.95rem', color: '#334155', fontWeight: 'bold', marginBottom: '10px' }}>Prix de vente finaux ($)</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '10px' }}>
+              {(availableSizes.length > 0 ? availableSizes : ['autre']).map(size => (
+                <div key={size}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#64748B', marginBottom: '3px' }}>{size === 'autre' ? 'Prix' : `${size} oz`}</label>
+                  <input type="number" step="0.01" value={sellingPrices[size] || ''} onChange={(e) => handleSellingPriceChange(size, e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #CBD5E1' }} placeholder="Ex: 5.50" />
+                </div>
+              ))}
+            </div>
           </div>
 
           <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', color: '#334155' }}>Ingrédients</h3>
@@ -284,80 +333,80 @@ export default function RecipesPage() {
           )}
         </div>
 
-        {/* RÉSULTATS */}
+        {/* RÉSULTATS MULTIPLES */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* CARTE COSTING */}
-          <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', borderTop: '4px solid #10B981' }}>
-            <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#334155' }}>Finances (Costing)</h2>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
-              <span>Coût ingrédients de base :</span>
-              <span>{totals.cost.toFixed(2)} $</span>
-            </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
-              <span>Marge de perte (gaspillage) :</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="number" min="0" max="100" value={wasteMargin} onChange={(e) => setWasteMargin(parseFloat(e.target.value) || 0)} style={{ width: '60px', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'right' }} />
-                <span>%</span>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', fontSize: '1rem', color: '#64748B' }}>
-              <span>Coût Emballage (Verre, paille, etc) :</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input type="number" step="0.01" min="0" value={packagingCost} onChange={(e) => setPackagingCost(parseFloat(e.target.value) || 0)} style={{ width: '75px', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'right' }} />
-                <span>$</span>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem', paddingTop: '10px', borderTop: '1px solid #E2E8F0' }}>
-              <span style={{ color: '#475569', fontWeight: 'bold' }}>Coût Réel (Total) :</span>
-              <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{finalCost.toFixed(2)} $</span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem' }}>
-              <span style={{ color: '#64748B' }}>Prix de vente final :</span>
-              <span style={{ fontWeight: 'bold', color: '#10B981' }}>{parseFloat(sellingPrice || 0).toFixed(2)} $</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #E2E8F0', fontSize: '1.2rem' }}>
-              <span style={{ color: '#334155', fontWeight: 'bold' }}>Profit brut :</span>
-              <span style={{ fontWeight: 'bold', color: profit >= 0 ? '#10B981' : '#EF4444' }}>{profit.toFixed(2)} $</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px', fontSize: '1rem' }}>
-              <span style={{ color: '#64748B' }}>Marge :</span>
-              <span style={{ fontWeight: 'bold', color: margin >= 70 ? '#10B981' : margin >= 50 ? '#F59E0B' : '#EF4444' }}>{margin.toFixed(1)} %</span>
-            </div>
-            <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '10px', fontStyle: 'italic' }}>* Marge idéale suggérée en restauration : 70-75%</p>
-          </div>
-
-          {/* CARTE NUTRITION */}
-          <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', borderTop: '4px solid #38BDF8' }}>
-            <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#334155' }}>Valeurs Nutritives (Total)</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <div style={{ background: '#F8FAFC', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748B' }}>Calories</span>
-                <span style={{ display: 'block', fontSize: '1.4rem', fontWeight: 'bold', color: '#0F172A' }}>{totals.calories.toFixed(0)}</span>
-              </div>
-              <div style={{ background: '#F8FAFC', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748B' }}>Protéines</span>
-                <span style={{ display: 'block', fontSize: '1.4rem', fontWeight: 'bold', color: '#0F172A' }}>{totals.protein.toFixed(1)}g</span>
-              </div>
-              <div style={{ background: '#F8FAFC', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748B' }}>Glucides</span>
-                <span style={{ display: 'block', fontSize: '1.4rem', fontWeight: 'bold', color: '#0F172A' }}>{totals.carbs.toFixed(1)}g</span>
-              </div>
-              <div style={{ background: '#F8FAFC', padding: '15px', borderRadius: '8px', textAlign: 'center' }}>
-                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748B' }}>Sucres</span>
-                <span style={{ display: 'block', fontSize: '1.4rem', fontWeight: 'bold', color: '#0F172A' }}>{totals.sugar.toFixed(1)}g</span>
-              </div>
-              <div style={{ background: '#F8FAFC', padding: '15px', borderRadius: '8px', textAlign: 'center', gridColumn: 'span 2' }}>
-                <span style={{ display: 'block', fontSize: '0.9rem', color: '#64748B' }}>Lipides (Gras)</span>
-                <span style={{ display: 'block', fontSize: '1.4rem', fontWeight: 'bold', color: '#0F172A' }}>{totals.fat.toFixed(1)}g</span>
-              </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '15px 25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0' }}>
+            <span style={{ fontSize: '1.1rem', color: '#334155', fontWeight: 'bold' }}>Marge de perte globale :</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <input type="number" min="0" max="100" value={wasteMargin} onChange={(e) => setWasteMargin(parseFloat(e.target.value) || 0)} style={{ width: '70px', padding: '8px', borderRadius: '6px', border: '2px solid #E2E8F0', textAlign: 'right', fontWeight: 'bold' }} />
+              <span style={{ fontWeight: 'bold', color: '#475569' }}>%</span>
             </div>
           </div>
+
+          {(availableSizes.length > 0 ? availableSizes : ['autre']).map(size => {
+            const stats = getScaledCosting(size);
+            return (
+              <div key={size} style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', borderTop: '4px solid #10B981', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <h2 style={{ fontSize: '1.3rem', color: '#334155', margin: 0 }}>Costing {size !== 'autre' ? `- ${size} oz` : ''}</h2>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#64748B' }}>
+                  <span>Coût ingrédients ({size !== 'autre' && baseSize !== 'autre' ? `${(parseInt(size)/parseInt(baseSize)).toFixed(2)}x la recette de base` : 'Base'}) :</span>
+                  <span>{stats.scaledIngCost.toFixed(2)} $</span>
+                </div>
+                
+                {size !== 'autre' && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', color: '#64748B' }}>
+                    <span>Coût Emballage ({size} oz) :</span>
+                    <span>{(packagingConfig[size] || 0).toFixed(2)} $</span>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', paddingTop: '10px', borderTop: '1px solid #E2E8F0' }}>
+                  <span style={{ color: '#475569', fontWeight: 'bold' }}>Coût Réel (Total) :</span>
+                  <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{stats.finalCost.toFixed(2)} $</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem' }}>
+                  <span style={{ color: '#64748B' }}>Prix de vente final :</span>
+                  <span style={{ fontWeight: 'bold', color: '#10B981' }}>{parseFloat(sellingPrices[size] || 0).toFixed(2)} $</span>
+                </div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid #E2E8F0', fontSize: '1.2rem' }}>
+                  <span style={{ color: '#334155', fontWeight: 'bold' }}>Profit brut :</span>
+                  <span style={{ fontWeight: 'bold', color: stats.profit >= 0 ? '#10B981' : '#EF4444' }}>{stats.profit.toFixed(2)} $</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px', fontSize: '1rem' }}>
+                  <span style={{ color: '#64748B' }}>Marge :</span>
+                  <span style={{ fontWeight: 'bold', color: stats.margin >= 70 ? '#10B981' : stats.margin >= 50 ? '#F59E0B' : '#EF4444' }}>{stats.margin.toFixed(1)} %</span>
+                </div>
+
+                {/* NUTRITION MINIMISE */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', marginTop: '15px', background: '#F8FAFC', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase' }}>Cal</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>{stats.calories.toFixed(0)}</span>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase' }}>Prot</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>{stats.protein.toFixed(1)}g</span>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase' }}>Gluc</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>{stats.carbs.toFixed(1)}g</span>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase' }}>Sucr</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>{stats.sugar.toFixed(1)}g</span>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <span style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase' }}>Lip</span>
+                    <span style={{ display: 'block', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>{stats.fat.toFixed(1)}g</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
 
         </div>
       </div>
