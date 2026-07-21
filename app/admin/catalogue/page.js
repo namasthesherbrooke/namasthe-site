@@ -437,7 +437,7 @@ export default function CataloguePage() {
                                 // Calculs pour la livraison
                                 const isEditing = editingRecipe && editingRecipe.id === recipe.id;
                                 const basePrice = isEditing ? (editingRecipe.selling_price || 0) : recipe.selling_price;
-                                const recipeCost = isEditing ? calculateTotalCost(editingRecipe.ingredients) : recipe.cost;
+                                const recipeCost = isEditing ? calculateTotalCost(editingRecipe.ingredients) : recipe.totalCost;
                                 const customUberPrice = isEditing ? editingRecipe.uber_price : recipe.uber_price;
                                 
                                 const suggestedUberPrice = parseFloat((basePrice * (1 + (deliveryMarkup / 100))).toFixed(2));
