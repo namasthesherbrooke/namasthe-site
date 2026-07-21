@@ -8,6 +8,7 @@ export default function CataloguePage() {
   const [recipes, setRecipes] = useState([]);
   const [ingredientsDb, setIngredientsDb] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [targetMargin, setTargetMarginState] = useState(75);
   
   const [expandedRecipeId, setExpandedRecipeId] = useState(null);
   const [editingRecipe, setEditingRecipe] = useState(null); // { id, name, selling_price, ingredients: [] }
@@ -15,7 +16,14 @@ export default function CataloguePage() {
   useEffect(() => {
     fetchRecipes();
     fetchIngredientsDb();
+    const savedTarget = localStorage.getItem('namasthe_target_margin');
+    if (savedTarget) setTargetMarginState(parseFloat(savedTarget));
   }, []);
+
+  const setTargetMargin = (val) => {
+    setTargetMarginState(val);
+    localStorage.setItem('namasthe_target_margin', val);
+  };
 
   const fetchIngredientsDb = async () => {
     try {
@@ -78,6 +86,8 @@ export default function CataloguePage() {
         
         const savedPkgStr = typeof window !== 'undefined' ? localStorage.getItem('namasthe_packaging_config') : null;
         const packagingConfig = savedPkgStr ? JSON.parse(savedPkgStr) : { '16': 0.35, '20': 0.40, '24': 0.45, '32': 0.55 };
+        const savedTargetStr = typeof window !== 'undefined' ? localStorage.getItem('namasthe_target_margin') : null;
+        const targetM = savedTargetStr ? parseFloat(savedTargetStr) : 75;
 
         // Parse size from recipe name (e.g. "Simplicithé 32oz" -> "32")
         const match = recipe.name.match(/(\d+)oz/i);
@@ -91,8 +101,11 @@ export default function CataloguePage() {
         const profit = sellingPrice - realTotalCost;
         const margin = sellingPrice > 0 ? (profit / sellingPrice) * 100 : 0;
         
-        // Suggested price for 75% margin = Cost / (1 - 0.75) = Cost / 0.25 = Cost * 4
-        const suggestedPrice = realTotalCost * 4;
+        // Prix suggéré calculé selon l'objectif de marge
+        // Formula: Prix = Coût / (1 - (Marge / 100))
+        let suggestedPrice = 0;
+        if (targetM >= 100) suggestedPrice = realTotalCost * 10; // Fallback pour empêcher division par 0
+        else suggestedPrice = realTotalCost / (1 - (targetM / 100));
 
         return {
           ...recipe,
@@ -214,9 +227,18 @@ export default function CataloguePage() {
         <h1 style={{ fontFamily: 'var(--font-heading)', color: '#1E293B', fontSize: '2.2rem', margin: 0 }}>
           Dossier Recettes (Catalogue)
         </h1>
-        <Link href="/admin/recettes" style={{ background: '#10B981', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>
-          + Nouvelle Recette
-        </Link>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <div style={{ background: 'white', padding: '8px 15px', borderRadius: '8px', border: '1px solid #CBD5E1', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: 'bold' }}>Objectif Marge:</label>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input type="number" value={targetMargin} onChange={(e) => { setTargetMargin(e.target.value); fetchRecipes(); }} style={{ width: '60px', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'center' }} />
+              <span style={{ marginLeft: '5px', color: '#64748B' }}>%</span>
+            </div>
+          </div>
+          <Link href="/admin/recettes" style={{ background: '#10B981', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>
+            + Nouvelle Recette
+          </Link>
+        </div>
       </div>
 
       {loading ? (
@@ -233,7 +255,7 @@ export default function CataloguePage() {
               <tr style={{ background: '#F8FAFC', color: '#475569', fontSize: '0.9rem', borderBottom: '2px solid #E2E8F0' }}>
                 <th style={{ padding: '15px 20px' }}>Nom de la recette</th>
                 <th style={{ padding: '15px 20px' }}>Coût Ingrédients</th>
-                <th style={{ padding: '15px 20px' }}>Prix Suggéré (Marge 75%)</th>
+                <th style={{ padding: '15px 20px' }}>Prix Suggéré (Marge {targetMargin}%)</th>
                 <th style={{ padding: '15px 20px' }}>Prix de vente actuel</th>
                 <th style={{ padding: '15px 20px' }}>Profit actuel ($)</th>
                 <th style={{ padding: '15px 20px' }}>Marge actuelle (%)</th>
