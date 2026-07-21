@@ -44,7 +44,7 @@ export async function POST(request) {
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-pro',
       contents: [
         {
           role: 'user',
