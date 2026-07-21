@@ -9,9 +9,19 @@ export default function RecipesPage() {
   
   // Recipe form state
   const [recipeName, setRecipeName] = useState('');
+  const [cupSize, setCupSize] = useState('autre'); // 16, 20, 24, 32, autre
   const [sellingPrice, setSellingPrice] = useState('');
   const [wasteMargin, setWasteMargin] = useState(0); // Marge de perte en %
   const [packagingCost, setPackagingCost] = useState(0); // Coût fixe de l'emballage
+
+  // Configured packaging costs per size (saved in localStorage)
+  const [packagingConfig, setPackagingConfig] = useState({
+    '16': 0.35,
+    '20': 0.40,
+    '24': 0.45,
+    '32': 0.55
+  });
+  const [showConfig, setShowConfig] = useState(false);
   
   // Dynamic list of ingredients added to this recipe
   const [recipeIngredients, setRecipeIngredients] = useState([]);
@@ -50,7 +60,29 @@ export default function RecipesPage() {
 
   useEffect(() => {
     fetchIngredients();
+    const savedConfig = localStorage.getItem('namasthe_packaging_config');
+    if (savedConfig) {
+      setPackagingConfig(JSON.parse(savedConfig));
+    }
   }, []);
+
+  const handleUpdateConfig = (size, value) => {
+    const newConfig = { ...packagingConfig, [size]: parseFloat(value) || 0 };
+    setPackagingConfig(newConfig);
+    localStorage.setItem('namasthe_packaging_config', JSON.stringify(newConfig));
+    // Update current packaging cost if the size is selected
+    if (cupSize === size) {
+      setPackagingCost(newConfig[size]);
+    }
+  };
+
+  const handleCupSizeChange = (e) => {
+    const size = e.target.value;
+    setCupSize(size);
+    if (size !== 'autre' && packagingConfig[size] !== undefined) {
+      setPackagingCost(packagingConfig[size]);
+    }
+  };
 
   const fetchIngredients = async () => {
     setLoading(true);
@@ -140,6 +172,7 @@ export default function RecipesPage() {
       if (ingError) throw ingError;
 
       alert("Recette sauvegardée avec succès !");
+      setCupSize('autre');
       setRecipeName('');
       setSellingPrice('');
       setWasteMargin(0);
@@ -160,11 +193,44 @@ export default function RecipesPage() {
         
         {/* CONSTRUCTEUR */}
         <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0', alignSelf: 'start' }}>
+          
+          {/* CONFIGURATION EMBALLAGES */}
+          <div style={{ marginBottom: '20px', background: '#F8FAFC', padding: '15px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.9rem', color: '#475569', fontWeight: 'bold' }}>⚙️ Coûts d'emballage par défaut (Verre + Paille + Couvercle)</span>
+              <button onClick={() => setShowConfig(!showConfig)} style={{ background: 'none', border: 'none', color: '#38BDF8', cursor: 'pointer', fontSize: '0.85rem' }}>
+                {showConfig ? 'Masquer' : 'Modifier'}
+              </button>
+            </div>
+            {showConfig && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px', marginTop: '10px' }}>
+                {['16', '20', '24', '32'].map(size => (
+                  <div key={size}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748B' }}>{size} oz ($)</label>
+                    <input type="number" step="0.01" value={packagingConfig[size]} onChange={(e) => handleUpdateConfig(size, e.target.value)} style={{ width: '100%', padding: '5px', borderRadius: '4px', border: '1px solid #CBD5E1', fontSize: '0.85rem' }} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#334155', borderBottom: '2px solid #E2E8F0', paddingBottom: '10px' }}>La Recette</h2>
           
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Nom du breuvage/plat</label>
-            <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: Frappé Glacé 16oz" />
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '15px', marginBottom: '15px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Nom du breuvage/plat</label>
+              <input type="text" value={recipeName} onChange={(e) => setRecipeName(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: Frappé Glacé" />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Format</label>
+              <select value={cupSize} onChange={handleCupSizeChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: cupSize !== 'autre' ? '#F0FDF4' : 'white' }}>
+                <option value="autre">Autre / Aucun</option>
+                <option value="16">16 oz</option>
+                <option value="20">20 oz</option>
+                <option value="24">24 oz</option>
+                <option value="32">32 oz</option>
+              </select>
+            </div>
           </div>
           <div style={{ marginBottom: '25px' }}>
             <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px' }}>Prix de vente final ($)</label>
