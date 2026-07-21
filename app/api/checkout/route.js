@@ -5,11 +5,16 @@ export async function POST(req) {
   try {
     const { items } = await req.json();
     
-    // items is an array of { id: "gid://shopify/ProductVariant/...", quantity: 1 }
-    const lineItems = items.map(item => ({
-      merchandiseId: item.id,
-      quantity: item.quantity
-    }));
+    const lineItems = items.map(item => {
+      const line = {
+        merchandiseId: item.id,
+        quantity: item.quantity
+      };
+      if (item.attributes && item.attributes.length > 0) {
+        line.attributes = item.attributes;
+      }
+      return line;
+    });
 
     const cart = await createShopifyCheckout(lineItems);
     

@@ -279,10 +279,15 @@ export default function Cart() {
                 onClick={async () => {
                   try {
                     setCheckoutMode('loading');
-                    const items = cart.map(item => ({
-                      id: item.base_product_id,
-                      quantity: item.quantity
-                    }));
+                    const items = cart.map(item => {
+                      // Extraire la personnalisation du nom s'il y en a une
+                      const hasCustomization = item.name.includes('(') || item.name.includes('[');
+                      return {
+                        id: item.base_product_id,
+                        quantity: item.quantity,
+                        attributes: hasCustomization ? [{ key: "Personnalisation", value: item.name }] : []
+                      };
+                    });
                     const res = await fetch('/api/checkout', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
