@@ -66,24 +66,59 @@ export default function IngredientsPage() {
 
     setIsScanning(true);
     
-    // Convert to base64
+    // Compresser l'image côté client (Canvas) pour éviter l'erreur 413 Payload Too Large
+    const img = new Image();
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
+    
+    reader.onload = (event) => {
+      img.src = event.target.result;
+    };
+    
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 1200;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Qualité 0.7 pour réduire le poids
+      const base64Data = canvas.toDataURL('image/jpeg', 0.7);
+
       try {
         const response = await fetch('/api/admin/parse-nutrition', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            imageBase64: reader.result,
-            mimeType: file.type 
+            imageBase64: base64Data,
+            mimeType: 'image/jpeg' 
           })
         });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erreur serveur (${response.status}): ${errorText.substring(0,100)}`);
+        }
         
         const data = await response.json();
         
         if (data.success && data.data) {
-          // Remplir le formulaire
           setFormData(prev => ({
             ...prev,
             calories_per_100: data.data.calories_per_100 || '',
@@ -92,17 +127,19 @@ export default function IngredientsPage() {
             fat_per_100: data.data.fat_per_100 || '',
             sugar_per_100: data.data.sugar_per_100 || ''
           }));
-          alert("Succès ! L'IA a rempli les informations nutritionnelles pour 100g/ml.");
+          alert("Succès ! L'IA a rempli les informations nutritionnelles.");
         } else {
           alert("Erreur de l'IA : " + data.error);
         }
       } catch (err) {
-        alert("Erreur de connexion à l'IA.");
+        alert("Erreur lors de l'analyse : " + err.message);
+        console.error(err);
       }
       setIsScanning(false);
-      // Reset input so we can upload same file again if needed
       if (fileInputRef.current) fileInputRef.current.value = '';
     };
+    
+    reader.readAsDataURL(file);
   };
 
   return (
