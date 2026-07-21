@@ -3,10 +3,14 @@
 import { useState, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
+import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
 
 function ScannerContent() {
   const searchParams = useSearchParams();
-  const userId = searchParams.get('userId');
+  const initialUserId = searchParams.get('userId');
+  const [userId, setUserId] = useState(initialUserId);
+  const [scannerActive, setScannerActive] = useState(false);
+  const [scanError, setScanError] = useState(null);
   
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,6 +46,73 @@ function ScannerContent() {
     if (isAuthenticated && userId) {
       processAction('info');
     }
+  }, [isAuthenticated, userId]);
+  // Initialiser le scanner QR si authentifié et aucun userId
+  useEffect(() => {
+    let html5QrcodeScanner;
+    
+    if (isAuthenticated && !userId && typeof window !== 'undefined') {
+      setScannerActive(true);
+      
+      // Delay to ensure the DOM element exists
+      setTimeout(() => {
+        const scannerNode = document.getElementById('reader');
+        if (scannerNode) {
+          html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { 
+              fps: 10, 
+              qrbox: {width: 250, height: 250},
+              aspectRatio: 1.0,
+              supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+              rememberLastUsedCamera: true
+            },
+            /* verbose= */ false
+          );
+          
+          html5QrcodeScanner.render(
+            (decodedText, decodedResult) => {
+              // Succès du scan !
+              // Le code QR du client contient une URL comme : https://cafenamasthesherbrooke.ca/admin/scanner?userId=abc-123
+              // Ou juste l'ID (abc-123)
+              console.log("Scan result:", decodedText);
+              
+              html5QrcodeScanner.clear().catch(error => {
+                console.error("Failed to clear html5QrcodeScanner. ", error);
+              });
+              setScannerActive(false);
+              
+              let extractedId = decodedText;
+              try {
+                // Si c'est une URL
+                if (decodedText.startsWith('http')) {
+                  const url = new URL(decodedText);
+                  const paramId = url.searchParams.get('userId');
+                  if (paramId) {
+                    extractedId = paramId;
+                  }
+                }
+              } catch (e) {
+                // Not a valid URL, fallback to raw text
+              }
+              
+              setUserId(extractedId);
+            },
+            (errorMessage) => {
+              // Ignore les erreurs de scan continuelles (ex: pas de QR trouvé)
+            }
+          );
+        }
+      }, 500);
+    }
+    
+    return () => {
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear().catch(error => {
+          console.error("Failed to clear html5QrcodeScanner on unmount. ", error);
+        });
+      }
+    };
   }, [isAuthenticated, userId]);
 
   // Vérifier si c'est la fête du client
@@ -156,13 +227,7 @@ function ScannerContent() {
     }
   };
 
-  if (!userId) {
-    return (
-      <div style={{ padding: '40px', textAlign: 'center' }}>
-        Erreur : Aucun ID utilisateur détecté dans l'URL. Veuillez scanner à nouveau le code QR.
-      </div>
-    );
-  }
+  // On ne retourne plus d'erreur si pas de userId, on va l'afficher conditionnellement plus bas !
 
   if (!isAuthenticated) {
     return (
@@ -188,8 +253,18 @@ function ScannerContent() {
   const progression = clientInfo ? (clientInfo.points || 0) : 0;
 
   return (
-    <div style={{ padding: '40px 24px', maxWidth: '500px', margin: '0 auto', textAlign: 'center' }}>
+    <div style={{ padding: '20px 24px', maxWidth: '500px', margin: '0 auto', textAlign: 'center' }}>
       <h1 style={{ color: '#2C1810', marginBottom: '10px' }}>☕ Fidélité Namasthé</h1>
+      
+      {!userId ? (
+        <div style={{ marginTop: '20px' }}>
+          <p style={{ color: '#5A4A42', marginBottom: '20px' }}>Veuillez scanner le code QR du client pour commencer.</p>
+          <div id="reader" style={{ width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}></div>
+          {scanError && <p style={{ color: 'red', marginTop: '10px' }}>{scanError}</p>}
+        </div>
+      ) : (
+        <>
+          {/* Section contenant les infos du client et les boutons d'action */}
       
       {clientInfo ? (
         <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', marginBottom: '30px' }}>
@@ -310,7 +385,19 @@ function ScannerContent() {
         >
           🎁 Utiliser 1 ticket
         </button>
+        
+        <button 
+          onClick={() => {
+            setUserId(null); // Permet de relancer la caméra pour un nouveau client
+            setClientInfo(null);
+          }} 
+          style={{ marginTop: '20px', background: '#e0e0e0', color: '#333', padding: '12px', fontSize: '1rem', border: 'none', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          📷 Scanner un autre client
+        </button>
       </div>
+        </>
+      )}
     </div>
   );
 }
