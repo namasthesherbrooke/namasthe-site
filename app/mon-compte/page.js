@@ -30,8 +30,8 @@ export default function MonComptePage() {
       }
       
       if (!session) {
-        // Rediriger si non connecté
-        router.replace('/connexion');
+        // Force a hard redirect if not connected to avoid Next.js router getting stuck
+        window.location.href = '/connexion';
         return;
       }
 
@@ -186,8 +186,11 @@ export default function MonComptePage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p>Chargement de votre espace...</p>
+      <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ marginBottom: '20px' }}>Chargement de votre espace...</p>
+        <button onClick={() => window.location.href = '/connexion'} style={{ padding: '10px 20px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+          Aller à la page de connexion
+        </button>
       </div>
     );
   }
