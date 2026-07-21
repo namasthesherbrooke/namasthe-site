@@ -9,6 +9,7 @@ export default function CataloguePage() {
   const [ingredientsDb, setIngredientsDb] = useState([]);
   const [loading, setLoading] = useState(true);
   const [targetMargin, setTargetMarginState] = useState(75);
+  const [deliveryMarkup, setDeliveryMarkup] = useState(20);
   
   const [expandedRecipeId, setExpandedRecipeId] = useState(null);
   const [editingRecipe, setEditingRecipe] = useState(null); // { id, name, selling_price, ingredients: [] }
@@ -223,7 +224,8 @@ export default function CataloguePage() {
       // 1. Update recipe selling price
       const { error: updateError } = await supabase
         .from('admin_recipes')
-        .update({ selling_price: parseFloat(editingRecipe.selling_price) || 0 })
+        .update({ selling_price: parseFloat(editingRecipe.selling_price) || 0,
+      uber_price: parseFloat(editingRecipe.uber_price) || null })
         .eq('id', editingRecipe.id);
         
       if (updateError) throw updateError;
