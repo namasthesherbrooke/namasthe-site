@@ -42,9 +42,10 @@ export default function IngredientsPage() {
           name: formData.name,
           supplier: formData.supplier,
           cost_per_unit: parseFloat(formData.cost_per_unit) || 0,
-          unit: formData.unit,
+          unit: formData.unit === 'oz' ? 'ml' : formData.unit,
           type: 'other', // Fix constraint
           calories_per_100: parseFloat(formData.calories_per_100) || 0,
+
           protein_per_100: parseFloat(formData.protein_per_100) || 0,
           carbs_per_100: parseFloat(formData.carbs_per_100) || 0,
           fat_per_100: parseFloat(formData.fat_per_100) || 0,
@@ -191,23 +192,34 @@ export default function IngredientsPage() {
                 <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Prix payé ($) *</label>
                 <input type="number" step="0.01" name="total_price" value={formData.total_price || ''} onChange={(e) => {
                   const price = parseFloat(e.target.value) || 0;
-                  const qty = parseFloat(formData.total_quantity) || 1;
+                  const rawQty = parseFloat(formData.total_quantity) || 1;
+                  const isOz = formData.unit === 'oz';
+                  const qty = isOz ? rawQty * 30 : rawQty;
                   setFormData({...formData, total_price: e.target.value, cost_per_unit: (price / qty).toFixed(4)});
                 }} required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 29.00" />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Quantité totale *</label>
                 <input type="number" step="0.01" name="total_quantity" value={formData.total_quantity || ''} onChange={(e) => {
-                  const qty = parseFloat(e.target.value) || 1;
+                  const rawQty = parseFloat(e.target.value) || 1;
                   const price = parseFloat(formData.total_price) || 0;
+                  const isOz = formData.unit === 'oz';
+                  const qty = isOz ? rawQty * 30 : rawQty;
                   setFormData({...formData, total_quantity: e.target.value, cost_per_unit: (price / qty).toFixed(4)});
                 }} required style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }} placeholder="Ex: 200" />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '5px' }}>Unité *</label>
-                <select name="unit" value={formData.unit} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
+                <select name="unit" value={formData.unit} onChange={(e) => {
+                  const newUnit = e.target.value;
+                  const rawQty = parseFloat(formData.total_quantity) || 1;
+                  const price = parseFloat(formData.total_price) || 0;
+                  const qty = newUnit === 'oz' ? rawQty * 30 : rawQty;
+                  setFormData({...formData, unit: newUnit, cost_per_unit: (price / qty).toFixed(4)});
+                }} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
                   <option value="g">Grammes (g)</option>
                   <option value="ml">Millilitres (ml)</option>
+                  <option value="oz">Onces liquides (oz)</option>
                   <option value="portion">Portions</option>
                   <option value="piece">Pièces / Unités</option>
                 </select>
@@ -215,9 +227,15 @@ export default function IngredientsPage() {
             </div>
             
             <div style={{ background: '#F8FAFC', padding: '10px', borderRadius: '6px', marginBottom: '20px', fontSize: '0.9rem', color: '#334155', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Coût calculé pour la recette :</span>
-              <strong>{formData.cost_per_unit || '0.0000'} $ / {formData.unit === 'piece' ? 'pièce' : formData.unit}</strong>
+              <span>Coût converti pour la recette :</span>
+              <strong>{formData.cost_per_unit || '0.0000'} $ / {formData.unit === 'piece' ? 'pièce' : formData.unit === 'oz' ? 'ml' : formData.unit}</strong>
             </div>
+            
+            {formData.unit === 'oz' && (
+              <p style={{ fontSize: '0.8rem', color: '#0369A1', marginTop: '-15px', marginBottom: '20px', fontStyle: 'italic' }}>
+                * Le système convertit automatiquement vos Onces (oz) en Millilitres (ml) dans la base de données (1 oz = 30 ml) pour que vos recettes soient précises au gramme près !
+              </p>
+            )}
 
             <p style={{ fontSize: '0.8rem', color: '#64748B', fontStyle: 'italic', marginBottom: '20px' }}>
               Astuce Emballage : Vous pouvez ajouter vos verres ou pailles ! Mettez le prix de la boîte, la quantité, choisissez "Pièces" et laissez les calories à 0.
