@@ -144,11 +144,19 @@ export default function AdminLayout({ children }) {
           </Link>
           
           <Link href="/admin/recettes" onClick={() => setIsMobileMenuOpen(false)} style={{ 
-            display: 'block', padding: '12px 20px', color: pathname.includes('/recettes') ? 'white' : '#94A3B8', 
-            background: pathname.includes('/recettes') ? 'rgba(255,255,255,0.05)' : 'transparent',
-            textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/recettes') ? '4px solid #38BDF8' : '4px solid transparent'
+            display: 'block', padding: '12px 20px', color: pathname === '/admin/recettes' ? 'white' : '#94A3B8', 
+            background: pathname === '/admin/recettes' ? 'rgba(255,255,255,0.05)' : 'transparent',
+            textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname === '/admin/recettes' ? '4px solid #38BDF8' : '4px solid transparent'
           }}>
             🧪 Calculateur de Recettes
+          </Link>
+          
+          <Link href="/admin/catalogue" onClick={() => setIsMobileMenuOpen(false)} style={{ 
+            display: 'block', padding: '12px 20px', color: pathname.includes('/catalogue') ? 'white' : '#94A3B8', 
+            background: pathname.includes('/catalogue') ? 'rgba(255,255,255,0.05)' : 'transparent',
+            textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/catalogue') ? '4px solid #38BDF8' : '4px solid transparent'
+          }}>
+            📚 Dossier Recettes
           </Link>
         </nav>
         
