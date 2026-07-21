@@ -31,11 +31,23 @@ export async function POST(request) {
         "carbs_per_100": nombre,
         "fat_per_100": nombre,
         "sugar_per_100": nombre,
+        "fiber_per_100": nombre,
+        "sodium_per_100": nombre,
+        "calcium_per_100": nombre,
+        "iron_per_100": nombre,
+        "vitamin_a_per_100": nombre,
+        "vitamin_c_per_100": nombre,
         "calories_per_serving": nombre,
         "protein_per_serving": nombre,
         "carbs_per_serving": nombre,
         "fat_per_serving": nombre,
-        "sugar_per_serving": nombre
+        "sugar_per_serving": nombre,
+        "fiber_per_serving": nombre,
+        "sodium_per_serving": nombre,
+        "calcium_per_serving": nombre,
+        "iron_per_serving": nombre,
+        "vitamin_a_per_serving": nombre,
+        "vitamin_c_per_serving": nombre
       }
       S'il manque une information, mets 0.
     `;

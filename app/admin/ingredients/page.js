@@ -10,7 +10,7 @@ export default function IngredientsPage() {
   const [formData, setFormData] = useState({
     name: '', supplier: '', cost_per_unit: '', unit: 'g',
     total_price: '', total_quantity: '', // Adding these to help reset
-    calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: ''
+    calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '', fiber_per_100: '', sodium_per_100: '', calcium_per_100: '', iron_per_100: '', vitamin_a_per_100: '', vitamin_c_per_100: ''
   });
   const [isScanning, setIsScanning] = useState(false);
   const [editIngredientId, setEditIngredientId] = useState(null);
@@ -50,6 +50,12 @@ export default function IngredientsPage() {
         carbs_per_100: parseFloat(formData.carbs_per_100) || 0,
         fat_per_100: parseFloat(formData.fat_per_100) || 0,
         sugar_per_100: parseFloat(formData.sugar_per_100) || 0,
+        fiber_per_100: parseFloat(formData.fiber_per_100) || 0,
+        sodium_per_100: parseFloat(formData.sodium_per_100) || 0,
+        calcium_per_100: parseFloat(formData.calcium_per_100) || 0,
+        iron_per_100: parseFloat(formData.iron_per_100) || 0,
+        vitamin_a_per_100: parseFloat(formData.vitamin_a_per_100) || 0,
+        vitamin_c_per_100: parseFloat(formData.vitamin_c_per_100) || 0,
       };
 
       if (editIngredientId) {
@@ -63,7 +69,7 @@ export default function IngredientsPage() {
       }
       
       setEditIngredientId(null);
-      setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '' });
+      setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '', fiber_per_100: '', sodium_per_100: '', calcium_per_100: '', iron_per_100: '', vitamin_a_per_100: '', vitamin_c_per_100: '' });
       fetchIngredients();
     } catch (error) {
       alert("Erreur lors de la sauvegarde : " + error.message);
@@ -83,7 +89,13 @@ export default function IngredientsPage() {
       protein_per_100: ing.protein_per_100 || 0,
       carbs_per_100: ing.carbs_per_100 || 0,
       fat_per_100: ing.fat_per_100 || 0,
-      sugar_per_100: ing.sugar_per_100 || 0
+      sugar_per_100: ing.sugar_per_100 || 0,
+      fiber_per_100: ing.fiber_per_100 || 0,
+      sodium_per_100: ing.sodium_per_100 || 0,
+      calcium_per_100: ing.calcium_per_100 || 0,
+      iron_per_100: ing.iron_per_100 || 0,
+      vitamin_a_per_100: ing.vitamin_a_per_100 || 0,
+      vitamin_c_per_100: ing.vitamin_c_per_100 || 0
     });
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -91,7 +103,7 @@ export default function IngredientsPage() {
 
   const handleCancelEdit = () => {
     setEditIngredientId(null);
-    setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '' });
+    setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '', fiber_per_100: '', sodium_per_100: '', calcium_per_100: '', iron_per_100: '', vitamin_a_per_100: '', vitamin_c_per_100: '' });
   };
 
   const handleFileUpload = async (e) => {
@@ -160,7 +172,13 @@ export default function IngredientsPage() {
             protein_per_100: isServing ? data.data.protein_per_serving : data.data.protein_per_100,
             carbs_per_100: isServing ? data.data.carbs_per_serving : data.data.carbs_per_100,
             fat_per_100: isServing ? data.data.fat_per_serving : data.data.fat_per_100,
-            sugar_per_100: isServing ? data.data.sugar_per_serving : data.data.sugar_per_100
+            sugar_per_100: isServing ? data.data.sugar_per_serving : data.data.sugar_per_100,
+            fiber_per_100: isServing ? data.data.fiber_per_serving : data.data.fiber_per_100,
+            sodium_per_100: isServing ? data.data.sodium_per_serving : data.data.sodium_per_100,
+            calcium_per_100: isServing ? data.data.calcium_per_serving : data.data.calcium_per_100,
+            iron_per_100: isServing ? data.data.iron_per_serving : data.data.iron_per_100,
+            vitamin_a_per_100: isServing ? data.data.vitamin_a_per_serving : data.data.vitamin_a_per_100,
+            vitamin_c_per_100: isServing ? data.data.vitamin_c_per_serving : data.data.vitamin_c_per_100
           }));
           alert(`Succès ! L'IA a rempli les informations nutritionnelles (${isServing ? 'Par portion' : 'Pour 100g/ml'}).`);
         } else {
@@ -286,7 +304,7 @@ export default function IngredientsPage() {
               Valeurs nutritives {formData.unit === 'portion' ? '(Pour 1 portion)' : formData.unit === 'piece' ? '(Pour 1 pièce)' : '(Pour 100g/ml)'}
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Calories</label>
                 <input type="number" step="0.1" name="calories_per_100" value={formData.calories_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
@@ -306,6 +324,30 @@ export default function IngredientsPage() {
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Lipides (g)</label>
                 <input type="number" step="0.1" name="fat_per_100" value={formData.fat_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Fibres (g)</label>
+                <input type="number" step="0.1" name="fiber_per_100" value={formData.fiber_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Sodium (mg)</label>
+                <input type="number" step="0.1" name="sodium_per_100" value={formData.sodium_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Calcium (mg)</label>
+                <input type="number" step="0.1" name="calcium_per_100" value={formData.calcium_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Fer (mg)</label>
+                <input type="number" step="0.1" name="iron_per_100" value={formData.iron_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Vitamine A (%)</label>
+                <input type="number" step="0.1" name="vitamin_a_per_100" value={formData.vitamin_a_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '3px' }}>Vitamine C (mg)</label>
+                <input type="number" step="0.1" name="vitamin_c_per_100" value={formData.vitamin_c_per_100} onChange={handleChange} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #CBD5E1' }} />
               </div>
             </div>
 
