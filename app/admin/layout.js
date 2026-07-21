@@ -67,18 +67,68 @@ export default function AdminLayout({ children }) {
     );
   }
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F7F6', fontFamily: 'var(--font-sans)' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F7F6', fontFamily: 'var(--font-sans)', position: 'relative' }}>
       
+      <style>{`
+        .admin-sidebar {
+          width: 250px;
+          background: #1E293B;
+          color: white;
+          display: flex;
+          flex-direction: column;
+          transition: transform 0.3s ease;
+          z-index: 100;
+        }
+        .admin-overlay {
+          display: none;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.5);
+          z-index: 90;
+        }
+        .menu-toggle {
+          display: none;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+        }
+        @media (max-width: 768px) {
+          .admin-sidebar {
+            position: fixed;
+            height: 100vh;
+            transform: translateX(-100%);
+          }
+          .admin-sidebar.open {
+            transform: translateX(0);
+          }
+          .admin-overlay.open {
+            display: block;
+          }
+          .menu-toggle {
+            display: block;
+          }
+        }
+      `}</style>
+
+      {/* OVERLAY POUR FERMER LE MENU SUR MOBILE */}
+      <div 
+        className={`admin-overlay ${isMobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
       {/* SIDEBAR */}
-      <aside style={{ width: '250px', background: '#1E293B', color: 'white', display: 'flex', flexDirection: 'column' }}>
+      <aside className={`admin-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div style={{ padding: '30px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', margin: 0, color: '#38BDF8' }}>Namasthé</h2>
           <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: '5px 0 0 0' }}>Portail de gestion</p>
         </div>
         
         <nav style={{ padding: '20px 0', flex: 1 }}>
-          <Link href="/admin" style={{ 
+          <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} style={{ 
             display: 'block', padding: '12px 20px', color: pathname === '/admin' ? 'white' : '#94A3B8', 
             background: pathname === '/admin' ? 'rgba(255,255,255,0.05)' : 'transparent',
             textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname === '/admin' ? '4px solid #38BDF8' : '4px solid transparent'
@@ -86,7 +136,7 @@ export default function AdminLayout({ children }) {
             📊 Tableau de bord
           </Link>
           
-          <Link href="/admin/ingredients" style={{ 
+          <Link href="/admin/ingredients" onClick={() => setIsMobileMenuOpen(false)} style={{ 
             display: 'block', padding: '12px 20px', color: pathname.includes('/ingredients') ? 'white' : '#94A3B8', 
             background: pathname.includes('/ingredients') ? 'rgba(255,255,255,0.05)' : 'transparent',
             textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/ingredients') ? '4px solid #38BDF8' : '4px solid transparent'
@@ -94,7 +144,7 @@ export default function AdminLayout({ children }) {
             🥑 Ingrédients & Coûts
           </Link>
           
-          <Link href="/admin/recettes" style={{ 
+          <Link href="/admin/recettes" onClick={() => setIsMobileMenuOpen(false)} style={{ 
             display: 'block', padding: '12px 20px', color: pathname.includes('/recettes') ? 'white' : '#94A3B8', 
             background: pathname.includes('/recettes') ? 'rgba(255,255,255,0.05)' : 'transparent',
             textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/recettes') ? '4px solid #38BDF8' : '4px solid transparent'
@@ -116,13 +166,16 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* CONTENT AREA */}
-      <main style={{ flex: 1, overflowY: 'auto' }}>
-        <header style={{ background: 'white', padding: '20px 40px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <main style={{ flex: 1, overflowY: 'auto', width: '100%' }}>
+        <header style={{ background: 'white', padding: '15px 20px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button className="menu-toggle" onClick={() => setIsMobileMenuOpen(true)}>
+            ☰
+          </button>
           <Link href="/" style={{ color: '#64748B', textDecoration: 'none', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
-            ← Retour au site public
+            ← Retour au site
           </Link>
         </header>
-        <div style={{ padding: '40px' }}>
+        <div style={{ padding: '20px' }}>
           {children}
         </div>
       </main>
