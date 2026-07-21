@@ -11,6 +11,7 @@ export default function MonComptePage() {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState('Vérification de la connexion...');
   
   const [editing, setEditing] = useState({ email: false, codePostal: false });
   const [formData, setFormData] = useState({ email: '', codePostal: '' });
@@ -18,9 +19,18 @@ export default function MonComptePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const withTimeout = (promise, ms, stepName) => {
+        let timeoutId;
+        const timeoutPromise = new Promise((_, reject) => {
+          timeoutId = setTimeout(() => reject(new Error('Timeout at ' + stepName)), ms);
+        });
+        return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId));
+      };
+
       let session = null;
       try {
-        const { data, error } = await supabase.auth.getSession();
+        setLoadingStep('Vérification de la session...');
+        const { data, error } = await withTimeout(supabase.auth.getSession(), 8000, 'getSession');
         if (error) {
           console.error("Erreur lors de la récupération de la session:", error);
         }
@@ -37,11 +47,12 @@ export default function MonComptePage() {
 
       // Récupérer le profil
       try {
-        const { data: profileData, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+        setLoadingStep('Récupération du profil...');
+        const { data: profileData, error } = await withTimeout(
+          supabase.from('profiles').select('*').eq('id', session.user.id).single(),
+          8000,
+          'fetchProfile'
+        );
 
         if (profileData) {
           setProfile({ ...profileData, email: session.user.email });
@@ -74,6 +85,7 @@ export default function MonComptePage() {
 
         // --- NOUVEAUTÉ : Mise à jour en temps réel (Realtime) ---
         // Si la Barista ajoute un point sur sa tablette, l'écran du client se met à jour tout seul instantanément !
+        setLoadingStep('Initialisation du temps réel...');
         const channel = supabase
           .channel(`profile_changes_${session.user.id}`)
           .on('postgres_changes', 
@@ -103,13 +115,20 @@ export default function MonComptePage() {
 
       } catch (err) {
         console.error("Erreur inattendue lors de la récupération du profil:", err);
+        setLoadingStep('Erreur : ' + err.message);
+        // Ne pas cacher le loading si on veut voir l'erreur, ou mettre un bouton pour forcer.
       } finally {
-        setLoading(false);
+        // If there was an error, we keep loading true so we can see the error step
+        // But if it's just a normal error, we might want to unblock.
+        // Actually, let's just always set it to false so we don't hang, UNLESS it's a critical timeout.
+        if (!err || !err.message.includes('Timeout')) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProfile();
-  }, [router]);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -186,8 +205,20 @@ export default function MonComptePage() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ marginBottom: '20px' }}>Chargement de votre espace...</p>
+      <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
+        <p style={{ marginBottom: '10px', fontSize: '1.2rem', fontWeight: 'bold' }}>Chargement de votre espace...</p>
+        <p style={{ marginBottom: '30px', color: '#666' }}>Étape : {loadingStep}</p>
+        
+        {loadingStep && loadingStep.includes('Erreur') && (
+          <div style={{ background: '#FDECEA', color: '#D32F2F', padding: '15px', borderRadius: '8px', marginBottom: '20px', maxWidth: '400px' }}>
+            <p><strong>Un blocage est survenu.</strong></p>
+            <p style={{ fontSize: '0.9rem', marginBottom: '10px' }}>La base de données prend trop de temps à répondre ou le navigateur bloque la connexion.</p>
+            <button onClick={() => window.location.reload()} style={{ padding: '10px 20px', background: '#D32F2F', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', width: '100%' }}>
+              🔄 Forcer le rechargement
+            </button>
+          </div>
+        )}
+        
         <button onClick={() => window.location.href = '/connexion'} style={{ padding: '10px 20px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
           Aller à la page de connexion
         </button>
@@ -195,7 +226,7 @@ export default function MonComptePage() {
     );
   }
 
-  if (!profile) return null;
+  if (!profile) return <div style={{ padding: '60px', textAlign: 'center' }}><h2>Profil introuvable</h2><p>Impossible de charger vos données. Veuillez vous reconnecter.</p><button onClick={() => window.location.href = '/connexion'} style={{ padding: '10px 20px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', marginTop: '20px' }}>Se reconnecter</button></div>;
 
   return (
     <section className="section" style={{ padding: '60px 24px', minHeight: '80vh' }}>
