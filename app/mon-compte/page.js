@@ -37,6 +37,18 @@ export default function MonComptePage() {
         session = data?.session;
       } catch (e) {
         console.error("Erreur getSession:", e);
+        if (e.message && e.message.includes('Timeout')) {
+          // Fix for Supabase local storage lock bug on mobile:
+          // If getSession hangs, clear local storage to break the corrupted lock.
+          if (typeof window !== 'undefined') {
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key && key.includes('-auth-token')) {
+                localStorage.removeItem(key);
+              }
+            }
+          }
+        }
       }
       
       if (!session) {
