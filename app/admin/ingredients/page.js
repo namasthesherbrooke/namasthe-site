@@ -9,9 +9,11 @@ export default function IngredientsPage() {
   
   const [formData, setFormData] = useState({
     name: '', supplier: '', cost_per_unit: '', unit: 'g',
+    total_price: '', total_quantity: '', // Adding these to help reset
     calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: ''
   });
   const [isScanning, setIsScanning] = useState(false);
+  const [editIngredientId, setEditIngredientId] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -37,29 +39,59 @@ export default function IngredientsPage() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase.from('ingredients').insert([
-        {
-          name: formData.name,
-          supplier: formData.supplier,
-          cost_per_unit: parseFloat(formData.cost_per_unit) || 0,
-          unit: formData.unit === 'oz' ? 'ml' : formData.unit,
-          type: 'other', // Fix constraint
-          calories_per_100: parseFloat(formData.calories_per_100) || 0,
+      const payload = {
+        name: formData.name,
+        supplier: formData.supplier,
+        cost_per_unit: parseFloat(formData.cost_per_unit) || 0,
+        unit: formData.unit === 'oz' ? 'ml' : formData.unit,
+        type: 'other', // Fix constraint
+        calories_per_100: parseFloat(formData.calories_per_100) || 0,
+        protein_per_100: parseFloat(formData.protein_per_100) || 0,
+        carbs_per_100: parseFloat(formData.carbs_per_100) || 0,
+        fat_per_100: parseFloat(formData.fat_per_100) || 0,
+        sugar_per_100: parseFloat(formData.sugar_per_100) || 0,
+      };
 
-          protein_per_100: parseFloat(formData.protein_per_100) || 0,
-          carbs_per_100: parseFloat(formData.carbs_per_100) || 0,
-          fat_per_100: parseFloat(formData.fat_per_100) || 0,
-          sugar_per_100: parseFloat(formData.sugar_per_100) || 0,
-        }
-      ]);
-      if (error) throw error;
+      if (editIngredientId) {
+        const { error } = await supabase.from('ingredients').update(payload).eq('id', editIngredientId);
+        if (error) throw error;
+        alert("Ingrédient mis à jour !");
+      } else {
+        const { error } = await supabase.from('ingredients').insert([payload]);
+        if (error) throw error;
+        alert("Ingrédient sauvegardé !");
+      }
       
-      alert("Ingrédient sauvegardé !");
-      setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '' });
+      setEditIngredientId(null);
+      setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '' });
       fetchIngredients();
     } catch (error) {
       alert("Erreur lors de la sauvegarde : " + error.message);
     }
+  };
+
+  const handleEditClick = (ing) => {
+    setEditIngredientId(ing.id);
+    setFormData({
+      name: ing.name || '',
+      supplier: ing.supplier || '',
+      cost_per_unit: ing.cost_per_unit || '',
+      unit: ing.unit || 'g',
+      total_price: '', // Clear the calculator fields when editing an existing one directly
+      total_quantity: '',
+      calories_per_100: ing.calories_per_100 || 0,
+      protein_per_100: ing.protein_per_100 || 0,
+      carbs_per_100: ing.carbs_per_100 || 0,
+      fat_per_100: ing.fat_per_100 || 0,
+      sugar_per_100: ing.sugar_per_100 || 0
+    });
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditIngredientId(null);
+    setFormData({ name: '', supplier: '', cost_per_unit: '', unit: 'g', total_price: '', total_quantity: '', calories_per_100: '', protein_per_100: '', carbs_per_100: '', fat_per_100: '', sugar_per_100: '' });
   };
 
   const handleFileUpload = async (e) => {
@@ -155,7 +187,16 @@ export default function IngredientsPage() {
         
         {/* COLONNE GAUCHE: FORMULAIRE */}
         <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0', alignSelf: 'start' }}>
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '20px', color: '#334155', borderBottom: '2px solid #E2E8F0', paddingBottom: '10px' }}>Ajouter un ingrédient</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #E2E8F0', paddingBottom: '10px' }}>
+            <h2 style={{ fontSize: '1.3rem', color: '#334155', margin: 0 }}>
+              {editIngredientId ? 'Modifier un ingrédient' : 'Ajouter un ingrédient'}
+            </h2>
+            {editIngredientId && (
+              <button type="button" onClick={handleCancelEdit} style={{ background: '#EF4444', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>
+                Annuler
+              </button>
+            )}
+          </div>
           
           <div style={{ marginBottom: '20px', background: '#F0FDF4', padding: '15px', borderRadius: '8px', border: '1px dashed #22C55E', textAlign: 'center' }}>
             <p style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: '#166534', fontWeight: 'bold' }}>🤖 Remplissage magique par IA</p>
@@ -268,8 +309,8 @@ export default function IngredientsPage() {
               </div>
             </div>
 
-            <button type="submit" style={{ width: '100%', padding: '12px', background: '#38BDF8', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
-              Sauvegarder l'ingrédient
+            <button type="submit" style={{ width: '100%', padding: '12px', background: editIngredientId ? '#F59E0B' : '#38BDF8', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+              {editIngredientId ? "Mettre à jour l'ingrédient" : "Sauvegarder l'ingrédient"}
             </button>
           </form>
         </div>
@@ -290,6 +331,7 @@ export default function IngredientsPage() {
                     <th style={{ padding: '12px 10px', color: '#475569' }}>Nom</th>
                     <th style={{ padding: '12px 10px', color: '#475569' }}>Coût (unitaire)</th>
                     <th style={{ padding: '12px 10px', color: '#475569' }}>Calories/100</th>
+                    <th style={{ padding: '12px 10px', color: '#475569' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -300,6 +342,11 @@ export default function IngredientsPage() {
                       </td>
                       <td style={{ padding: '12px 10px', color: '#64748B' }}>{ing.cost_per_unit}$ / {ing.unit}</td>
                       <td style={{ padding: '12px 10px', color: '#64748B' }}>{ing.calories_per_100} kcal</td>
+                      <td style={{ padding: '12px 10px' }}>
+                        <button onClick={() => handleEditClick(ing)} style={{ background: '#E2E8F0', color: '#475569', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                          Éditer
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
