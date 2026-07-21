@@ -51,7 +51,18 @@ export default function CataloguePage() {
               id,
               name,
               cost_per_unit,
-              unit
+              unit,
+              calories_per_100,
+              protein_per_100,
+              carbs_per_100,
+              fat_per_100,
+              sugar_per_100,
+              fiber_per_100,
+              sodium_per_100,
+              calcium_per_100,
+              iron_per_100,
+              vitamin_a_per_100,
+              vitamin_c_per_100
             )
           )
         `)
@@ -62,6 +73,7 @@ export default function CataloguePage() {
       // Calculate dynamic costs for each recipe
       const enrichedRecipes = (data || []).map(recipe => {
         let totalCost = 0;
+        let nutritionTotals = { calories: 0, protein: 0, carbs: 0, fat: 0, sugar: 0, fiber: 0, sodium: 0, calcium: 0, iron: 0, vitamin_a: 0, vitamin_c: 0 };
         
         const ingredientsList = recipe.admin_recipe_ingredients.map(ri => {
           // If the ingredient got deleted from the DB, handle gracefully
@@ -69,6 +81,29 @@ export default function CataloguePage() {
           
           const ingCost = (ri.ingredients.cost_per_unit || 0) * ri.quantity;
           totalCost += ingCost;
+          
+          const ing = ri.ingredients;
+          const isLiquidOz = ing.unit === 'ml' && (recipe.name.includes('oz') || recipe.name.includes('Oz'));
+          // In builder we use the raw quantity. In DB we save raw quantity.
+          // Wait, if DB unit is ml, the qty is the actual ml quantity.
+          // In builder, we scale it. In the catalogue, the quantity in 'ri.quantity' is ALREADY the scaled quantity!
+          // So we just use ri.quantity.
+          // For nutritional info, it's per 100g/ml or per serving.
+          // Wait, we need to replicate the exact math:
+          const isServing = ing.unit === 'portion' || ing.unit === 'piece';
+          const calcQty = isServing ? ri.quantity : (ri.quantity / 100);
+          
+          nutritionTotals.calories += calcQty * (ing.calories_per_100 || 0);
+          nutritionTotals.protein += calcQty * (ing.protein_per_100 || 0);
+          nutritionTotals.carbs += calcQty * (ing.carbs_per_100 || 0);
+          nutritionTotals.fat += calcQty * (ing.fat_per_100 || 0);
+          nutritionTotals.sugar += calcQty * (ing.sugar_per_100 || 0);
+          nutritionTotals.fiber += calcQty * (ing.fiber_per_100 || 0);
+          nutritionTotals.sodium += calcQty * (ing.sodium_per_100 || 0);
+          nutritionTotals.calcium += calcQty * (ing.calcium_per_100 || 0);
+          nutritionTotals.iron += calcQty * (ing.iron_per_100 || 0);
+          nutritionTotals.vitamin_a += calcQty * (ing.vitamin_a_per_100 || 0);
+          nutritionTotals.vitamin_c += calcQty * (ing.vitamin_c_per_100 || 0);
           
           return {
             ingredient_id: ri.ingredient_id,
@@ -114,7 +149,8 @@ export default function CataloguePage() {
           profit,
           margin,
           suggestedPrice,
-          ingredientsList
+          ingredientsList,
+          nutritionTotals
         };
       });
 
@@ -381,6 +417,24 @@ export default function CataloguePage() {
                               </ul>
                             </div>
                           )}
+                          
+                          {/* Nutritional Values Display */}
+                          <div style={{ marginTop: '20px', padding: '15px', background: 'white', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                            <h4 style={{ margin: '0 0 10px 0', color: '#334155', fontSize: '0.9rem' }}>Valeurs nutritives (Totales)</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px 10px', textAlign: 'center' }}>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Calories</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{Math.round(recipe.nutritionTotals.calories)}</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Protéines</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.protein.toFixed(1)}g</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Glucides</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.carbs.toFixed(1)}g</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Sucres</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.sugar.toFixed(1)}g</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Lipides</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.fat.toFixed(1)}g</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Fibres</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.fiber.toFixed(1)}g</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Sodium</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{Math.round(recipe.nutritionTotals.sodium)}mg</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Calcium</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{Math.round(recipe.nutritionTotals.calcium)}mg</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Fer</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{recipe.nutritionTotals.iron.toFixed(1)}mg</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Vitamine A</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{Math.round(recipe.nutritionTotals.vitamin_a)}%</div></div>
+                              <div><div style={{ fontSize: '0.65rem', color: '#94A3B8', textTransform: 'uppercase' }}>Vitamine C</div><div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0F172A' }}>{Math.round(recipe.nutritionTotals.vitamin_c)}mg</div></div>
+                            </div>
+                          </div>
                         </div>
                       </td>
                     </tr>
