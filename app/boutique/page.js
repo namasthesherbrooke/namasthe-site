@@ -52,17 +52,8 @@ export default function BoutiquePage() {
     }));
   };
 
-  const handleAddToCart = (product) => {
-    const variationId = selectedVariations[product.id] || (product.variations?.length > 0 ? product.variations[0].id : null);
-    const variation = product.variations?.find(v => v.id === variationId) || product.variations?.[0];
-
-    if (!variation) return;
-
-    let finalPrice = parseFloat(variation.price || product.price || 0);
-    const ingredientIds = [];
-    const extrasNames = [];
-
-    if (product.modifier_lists) {
+    const getProcessLists = (product) => {
+      if (!product.modifier_lists) return [];
       let processLists = [...product.modifier_lists];
       
       // Patch : Sachet individuel a 2 listes attachées par erreur dans Square, on n'en garde qu'une
@@ -77,6 +68,21 @@ export default function BoutiquePage() {
           processLists.push(`${jusList.id}_extra`);
         }
       }
+      return processLists;
+    };
+
+  const handleAddToCart = (product) => {
+    const variationId = selectedVariations[product.id] || (product.variations?.length > 0 ? product.variations[0].id : null);
+    const variation = product.variations?.find(v => v.id === variationId) || product.variations?.[0];
+
+    if (!variation) return;
+
+    let finalPrice = parseFloat(variation.price || product.price || 0);
+    const ingredientIds = [];
+    const extrasNames = [];
+
+    if (product.modifier_lists) {
+      const processLists = getProcessLists(product);
 
       processLists.forEach(rawListId => {
         const isExtra = rawListId.endsWith('_extra');
@@ -160,7 +166,7 @@ export default function BoutiquePage() {
                   <select 
                     value={selectedVariations[product.id] || product.variations[0].id}
                     onChange={(e) => handleVariationChange(product.id, e.target.value)}
-                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontFamily: 'inherit', fontSize: '1rem', color: '#2C1810', background: 'white' }}
                   >
                     {product.variations.map(v => (
                       <option key={v.id} value={v.id} disabled={v.is_sold_out}>
@@ -170,6 +176,34 @@ export default function BoutiquePage() {
                   </select>
                 </div>
               )}
+
+              {getProcessLists(product).map(rawListId => {
+                const isExtra = rawListId.endsWith('_extra');
+                const listId = isExtra ? rawListId.replace('_extra', '') : rawListId;
+                const list = menu.modifierLists.find(l => l.id === listId);
+                
+                if (!list || !list.modifiers || list.modifiers.length === 0) return null;
+                const stateKey = isExtra ? `${listId}_extra` : listId;
+
+                return (
+                  <div key={stateKey} style={{ marginBottom: '15px' }}>
+                    <label style={{ display: 'block', fontSize: '0.9rem', color: '#666', marginBottom: '5px', fontWeight: 'bold' }}>
+                      {list.name} {isExtra && '(2e choix)'}
+                    </label>
+                    <select 
+                      value={selectedModifiers[product.id]?.[stateKey] || list.modifiers[0].id}
+                      onChange={(e) => handleModifierChange(product.id, stateKey, e.target.value)}
+                      style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontFamily: 'inherit', fontSize: '1rem', color: '#2C1810', background: 'white' }}
+                    >
+                      {list.modifiers.map(mod => (
+                        <option key={mod.id} value={mod.id} disabled={mod.is_sold_out}>
+                          {mod.name} {parseFloat(mod.price) > 0 ? `(+${parseFloat(mod.price).toFixed(2)}$)` : ''} {mod.is_sold_out ? '(Épuisé)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              })}
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                 <span style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--green-tropical)' }}>
