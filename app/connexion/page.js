@@ -35,7 +35,7 @@ export default function ConnexionPage() {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        router.push('/mon-compte');
+        window.location.href = '/mon-compte';
       }, 500);
     }
   };

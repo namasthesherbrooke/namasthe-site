@@ -52,8 +52,8 @@ export default function MonComptePage() {
       }
       
       if (!session) {
-        // Force a hard redirect if not connected to avoid Next.js router getting stuck
-        window.location.href = '/connexion';
+        setLoadingStep('Aucune session trouvée. Vous n\'êtes pas connecté.');
+        setLoading(false);
         return;
       }
 
@@ -238,7 +238,15 @@ export default function MonComptePage() {
     );
   }
 
-  if (!profile) return <div style={{ padding: '60px', textAlign: 'center' }}><h2>Profil introuvable</h2><p>Impossible de charger vos données. Veuillez vous reconnecter.</p><button onClick={() => window.location.href = '/connexion'} style={{ padding: '10px 20px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', marginTop: '20px' }}>Se reconnecter</button></div>;
+  if (!profile) return (
+    <div style={{ padding: '60px', textAlign: 'center' }}>
+      <h2>Profil introuvable ou session expirée</h2>
+      <p style={{marginBottom: '20px', color: '#666'}}>Impossible de charger vos données. Vous avez été déconnecté.</p>
+      <button onClick={() => window.location.href = '/connexion'} style={{ padding: '15px 30px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: '1.1rem' }}>
+        Aller à la page de Connexion
+      </button>
+    </div>
+  );
 
   return (
     <section className="section" style={{ padding: '60px 24px', minHeight: '80vh' }}>
