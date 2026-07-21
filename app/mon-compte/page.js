@@ -128,14 +128,8 @@ export default function MonComptePage() {
       } catch (err) {
         console.error("Erreur inattendue lors de la récupération du profil:", err);
         setLoadingStep('Erreur : ' + err.message);
-        // Ne pas cacher le loading si on veut voir l'erreur, ou mettre un bouton pour forcer.
       } finally {
-        // If there was an error, we keep loading true so we can see the error step
-        // But if it's just a normal error, we might want to unblock.
-        // Actually, let's just always set it to false so we don't hang, UNLESS it's a critical timeout.
-        if (!err || !err.message.includes('Timeout')) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
 
