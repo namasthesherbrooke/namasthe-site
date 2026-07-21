@@ -274,85 +274,38 @@ export default function Cart() {
               <span>{grandTotal.toFixed(2)} $</span>
             </div>
 
-            {!checkoutMode && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button 
-                  onClick={() => setCheckoutMode('square')}
-                  style={{ width: '100%', padding: '15px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}
-                >
-                  💳 Payer en ligne (Sécurisé)
-                </button>
-              </div>
-            )}
-
-            {checkoutMode === 'square' && (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ marginBottom: '15px', textAlign: 'left' }}>
-                  <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '10px' }}>Entrez vos informations pour le reçu et le suivi de commande :</p>
-                  <input 
-                    required 
-                    type="text" 
-                    placeholder="Votre nom" 
-                    value={guestName} 
-                    onChange={e => setGuestName(e.target.value)} 
-                    style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ccc' }} 
-                  />
-                  <input 
-                    required 
-                    type="email" 
-                    placeholder="Votre courriel" 
-                    value={guestEmail} 
-                    onChange={e => setGuestEmail(e.target.value)} 
-                    style={{ width: '100%', padding: '10px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc' }} 
-                  />
-                </div>
-                
-                {(!guestName || !guestEmail) || (pickupType === 'custom' && (!selectedDate || !selectedTime)) ? (
-                  <div style={{ color: '#D32F2F', fontSize: '0.9rem', textAlign: 'left', background: '#FFF0F5', padding: '10px', borderRadius: '8px' }}>
-                    {(!guestName || !guestEmail) && <p style={{ margin: '0 0 5px 0' }}>• Veuillez remplir votre nom et courriel.</p>}
-                    {(pickupType === 'custom' && (!selectedDate || !selectedTime)) && <p style={{ margin: 0 }}>• Veuillez choisir une date et une heure de préparation valides.</p>}
-                  </div>
-                ) : (
-                  <SquareCheckoutForm 
-                    amount={grandTotal} 
-                    cartTotal={cartTotal}
-                    tpsAmount={tpsAmount}
-                    tvqAmount={tvqAmount}
-                    cart={cart}
-                    customer_name={guestName}
-                    customer_email={guestEmail}
-                    user_id={session ? session.user.id : null}
-                    pickupTime={
-                      pickupType === 'Dès que possible' 
-                        ? 'Dès que possible' 
-                        : `${displayDate(selectedDate)} à ${selectedTime.replace(':', 'h')}`
-                    }
-                    onSuccess={(data) => {
-                      try {
-                        const history = JSON.parse(localStorage.getItem('namasthe_order_history') || '[]');
-                        history.unshift({
-                          id: data.orderNumber,
-                          date: new Date().toISOString(),
-                          items: cart,
-                          total: grandTotal
-                        });
-                        localStorage.setItem('namasthe_order_history', JSON.stringify(history.slice(0, 15)));
-                      } catch(e) {
-                        console.error('Erreur sauvegarde historique', e);
-                      }
-                      alert(`Paiement complété avec succès ! Votre numéro de commande est : ${data.orderNumber}`);
-                      window.location.href = `/commande/statut?numero=${data.orderNumber}&email=${session ? session.user.email : guestEmail}`;
-                      clearCart();
-                      setIsCartOpen(false);
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button 
+                onClick={async () => {
+                  try {
+                    setCheckoutMode('loading');
+                    const items = cart.map(item => ({
+                      id: item.base_product_id,
+                      quantity: item.quantity
+                    }));
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ items })
+                    });
+                    const data = await res.json();
+                    if (data.success && data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      alert("Erreur lors de la création du paiement : " + (data.error || "Inconnue"));
                       setCheckoutMode(null);
-                    }}
-                    onCancel={() => setCheckoutMode(null)}
-                  />
-                )}
-              </div>
-            )}
-
-
+                    }
+                  } catch (e) {
+                    alert("Erreur réseau.");
+                    setCheckoutMode(null);
+                  }
+                }}
+                disabled={checkoutMode === 'loading'}
+                style={{ width: '100%', padding: '15px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: checkoutMode === 'loading' ? 'not-allowed' : 'pointer', opacity: checkoutMode === 'loading' ? 0.7 : 1 }}
+              >
+                {checkoutMode === 'loading' ? 'Redirection vers Shopify...' : '💳 Payer en ligne (Sécurisé)'}
+              </button>
+            </div>
           </div>
         )}
 

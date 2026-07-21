@@ -139,22 +139,57 @@ export default function BoutiquePage() {
         </header>
 
         
-        {/* SECTION BOUTIQUE EN MAINTENANCE */}
-        <section>
-          <div style={{ textAlign: 'center', background: '#FFF3F3', padding: '60px 20px', borderRadius: '16px', border: '2px solid var(--crimson)', marginBottom: '40px' }}>
-            <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--crimson)', fontSize: '2.5rem', marginBottom: '20px' }}>🚧 Boutique en ajustement</h2>
-            <p style={{ color: '#2C1810', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6' }}>
-              Nous faisons actuellement une mise à jour majeure de notre système de boutique en ligne. 
-              Les achats de produits et de cartes-cadeaux sont <strong>temporairement suspendus</strong>.
-            </p>
-            <p style={{ color: '#2C1810', fontSize: '1.1rem', marginTop: '20px', fontWeight: 'bold' }}>
-              Merci de votre compréhension. Retrouvez tous nos produits directement au Café Namasthé !
-            </p>
-          </div>
+        {/* LISTE DES PRODUITS */}
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+          {filteredItems.map(product => (
+            <div key={product.id} style={{ background: 'white', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '1', marginBottom: '20px', borderRadius: '12px', overflow: 'hidden', background: '#f5f5f5' }}>
+                <img src={product.image_url || '/logo-new.png'} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                {product.is_sold_out && (
+                  <div style={{ position: 'absolute', top: 10, right: 10, background: '#D32F2F', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                    Épuisé
+                  </div>
+                )}
+              </div>
+              
+              <h3 style={{ fontSize: '1.4rem', color: '#2C1810', marginBottom: '10px' }}>{product.name}</h3>
+              <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '20px', flex: 1 }}>{product.description}</p>
+              
+              {product.variations && product.variations.length > 1 && (
+                <div style={{ marginBottom: '15px' }}>
+                  <select 
+                    value={selectedVariations[product.id] || product.variations[0].id}
+                    onChange={(e) => handleVariationChange(product.id, e.target.value)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                  >
+                    {product.variations.map(v => (
+                      <option key={v.id} value={v.id} disabled={v.is_sold_out}>
+                        {v.name} - {parseFloat(v.price).toFixed(2)}$
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                <span style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--green-tropical)' }}>
+                  {product.variations && product.variations.length === 1 ? parseFloat(product.variations[0].price).toFixed(2) : (product.variations?.find(v => v.id === selectedVariations[product.id])?.price || product.price)} $
+                </span>
+                
+                <button 
+                  onClick={() => handleAddToCart(product)}
+                  disabled={product.is_sold_out}
+                  style={{
+                    background: addedState[product.id] ? '#4CAF50' : (product.is_sold_out ? '#ccc' : 'var(--crimson)'),
+                    color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: product.is_sold_out ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease'
+                  }}
+                >
+                  {addedState[product.id] ? 'Ajouté ! ✓' : (product.is_sold_out ? 'Indisponible' : 'Ajouter')}
+                </button>
+              </div>
+            </div>
+          ))}
         </section>
-      
-
-      </div>
     </div>
   );
 }
