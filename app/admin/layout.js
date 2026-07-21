@@ -8,6 +8,7 @@ export default function AdminLayout({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -66,8 +67,6 @@ export default function AdminLayout({ children }) {
       </div>
     );
   }
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F4F7F6', fontFamily: 'var(--font-sans)', position: 'relative' }}>
