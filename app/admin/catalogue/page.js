@@ -285,8 +285,8 @@ export default function CataloguePage() {
           <Link href="/admin/recettes" style={{ display: 'inline-block', marginTop: '15px', color: '#10B981', fontWeight: 'bold' }}>Commencer à créer vos recettes</Link>
         </div>
       ) : (
-        <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+        <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: '#F8FAFC', color: '#475569', fontSize: '0.9rem', borderBottom: '2px solid #E2E8F0' }}>
                 <th style={{ padding: '15px 20px' }}>Nom de la recette</th>
