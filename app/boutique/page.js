@@ -190,6 +190,7 @@ export default function BoutiquePage() {
             </div>
           ))}
         </section>
+      </div>
     </div>
   );
 }
