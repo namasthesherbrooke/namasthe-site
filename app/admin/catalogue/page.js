@@ -178,6 +178,7 @@ export default function CataloguePage() {
       id: recipe.id,
       name: recipe.name,
       selling_price: recipe.selling_price || '',
+      uber_price: recipe.uber_price || '',
       ingredients: [...recipe.ingredientsList] // copy to avoid mutating original state before save
     });
     setExpandedRecipeId(recipe.id);
@@ -434,6 +435,7 @@ export default function CataloguePage() {
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '15px' }}>
                               {(() => {
+                                try {
                                 // Calculs pour la livraison
                                 const isEditing = editingRecipe && editingRecipe.id === recipe.id;
                                 const basePrice = isEditing ? (editingRecipe.selling_price || 0) : recipe.selling_price;
@@ -496,6 +498,7 @@ export default function CataloguePage() {
                                     </div>
                                   </>
                                 );
+                              } catch (err) { return <div style={{padding: '10px', color: 'red', border: '1px solid red'}}>Erreur: {err.message}</div>; }
                               })()}
                             </div>
                           </div>
