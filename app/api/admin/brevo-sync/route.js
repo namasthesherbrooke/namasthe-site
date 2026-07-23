@@ -31,16 +31,27 @@ export async function GET(req) {
       return NextResponse.json({ error: "Clé API Brevo manquante" }, { status: 500 });
     }
 
-    // 1. Récupérer TOUS les profils qui ont une adresse email
-    const { data: profiles, error: profilesError } = await supabaseAdmin
+    // 1. Récupérer TOUS les profils
+    const { data: dbProfiles, error: profilesError } = await supabaseAdmin
       .from('profiles')
-      .select('id, prenom, nom, email, date_naissance, "Telephone", preference_contact')
-      .not('email', 'is', null)
-      .neq('email', '');
+      .select('id, prenom, nom, date_naissance, "Telephone", preference_contact');
 
     if (profilesError) {
       return NextResponse.json({ error: "Erreur BD", details: profilesError }, { status: 500 });
     }
+
+    // 1.5. Récupérer les courriels (qui sont dans auth.users, pas dans profiles)
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
+    const emailMap = {};
+    if (!authError && authData?.users) {
+      authData.users.forEach(u => {
+        if (u.email) emailMap[u.id] = u.email;
+      });
+    }
+
+    const profiles = dbProfiles
+      .map(p => ({ ...p, email: emailMap[p.id] }))
+      .filter(p => p.email && p.email.trim() !== '');
 
     let successCount = 0;
     let errors = [];

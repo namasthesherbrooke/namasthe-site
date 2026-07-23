@@ -46,15 +46,25 @@ export async function GET(req) {
     today.setUTCHours(0,0,0,0);
 
     // 1. Récupérer tous les profils avec une date de naissance
-    const { data: profiles, error: profilesError } = await supabaseAdmin
+    const { data: dbProfiles, error: profilesError } = await supabaseAdmin
       .from('profiles')
-      .select('id, prenom, nom, email, date_naissance')
-      .not('date_naissance', 'is', null)
-      .not('email', 'is', null);
+      .select('id, prenom, nom, date_naissance')
+      .not('date_naissance', 'is', null);
 
     if (profilesError) {
       return NextResponse.json({ error: "Erreur base de données (profils)", details: profilesError }, { status: 500 });
     }
+
+    // 1.5. Récupérer les courriels depuis auth.users
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
+    const emailMap = {};
+    if (!authError && authData?.users) {
+      authData.users.forEach(u => emailMap[u.id] = u.email);
+    }
+
+    const profiles = dbProfiles
+      .map(p => ({ ...p, email: emailMap[p.id] }))
+      .filter(p => p.email);
 
     // 2. Trouver ceux qui fêtent dans 2 jours (ou qui sont en retard)
     const upcomingBirthdays = profiles.filter(p => {
