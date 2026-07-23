@@ -104,15 +104,17 @@ export async function GET(req) {
     // Filtrer ceux qui ne l'ont pas encore eu
     const toSend = upcomingBirthdays.filter(p => !sentIds.has(p.id));
 
-    if (toSend.length === 0) {
-      return NextResponse.json({ success: true, message: "Tous les courriels ont déjà été envoyés", processed: 0 });
-    }
-
-    // Si on est juste en "Test Mode", on n'envoie qu'à l'admin
+    // Si on est juste en "Test Mode", on prend le premier profil qui approche (même s'il a déjà été envoyé)
     if (isTest) {
-      const testProfile = toSend[0];
+      const testProfile = upcomingBirthdays[0] || profiles[0];
+      if (!testProfile) return NextResponse.json({ error: "Aucun profil trouvé" }, { status: 400 });
+      
       const result = await sendBirthdayEmail('namasthesherbrooke@gmail.com', testProfile.prenom + ' ' + testProfile.nom);
       return NextResponse.json({ success: true, message: "Email de test envoyé à namasthesherbrooke@gmail.com", profileTested: testProfile });
+    }
+
+    if (toSend.length === 0) {
+      return NextResponse.json({ success: true, message: "Tous les courriels ont déjà été envoyés", processed: 0 });
     }
 
     // 4. Envoyer les courriels et enregistrer dans la base de données
