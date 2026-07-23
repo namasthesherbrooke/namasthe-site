@@ -116,18 +116,38 @@ function ScannerContent() {
   }, [isAuthenticated, userId]);
 
   // Vérifier si c'est la fête du client
+  const [birthdayMessage, setBirthdayMessage] = useState('');
   useEffect(() => {
     if (clientInfo && clientInfo.date_naissance) {
       const birthDate = new Date(clientInfo.date_naissance);
       const today = new Date();
       
-      const currentYearBirthDate = new Date(Date.UTC(today.getFullYear(), birthDate.getUTCMonth(), birthDate.getUTCDate()));
-      // diffTime sans Math.abs pour savoir si c'est avant ou après
-      const diffTime = today - currentYearBirthDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+      const birthMonth = birthDate.getUTCMonth();
+      const birthDay = birthDate.getUTCDate();
       
-      // Valide uniquement le jour J (0) jusqu'à J+7
-      setIsBirthdayWeek(diffDays >= 0 && diffDays <= 7);
+      const currentYearBirthDate = new Date(Date.UTC(today.getFullYear(), birthMonth, birthDay));
+      
+      // On retire l'heure pour comparer des jours francs
+      today.setUTCHours(0,0,0,0);
+      currentYearBirthDate.setUTCHours(0,0,0,0);
+      
+      const diffTime = currentYearBirthDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Négatif = passé, Positif = futur, 0 = aujourd'hui
+      
+      // Valide de -14 jours à +7 jours
+      if (diffDays <= 14 && diffDays >= -7) {
+        setIsBirthdayWeek(true);
+        if (diffDays === 0) {
+          setBirthdayMessage("Anniversaire aujourd'hui !");
+        } else if (diffDays > 0) {
+          setBirthdayMessage(`Anniversaire dans ${diffDays} jour${diffDays > 1 ? 's' : ''}`);
+        } else {
+          setBirthdayMessage(`Anniversaire il y a ${Math.abs(diffDays)} jour${Math.abs(diffDays) > 1 ? 's' : ''}`);
+        }
+      } else {
+        setIsBirthdayWeek(false);
+      }
+      
       setBirthdayClaimedThisYear(clientInfo.birthdayClaimedThisYear || false);
     } else {
       setIsBirthdayWeek(false);
@@ -288,7 +308,7 @@ function ScannerContent() {
 
       {isBirthdayWeek && (
         <div style={{ background: '#FF9800', padding: '15px', borderRadius: '12px', marginBottom: '24px', color: 'white', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(255, 152, 0, 0.3)' }}>
-          <h2 style={{ margin: 0, fontSize: '1.5rem' }}>🎉 C'EST SA FÊTE BIENTÔT ! 🎉</h2>
+          <h2 style={{ margin: 0, fontSize: '1.5rem' }}>🎉 {birthdayMessage.toUpperCase()} 🎉</h2>
           {!birthdayClaimedThisYear && (
             <button 
               onClick={() => setShowGiftModal(true)}

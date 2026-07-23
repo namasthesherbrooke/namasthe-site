@@ -59,7 +59,87 @@ export default function BirthdayManager({ profiles = [] }) {
         <p style={{ color: '#5A4A42' }}>Gérez les anniversaires et l'historique des cadeaux réclamés.</p>
       </header>
 
-      {/* NOUVELLE SECTION : Anniversaires du mois */}
+      {/* NOUVELLE SECTION : Contrôle des courriels */}
+      <div style={{ background: '#FFF3E0', padding: '25px', borderRadius: '16px', marginBottom: '40px', border: '2px solid #FFE0B2' }}>
+        <h3 style={{ color: '#E65100', fontSize: '1.5rem', marginTop: 0, marginBottom: '15px' }}>
+          📧 Gestion des Courriels d'Anniversaire
+        </h3>
+        <p style={{ color: '#5A4A42', marginBottom: '20px' }}>
+          Le système envoie automatiquement les courriels 2 jours avant l'anniversaire. Utilisez ces contrôles pour tester ou forcer l'envoi manuellement.
+        </p>
+        
+        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+          <button 
+            onClick={async () => {
+              if (window.confirm("Envoyer un courriel de TEST à namasthesherbrooke@gmail.com ?")) {
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const res = await fetch('/api/cron/birthdays?manual=true&test=true', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                  });
+                  const data = await res.json();
+                  alert(data.message || data.error);
+                } catch (e) {
+                  alert("Erreur: " + e.message);
+                }
+              }
+            }}
+            style={{ background: 'white', color: '#E65100', border: '2px solid #E65100', padding: '12px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            🧪 Tester l'envoi (À mon adresse)
+          </button>
+          
+          <button 
+            onClick={async () => {
+              if (window.confirm("Voulez-vous vérifier et envoyer les courriels d'anniversaire pour les clients fêtés dans 2 jours ? (Les envois en double sont bloqués automatiquement)")) {
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const res = await fetch('/api/cron/birthdays?manual=true', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    alert(`SUCCÈS: ${data.message}`);
+                  } else {
+                    alert(`ERREUR: ${data.error}`);
+                  }
+                } catch (e) {
+                  alert("Erreur: " + e.message);
+                }
+              }
+            }}
+            style={{ background: '#E65100', color: 'white', border: 'none', padding: '12px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            🚀 Forcer l'envoi maintenant
+          </button>
+
+          <button 
+            onClick={async () => {
+              if (window.confirm("Voulez-vous synchroniser TOUS vos clients actuels vers Brevo ? (Ceci va ajouter leurs dates de naissance dans Brevo pour que vos scénarios automatiques fonctionnent)")) {
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const res = await fetch('/api/admin/brevo-sync', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    alert(`SUCCÈS: ${data.message}`);
+                  } else {
+                    alert(`ERREUR: ${data.error}`);
+                  }
+                } catch (e) {
+                  alert("Erreur: " + e.message);
+                }
+              }
+            }}
+            style={{ background: '#2E7D32', color: 'white', border: 'none', padding: '12px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            🔄 Synchroniser tous les clients vers Brevo
+          </button>
+        </div>
+      </div>
+
+      {/* SECTION : Anniversaires du mois */}
       <div style={{ marginBottom: '40px' }}>
         <h3 style={{ color: '#E65100', fontSize: '1.5rem', marginBottom: '15px' }}>
           🎂 Anniversaires de {currentMonthName}
