@@ -361,6 +361,12 @@ export default function ProductsGrid({ items, type }) {
                         <div>
                           <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#FFA000' }}>{nutrition.glucides}g</div>
                           <div style={{ fontSize: '0.85rem', color: '#888' }}>Glucides</div>
+                          {(nutrition.fibres !== undefined || nutrition.sucres !== undefined) && (
+                            <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '6px', lineHeight: '1.2' }}>
+                              {nutrition.fibres !== undefined && <div>Fibres: {nutrition.fibres}g</div>}
+                              {nutrition.sucres !== undefined && <div>Sucres: {nutrition.sucres}g</div>}
+                            </div>
+                          )}
                         </div>
                         <div>
                           <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#4CAF50' }}>{nutrition.lipides}g</div>

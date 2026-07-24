@@ -67,6 +67,8 @@
     "calories": 277,
     "proteines": 17.4,
     "glucides": 31.2,
+    "sucres": 0,
+    "fibres": 10,
     "lipides": 7.9,
     "vitamines": [
       {
@@ -120,6 +122,8 @@
       "calories": 597,
       "proteines": 42.7,
       "glucides": 55.7,
+      "sucres": 2.5,
+      "fibres": 12,
       "lipides": 19.8,
       "ingredients": "Substitut de repas vanille, Préparation à boisson protéique vanille, Oeuf entier, Farine tout usage",
       "vitamines": [
@@ -367,6 +371,7 @@
     "calories": 0,
     "proteines": 0,
     "glucides": 0,
+    "sucres": 0,
     "lipides": 0,
     "ingredients": "Glace, Base neutre ou saveur sans sucre",
     "vitamines": [
