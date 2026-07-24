@@ -28,7 +28,7 @@ export async function GET(req) {
     // Récupérer tous les profils (pas idéal pour 10M utilisateurs, mais ok pour une petite boutique)
     const { data: profiles, error } = await supabaseAdmin
       .from('profiles')
-      .select('id, prenom, nom, created_at, date_naissance, code_postal');
+      .select('id, prenom, nom, created_at, date_naissance, code_postal, tickets_utilises');
 
     if (error) {
       throw error;
@@ -174,10 +174,13 @@ export async function GET(req) {
       visites: visitsPerDay[k]
     }));
 
+    const totalRewardsUsed = profiles.reduce((sum, profile) => sum + (profile.tickets_utilises || 0), 0);
+
     return NextResponse.json({ 
       success: true, 
       stats: {
         totalProfiles: profiles.length,
+        totalRewardsUsed,
         registrationsData,
         ageData,
         postalData,

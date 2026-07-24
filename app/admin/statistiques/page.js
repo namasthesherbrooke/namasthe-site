@@ -65,6 +65,10 @@ export default function StatistiquesPage() {
           <div style={{ fontSize: '1rem', color: '#666', marginBottom: '10px' }}>Total des membres</div>
           <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#4CAF50' }}>{stats.totalProfiles}</div>
         </div>
+        <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
+          <div style={{ fontSize: '1rem', color: '#666', marginBottom: '10px' }}>Cadeaux Réclamés</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#FF9800' }}>{stats.totalRewardsUsed || 0}</div>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>

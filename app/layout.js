@@ -10,6 +10,8 @@
  * Chaque page sera rendue à l'intérieur du {children} de ce layout.
  */
 
+import { Inter, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import './globals.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -92,6 +94,8 @@ export default function RootLayout({ children }) {
 
           {/* Bouton Commander Flottant (Mobile uniquement, masqué sur certaines pages) */}
           <FloatingOrderButton />
+          
+          <Analytics />
         </CartProvider>
       </body>
     </html>
