@@ -60,8 +60,22 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
                 <tr key={profile.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }}>
                   <td style={{ padding: '15px 20px', fontWeight: 'bold', color: '#2C1810' }}>{profile.prenom} {profile.nom}</td>
                   <td style={{ padding: '15px 20px', color: '#666', fontSize: '0.85rem' }}>
-                    <div style={{ marginBottom: '4px' }}>✉️ {profile.email}</div>
-                    {profile.telephone && <div>📞 {profile.telephone}</div>}
+                    <div style={{ marginBottom: '4px' }}>
+                      {profile.newsletter && profile.email && profile.email !== 'Inconnu' ? (
+                        <a href={`mailto:${profile.email}`} style={{ textDecoration: 'none', color: '#1976D2', fontWeight: '500' }} title="Écrire un courriel">✉️ {profile.email}</a>
+                      ) : (
+                        <span title={!profile.newsletter ? "Pas de consentement marketing" : ""}>✉️ {profile.email || 'Inconnu'} {!profile.newsletter && '🚫'}</span>
+                      )}
+                    </div>
+                    {profile.telephone && profile.telephone !== 'Inconnu' && (
+                      <div>
+                        {profile.newsletter ? (
+                          <a href={`sms:${profile.telephone}`} style={{ textDecoration: 'none', color: '#388E3C', fontWeight: '500' }} title="Envoyer un texto">📞 {profile.telephone}</a>
+                        ) : (
+                          <span title="Pas de consentement marketing">📞 {profile.telephone} 🚫</span>
+                        )}
+                      </div>
+                    )}
                     {profile.preference_contact === 'texto' && <div style={{ fontSize: '0.75rem', color: '#1565C0', marginTop: '4px', fontWeight: 'bold' }}>Préfère SMS</div>}
                   </td>
                   <td style={{ padding: '15px 20px', color: '#888', fontSize: '0.85rem' }}>
