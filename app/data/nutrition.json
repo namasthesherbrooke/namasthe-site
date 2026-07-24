@@ -170,23 +170,45 @@
     "lipides": 0,
     "ingredients": "Amaretto sans alcool, Lotus"
   },
-  "Bubble tea": {
-    "calories": 37,
-    "proteines": 0,
-    "glucides": 10,
-    "lipides": 0,
-    "vitamines": [
-      {
-        "nom": "Calories",
-        "quantite": "-90% vs l'industrie"
-      },
-      {
-        "nom": "Digestion",
-        "quantite": "Légère"
-      }
-    ],
-    "ingredients": "Thé, Bubble tea"
-  },
+  "Bubble tea": [
+    {
+      "variant": "Régulier",
+      "calories": 37,
+      "proteines": 0,
+      "glucides": 10,
+      "lipides": 0,
+      "vitamines": [
+        {
+          "nom": "Calories",
+          "quantite": "-90% vs l'industrie"
+        },
+        {
+          "nom": "Digestion",
+          "quantite": "Légère"
+        }
+      ],
+      "ingredients": "Thé, Bubble tea"
+    },
+    {
+      "variant": "Option sans sucre (Fraise ou Mangue)",
+      "calories": 0,
+      "proteines": 0,
+      "glucides": 0,
+      "sucres": 0,
+      "lipides": 0,
+      "vitamines": [
+        {
+          "nom": "Calories",
+          "quantite": "-90% vs l'industrie"
+        },
+        {
+          "nom": "Digestion",
+          "quantite": "Légère"
+        }
+      ],
+      "ingredients": "Thé, Bubble tea (sans sucre)"
+    }
+  ],
   "Raffraichi-Thé": {
     "calories": 78,
     "proteines": 0.4,
@@ -204,23 +226,45 @@
       }
     ]
   },
-  "Smoothie Bubble": {
-    "calories": 145,
-    "proteines": 1,
-    "glucides": 38.5,
-    "lipides": 0,
-    "ingredients": "Mangues congelées, Bubble tea, Crème lotus",
-    "vitamines": [
-      {
-        "nom": "Fruits",
-        "quantite": "Vrais (Mangues/Fraises)"
-      },
-      {
-        "nom": "Texture",
-        "quantite": "Onctueuse"
-      }
-    ]
-  },
+  "Smoothie Bubble": [
+    {
+      "variant": "Régulier",
+      "calories": 145,
+      "proteines": 1,
+      "glucides": 38.5,
+      "lipides": 0,
+      "ingredients": "Mangues congelées, Bubble tea, Crème lotus",
+      "vitamines": [
+        {
+          "nom": "Fruits",
+          "quantite": "Vrais (Mangues/Fraises)"
+        },
+        {
+          "nom": "Texture",
+          "quantite": "Onctueuse"
+        }
+      ]
+    },
+    {
+      "variant": "Option sans sucre (Fraise ou Mangue)",
+      "calories": 108,
+      "proteines": 1,
+      "glucides": 28.5,
+      "sucres": 0,
+      "lipides": 0,
+      "ingredients": "Mangues congelées, Bubble tea (sans sucre), Crème lotus",
+      "vitamines": [
+        {
+          "nom": "Fruits",
+          "quantite": "Vrais (Mangues/Fraises)"
+        },
+        {
+          "nom": "Texture",
+          "quantite": "Onctueuse"
+        }
+      ]
+    }
+  ],
   "Simplicithé": {
     "calories": 0,
     "proteines": 0,
