@@ -1,6 +1,8 @@
 'use client';
+import { useState } from 'react';
 
 export default function FideliteManager({ profiles, searchTerm, setSearchTerm, handleAction, statusMessage }) {
+  const [selectedIds, setSelectedIds] = useState([]);
   const filteredProfiles = profiles.filter(p => 
     (p.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
     (p.nom?.toLowerCase().includes(searchTerm.toLowerCase()) || '') ||
@@ -22,13 +24,30 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
             onChange={e => setSearchTerm(e.target.value)}
             style={{ padding: '12px 20px', borderRadius: '30px', border: '1px solid #ccc', minWidth: '250px', fontSize: '1rem' }}
           />
-          <a 
-            href="/admin/scanner" 
-            style={{ background: '#E91E63', color: 'white', padding: '12px 20px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(233, 30, 99, 0.3)' }}
-          >
-            📸 Scanner un client
-          </a>
-        </div>
+            <a 
+              href="/admin/scanner" 
+              style={{ background: '#E91E63', color: 'white', padding: '12px 20px', borderRadius: '30px', textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(233, 30, 99, 0.3)' }}
+            >
+              📸 Scanner un client
+            </a>
+            {selectedIds.length > 0 && (
+              <button 
+                onClick={() => {
+                  const emails = profiles
+                    .filter(p => selectedIds.includes(p.id) && p.email && p.email !== 'Inconnu')
+                    .map(p => p.email);
+                  if (emails.length > 0) {
+                    window.location.href = `mailto:?bcc=${emails.join(',')}`;
+                  } else {
+                    alert("Aucune adresse courriel valide dans la sélection.");
+                  }
+                }}
+                style={{ background: '#1976D2', color: 'white', border: 'none', padding: '12px 20px', borderRadius: '30px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 10px rgba(25, 118, 210, 0.3)' }}
+              >
+                ✉️ Écrire à {selectedIds.length} {selectedIds.length > 1 ? 'clients' : 'client'}
+              </button>
+            )}
+          </div>
       </header>
 
       {statusMessage && (
@@ -41,6 +60,20 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
         <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{ background: '#f5f5f5', color: '#333' }}>
+              <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee', width: '40px' }}>
+                <input 
+                  type="checkbox" 
+                  checked={filteredProfiles.length > 0 && selectedIds.length === filteredProfiles.length}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedIds(filteredProfiles.map(p => p.id));
+                    } else {
+                      setSelectedIds([]);
+                    }
+                  }}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                />
+              </th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Client</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Contact</th>
               <th style={{ padding: '15px 20px', borderBottom: '2px solid #eee' }}>Dernière Visite</th>
@@ -57,7 +90,21 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
               const progression = pts;
               
               return (
-                <tr key={profile.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }}>
+                <tr key={profile.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s', background: selectedIds.includes(profile.id) ? '#F3F8FF' : 'transparent' }}>
+                  <td style={{ padding: '15px 20px' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedIds.includes(profile.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedIds([...selectedIds, profile.id]);
+                        } else {
+                          setSelectedIds(selectedIds.filter(id => id !== profile.id));
+                        }
+                      }}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                  </td>
                   <td style={{ padding: '15px 20px', fontWeight: 'bold', color: '#2C1810' }}>{profile.prenom} {profile.nom}</td>
                   <td style={{ padding: '15px 20px', color: '#666', fontSize: '0.85rem' }}>
                     <div style={{ marginBottom: '4px' }}>
@@ -118,7 +165,7 @@ export default function FideliteManager({ profiles, searchTerm, setSearchTerm, h
             })}
             {filteredProfiles.length === 0 && (
               <tr>
-                <td colSpan="7" style={{ padding: '30px', textAlign: 'center', color: '#666' }}>Aucun client trouvé.</td>
+                <td colSpan="8" style={{ padding: '30px', textAlign: 'center', color: '#666' }}>Aucun client trouvé.</td>
               </tr>
             )}
           </tbody>
