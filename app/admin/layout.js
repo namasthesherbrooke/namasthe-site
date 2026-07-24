@@ -135,6 +135,14 @@ export default function AdminLayout({ children }) {
             📊 Tableau de bord
           </Link>
           
+          <Link href="/admin/statistiques" onClick={() => setIsMobileMenuOpen(false)} style={{ 
+            display: 'block', padding: '12px 20px', color: pathname.includes('/statistiques') ? 'white' : '#94A3B8', 
+            background: pathname.includes('/statistiques') ? 'rgba(255,255,255,0.05)' : 'transparent',
+            textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/statistiques') ? '4px solid #38BDF8' : '4px solid transparent'
+          }}>
+            📈 Statistiques
+          </Link>
+          
           <Link href="/admin/ingredients" onClick={() => setIsMobileMenuOpen(false)} style={{ 
             display: 'block', padding: '12px 20px', color: pathname.includes('/ingredients') ? 'white' : '#94A3B8', 
             background: pathname.includes('/ingredients') ? 'rgba(255,255,255,0.05)' : 'transparent',
