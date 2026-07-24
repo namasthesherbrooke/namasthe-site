@@ -179,9 +179,42 @@ export default function BirthdayManager({ profiles = [] }) {
                           Réclamé ✓
                         </span>
                       ) : (
-                        <span style={{ background: '#FFF3E0', color: '#E65100', padding: '5px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                          En attente
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ background: '#FFF3E0', color: '#E65100', padding: '5px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                            En attente
+                          </span>
+                          <button
+                            onClick={async () => {
+                              const item = window.prompt("Quel breuvage gratuit a été offert ? (ex: Bubble Tea L)");
+                              if (item && item.trim()) {
+                                try {
+                                  const { data: { session } } = await supabase.auth.getSession();
+                                  const res = await fetch('/api/admin/birthday-claims', {
+                                    method: 'POST',
+                                    headers: {
+                                      'Authorization': `Bearer ${session.access_token}`,
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ profileId: profile.id, itemClaimed: item.trim() })
+                                  });
+                                  const data = await res.json();
+                                  if (data.success) {
+                                    alert("Cadeau enregistré avec succès !");
+                                    fetchClaims(); // Rafraichir la liste
+                                  } else {
+                                    alert("Erreur: " + data.error);
+                                  }
+                                } catch (e) {
+                                  alert("Erreur: " + e.message);
+                                }
+                              }
+                            }}
+                            style={{ background: '#FF9800', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}
+                            title="Marquer manuellement si la tablette n'a pas fonctionné"
+                          >
+                            Valider manuellement
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
