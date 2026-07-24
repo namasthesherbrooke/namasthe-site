@@ -91,6 +91,57 @@ export default function StatistiquesPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '40px' }}>
           
           <div style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
+            <h2 style={{ fontSize: '1.2rem', color: '#2C1810', marginBottom: '20px' }}>Achalandage (14 derniers jours)</h2>
+            <div style={{ height: 300 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.visitsTrendData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#666' }} allowDecimals={false} />
+                  <RechartsTooltip 
+                    cursor={{ fill: '#f5f5f5' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  />
+                  <Bar dataKey="visites" name="Visites" fill="#2196F3" radius={[4, 4, 0, 0]} barSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
+            <h2 style={{ fontSize: '1.2rem', color: '#2C1810', marginBottom: '20px' }}>Dernières visites en boutique</h2>
+            <div style={{ height: 300, overflowY: 'auto', paddingRight: '10px' }}>
+              {stats.recentVisitsList && stats.recentVisitsList.length > 0 ? (
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {stats.recentVisitsList.map((visit, idx) => (
+                    <li key={idx} style={{ 
+                      padding: '12px 15px', 
+                      borderBottom: idx === stats.recentVisitsList.length - 1 ? 'none' : '1px solid #f0f0f0',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      background: idx % 2 === 0 ? '#fafafa' : 'white',
+                      borderRadius: '8px'
+                    }}>
+                      <span style={{ fontWeight: '500', color: '#333' }}>{visit.nom}</span>
+                      <span style={{ fontSize: '0.85rem', color: '#888', background: '#eee', padding: '4px 8px', borderRadius: '12px' }}>{visit.date}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+                  Aucune visite récente enregistrée ou trigger non configuré.
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Ligne 3: Âge et Code Postal */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '40px' }}>
+          
+          <div style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #eee' }}>
             <h2 style={{ fontSize: '1.2rem', color: '#2C1810', marginBottom: '20px' }}>Pyramide des âges</h2>
             <div style={{ height: 300 }}>
               <ResponsiveContainer width="100%" height="100%">

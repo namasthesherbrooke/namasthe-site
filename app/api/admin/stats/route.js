@@ -28,11 +28,21 @@ export async function GET(req) {
     // Récupérer tous les profils (pas idéal pour 10M utilisateurs, mais ok pour une petite boutique)
     const { data: profiles, error } = await supabaseAdmin
       .from('profiles')
-      .select('created_at, date_naissance, code_postal');
+      .select('id, prenom, nom, created_at, date_naissance, code_postal');
 
     if (error) {
       throw error;
     }
+
+    // Récupérer l'historique des visites (30 derniers jours)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const { data: visitsLog, error: visitsError } = await supabaseAdmin
+      .from('visits_log')
+      .select('id, profile_id, visited_at, profiles(prenom, nom)')
+      .gte('visited_at', thirtyDaysAgo.toISOString())
+      .order('visited_at', { ascending: false });
 
     // 1. Inscriptions par mois (6 derniers mois)
     const monthlyRegistrations = {};
@@ -125,13 +135,54 @@ export async function GET(req) {
       .sort((a, b) => b.clients - a.clients) // Trier par popularité
       .slice(0, 10); // Garder le top 10
 
+    // 4. Visites des 14 derniers jours
+    const visitsPerDay = {};
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+    
+    // Initialiser les 14 derniers jours à 0 pour éviter des trous dans le graphique
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dayStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+      visitsPerDay[dayStr] = 0;
+    }
+
+    let recentVisitsList = [];
+    if (visitsLog) {
+      visitsLog.forEach(v => {
+        const d = new Date(v.visited_at);
+        if (d >= fourteenDaysAgo) {
+          const dayStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+          if (visitsPerDay[dayStr] !== undefined) {
+            visitsPerDay[dayStr]++;
+          }
+        }
+      });
+      
+      recentVisitsList = visitsLog.slice(0, 15).map(v => ({
+        id: v.id,
+        nom: v.profiles ? `${v.profiles.prenom} ${v.profiles.nom}` : "Client inconnu",
+        date: new Date(v.visited_at).toLocaleString('fr-CA', { 
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+        })
+      }));
+    }
+
+    const visitsTrendData = Object.keys(visitsPerDay).map(k => ({
+      name: k,
+      visites: visitsPerDay[k]
+    }));
+
     return NextResponse.json({ 
       success: true, 
       stats: {
         totalProfiles: profiles.length,
         registrationsData,
         ageData,
-        postalData
+        postalData,
+        visitsTrendData,
+        recentVisitsList
       }
     });
   } catch (error) {
