@@ -7,7 +7,6 @@ export default function sitemap() {
     '/boutique',
     '/promotions',
     '/evenements',
-    '/mon-compte',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),

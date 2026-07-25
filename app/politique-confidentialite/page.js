@@ -69,10 +69,11 @@ export default function PolitiqueConfidentialite() {
       </section>
 
       <section style={{ marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '1.5rem', borderBottom: '2px solid var(--green-tropical)', paddingBottom: '10px', marginBottom: '15px' }}>6. Nous contacter</h2>
-        <p>Si vous avez des questions concernant cette politique de confidentialité, vous pouvez nous écrire à :</p>
+        <h2 style={{ fontSize: '1.5rem', borderBottom: '2px solid var(--green-tropical)', paddingBottom: '10px', marginBottom: '15px' }}>6. Responsable de la protection des renseignements personnels (PRP)</h2>
+        <p>Conformément à la Loi 25, la personne responsable de veiller à la protection de vos données est :</p>
         <p>
-          <strong>Café Namasthé</strong><br/>
+          <strong>Corine</strong> (Propriétaire)<br/>
+          Café Namasthé<br/>
           1086 rue King Ouest<br/>
           Sherbrooke, QC J1H 1S2<br/>
           Courriel : <a href="mailto:namasthesherbrooke@gmail.com" style={{ color: 'var(--crimson)', textDecoration: 'underline' }}>namasthesherbrooke@gmail.com</a>
