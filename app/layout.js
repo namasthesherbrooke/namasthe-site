@@ -83,7 +83,7 @@ export default function RootLayout({ children }) {
       streetAddress: '1086 rue King Ouest',
       addressLocality: 'Sherbrooke',
       addressRegion: 'QC',
-      postalCode: 'J1H 1H8',
+      postalCode: 'J1H 1S2',
       addressCountry: 'CA'
     },
     geo: {

@@ -74,7 +74,7 @@ export default function PolitiqueConfidentialite() {
         <p>
           <strong>Café Namasthé</strong><br/>
           1086 rue King Ouest<br/>
-          Sherbrooke, QC J1H 1H8<br/>
+          Sherbrooke, QC J1H 1S2<br/>
           Courriel : <a href="mailto:namasthesherbrooke@gmail.com" style={{ color: 'var(--crimson)', textDecoration: 'underline' }}>namasthesherbrooke@gmail.com</a>
         </p>
       </section>
