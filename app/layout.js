@@ -54,6 +54,12 @@ export const metadata = {
     locale: 'fr_CA',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Café Namasthé | Oasis Urbaine à Sherbrooke',
+    description: 'Découvrez nos boissons vibrantes, nos Bubble Teas et nos événements bien-être dans une ambiance zen.',
+    images: ['/images/esprit_namasthe_v2.jpg'],
+  },
 };
 
 export const viewport = {
@@ -64,8 +70,52 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CafeOrCoffeeShop',
+    name: 'Café Namasthé',
+    image: 'https://cafenamasthesherbrooke.ca/images/esprit_namasthe_v2.jpg',
+    '@id': 'https://cafenamasthesherbrooke.ca',
+    url: 'https://cafenamasthesherbrooke.ca',
+    telephone: '819-123-4567',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '1086 rue King Ouest',
+      addressLocality: 'Sherbrooke',
+      addressRegion: 'QC',
+      postalCode: 'J1H 1H8',
+      addressCountry: 'CA'
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 45.3982,
+      longitude: -71.9056
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '17:00'
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Saturday', 'Sunday'],
+        opens: '10:00',
+        closes: '16:00'
+      }
+    ],
+    priceRange: '$'
+  };
+
   return (
     <html lang="fr">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <CartProvider>
           {/* Composants globaux présents sur toutes les pages */}
