@@ -144,11 +144,6 @@ export default function Home() {
           {/* Titre principal du site (h1 unique pour le SEO) */}
           <h1>Le café santé coloré et gourmand de Sherbrooke</h1>
 
-          {/* BANNER VACANCES */}
-          <div style={{ background: '#FFC107', color: '#2C1810', padding: '15px 24px', borderRadius: '12px', fontWeight: 'bold', fontSize: '1.15rem', marginBottom: '24px', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '2px solid rgba(255,255,255,0.5)' }}>
-            🏖️ Avis à notre clientèle : Nous sommes en vacances du 26 juillet au 3 août inclusivement.
-          </div>
-
           <p>
           Bubble teas, breuvages énergisants, shakes protéinés, cafés, matchas et créations personnalisées sans sucre ajouté.
           </p>
