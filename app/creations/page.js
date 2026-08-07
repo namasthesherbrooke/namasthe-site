@@ -757,7 +757,7 @@ export default function CreationsPage() {
                           <button
                             onClick={() => {
                                const baseName = creation.base.toLowerCase().split(' - ')[0].trim();
-                               let realItem = realMenu.items.find(i => i.name.toLowerCase() === baseName);
+                               let realItem = realMenu.items.find(i => i.name.toLowerCase().includes(baseName));
                                
                                if (!realItem) {
                                   realItem = realMenu.items.find(i => i.name.toLowerCase().includes('créez le de toute pièce'));
