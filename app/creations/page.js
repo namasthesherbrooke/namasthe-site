@@ -120,19 +120,16 @@ export default function CreationsPage() {
     setLoading(false);
   };
 
-  const fetchSquareCustomItem = async () => {
+  const [realMenu, setRealMenu] = useState(null);
+
+  const fetchRealMenu = async () => {
     try {
       const res = await fetch('/api/menu', { cache: 'no-store' });
       const data = await res.json();
       if (data.success && data.menu) {
-        const item = data.menu.items.find(i => i.name.toLowerCase().includes('créez le de toute pièce') || i.name.toLowerCase().includes('creez'));
-        if (item) {
-           const fullItem = { ...item };
-           fullItem.modifierListsData = data.menu.modifierLists.filter(ml => item.modifier_lists?.includes(ml.id));
-           setSquareCustomItem(fullItem);
-        }
+        setRealMenu(data.menu);
       }
-    } catch(e) { console.error("Erreur chargement Créez le de toute pièce", e); }
+    } catch(e) { console.error("Erreur chargement menu réel", e); }
   };
 
   const fetchSquareMenu = async () => {
@@ -300,7 +297,7 @@ export default function CreationsPage() {
   useEffect(() => {
     fetchInitialData();
     fetchSquareMenu();
-    fetchSquareCustomItem();
+    fetchRealMenu();
     
     // Lire le cookie pour restaurer les votes locaux de la session
     const match = document.cookie.match(/(^| )namasthe_rated=([^;]+)/);
@@ -756,9 +753,23 @@ export default function CreationsPage() {
                           onRemove={handleRemoveVote}
                           userRating={votedCreations[creation.id]} 
                         />
-                        {squareCustomItem && (
+                        {realMenu && (
                           <button
-                            onClick={() => setOrderModalCreation(creation)}
+                            onClick={() => {
+                               const baseName = creation.base.toLowerCase().split(' - ')[0].trim();
+                               let realItem = realMenu.items.find(i => i.name.toLowerCase() === baseName);
+                               
+                               if (!realItem) {
+                                  realItem = realMenu.items.find(i => i.name.toLowerCase().includes('créez le de toute pièce'));
+                               }
+                               
+                               if (realItem) {
+                                 const fullItem = { ...realItem };
+                                 fullItem.modifierListsData = realMenu.modifierLists.filter(ml => realItem.modifier_lists?.includes(ml.id));
+                                 setOrderModalCreation(creation);
+                                 setSquareCustomItem(fullItem);
+                               }
+                            }}
                             style={{
                               marginTop: '15px',
                               padding: '10px 20px',

@@ -29,32 +29,12 @@ export default function OrderModal({ creation, squareItem, onClose, onAddToCart 
 
   if (!creation || !squareItem) return null;
 
-  // Calcul du prix de base selon le nom de la base de la création
-  const getBasePrice = (baseName) => {
-    if (!baseName) return 0;
-    const b = baseName.toLowerCase();
-    if (b.includes('smoothie bol')) return 9.75;
-    if (b.includes('fruithé') || b.includes('fruithe')) return 6.25;
-    if (b.includes('lotus')) return 4.00;
-    if (b.includes('rafraichi')) return 2.75;
-    if (b.includes('bubble')) return 2.75;
-    if (b.includes('limonade')) return 2.50;
-    if (b.includes('matcha')) return 2.00;
-    if (b.includes('méga') || b.includes('mega')) return 2.00;
-    if (b.includes('mindblow')) return 1.00;
-    if (b.includes('latté') || b.includes('latte')) return 1.00;
-    if (b.includes('simplicithé') || b.includes('simplicithe')) return 1.00;
-    return 0; // Par défaut
-  };
-
-  const basePrice = getBasePrice(creation.base);
-
   const handleExtraToggle = (modId, isChecked) => {
     setSelectedExtras(prev => ({ ...prev, [modId]: isChecked }));
   };
 
   const calculateTotal = () => {
-    let total = (selectedVariation?.price || 0) + basePrice;
+    let total = (selectedVariation?.price || 0);
     extraLists.forEach(list => {
       list.modifiers.forEach(mod => {
         if (selectedExtras[mod.id]) {
