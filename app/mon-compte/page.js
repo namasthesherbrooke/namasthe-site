@@ -18,6 +18,40 @@ export default function MonComptePage() {
   const [message, setMessage] = useState({ type: '', text: '' });
   
   const [showPromptModal, setShowPromptModal] = useState(false);
+  const [lastOrder, setLastOrder] = useState(null);
+  const [socialClaimLoading, setSocialClaimLoading] = useState(false);
+  
+  // Fonction pour copier le lien de parrainage
+  const copyReferralLink = () => {
+    const link = `${window.location.origin}/inscription?ref=${profile?.referral_code || profile?.id}`;
+    navigator.clipboard.writeText(link);
+    setMessage({ type: 'success', text: 'Lien de parrainage copié !' });
+  };
+  
+  // Fonction pour réclamer le point Instagram
+  const claimSocialBonus = async () => {
+    setSocialClaimLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/social-bonus', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Ouvre Instagram dans un nouvel onglet
+        window.open('https://www.instagram.com/cafenamasthesherbrooke/', '_blank');
+        setMessage({ type: 'success', text: 'Merci de nous suivre ! 1 point ajouté.' });
+        setProfile({ ...profile, social_bonus_claimed: true, fidelite_points: (profile.fidelite_points || 0) + 1 });
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Erreur' });
+      }
+    } catch (e) {
+      setMessage({ type: 'error', text: 'Erreur réseau.' });
+    }
+    setSocialClaimLoading(false);
+  };
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -134,6 +168,21 @@ export default function MonComptePage() {
           supabase.removeChannel(channel);
         };
         // --------------------------------------------------------
+        
+        // NOUVEAUTÉ : Récupérer la dernière commande
+        if (session.user.email !== 'namasthesherbrooke@gmail.com') {
+          const { data: lastOrderData } = await supabase
+            .from('orders')
+            .select('*, order_items(*)')
+            .eq('user_id', session.user.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+            
+          if (lastOrderData) {
+            setLastOrder(lastOrderData);
+          }
+        }
 
       } catch (err) {
         console.error("Erreur inattendue lors de la récupération du profil:", err);
@@ -300,11 +349,48 @@ export default function MonComptePage() {
               <p style={{ color: '#666', marginBottom: '20px', textAlign: 'center' }}>
                 Consultez l'historique de vos commandes passées sur la boutique en ligne.
               </p>
+              
+              {/* Bouton Recommander la dernière commande */}
+              {lastOrder && (
+                <div style={{ background: '#FFF3E0', border: '1px solid #FFE0B2', padding: '16px', borderRadius: '12px', width: '100%', marginBottom: '20px', textAlign: 'center' }}>
+                  <p style={{ margin: '0 0 10px', color: '#E65100', fontWeight: 'bold' }}>Dernière commande : {new Date(lastOrder.created_at).toLocaleDateString('fr-CA')}</p>
+                  <p style={{ margin: '0 0 15px', fontSize: '0.9rem', color: '#666' }}>
+                    {lastOrder.order_items.slice(0, 2).map(item => item.product_name || 'Article').join(', ')} 
+                    {lastOrder.order_items.length > 2 ? ` et ${lastOrder.order_items.length - 2} autre(s)...` : ''}
+                  </p>
+                  <button 
+                    onClick={() => {
+                      // Ajoute les articles au panier
+                      let cartStr = localStorage.getItem('namasthe_cart');
+                      let cart = cartStr ? JSON.parse(cartStr) : [];
+                      
+                      lastOrder.order_items.forEach(item => {
+                        cart.push({
+                          id: item.product_id + '_' + Date.now() + Math.random(),
+                          base_product_id: item.product_id,
+                          name: item.custom_instructions || item.product_name,
+                          price: parseFloat(item.price) || 0,
+                          quantity: item.quantity,
+                          image: '/images/cup.png' // Image générique car l'image n'est pas sauvée
+                        });
+                      });
+                      
+                      localStorage.setItem('namasthe_cart', JSON.stringify(cart));
+                      window.dispatchEvent(new Event('storage')); // Notifier le contexte du panier
+                      setMessage({ type: 'success', text: 'Produits ajoutés au panier ! Ouvrez le panier pour payer.' });
+                    }}
+                    style={{ background: '#E65100', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', width: '100%', boxShadow: '0 4px 10px rgba(230,81,0,0.3)' }}
+                  >
+                    ⚡ Recommander ma dernière commande
+                  </button>
+                </div>
+              )}
+              
               <Link 
                 href="/historique-commandes" 
                 style={{ background: 'var(--crimson)', color: 'white', padding: '12px 30px', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem', transition: 'transform 0.2s', display: 'inline-block' }}
               >
-                Voir mon historique
+                Voir tout mon historique
               </Link>
             </div>
           )}
@@ -353,33 +439,30 @@ export default function MonComptePage() {
                 </div>
                 
                 {/* Jauge de progression ludique (Gamification) */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', gap: '4px' }}>
-                  {[...Array(10)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      style={{ 
-                        flex: 1,
-                        aspectRatio: '1',
-                        borderRadius: '50%',
-                        background: i < (profile.fidelite_points || 0) ? '#4ADE80' : 'rgba(255,255,255,0.2)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: i < (profile.fidelite_points || 0) ? '0 0 10px rgba(74, 222, 128, 0.8)' : 'none',
-                        transition: 'all 0.5s ease',
-                        border: '2px solid rgba(255,255,255,0.4)',
-                        position: 'relative'
-                      }}
-                    >
-                      {i === 9 && <span style={{ fontSize: '0.8rem' }}>🎁</span>}
-                      {i < (profile.fidelite_points || 0) && i !== 9 && <span style={{ fontSize: '0.8rem', color: '#1B5E20' }}>✓</span>}
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                    <span style={{ color: '#4ADE80' }}>{profile.fidelite_points || 0} / 10 points</span>
+                    <span style={{ color: 'rgba(255,255,255,0.8)' }}>Cadeau 🎁</span>
+                  </div>
+                  
+                  <div style={{ width: '100%', background: 'rgba(255,255,255,0.2)', height: '16px', borderRadius: '20px', overflow: 'hidden', boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)' }}>
+                    <div style={{ 
+                      width: `${Math.min(((profile.fidelite_points || 0) / 10) * 100, 100)}%`, 
+                      height: '100%', 
+                      background: 'linear-gradient(90deg, #4ADE80, #FFC107)', 
+                      borderRadius: '20px',
+                      transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)',
+                      position: 'relative'
+                    }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.2)', animation: 'shimmer 2s infinite' }} />
                     </div>
-                  ))}
-                </div>
-                
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                  <span style={{ color: '#4ADE80' }}>{profile.fidelite_points || 0} point{(profile.fidelite_points || 0) > 1 ? 's' : ''} gagné{(profile.fidelite_points || 0) > 1 ? 's' : ''}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.8)' }}>Objectif : 10</span>
+                  </div>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>
+                    <span>Commencement</span>
+                    <span>Moitié (5)</span>
+                    <span>Gratuité (10)</span>
+                  </div>
                 </div>
                 
                 {(profile.tickets || 0) > 0 && (
@@ -395,6 +478,50 @@ export default function MonComptePage() {
               </div>
             </div>
           )}
+          
+          {/* NOUVEAU: Gagner des points gratuits (Parrainage & Réseaux Sociaux) */}
+          {profile.email !== 'namasthesherbrooke@gmail.com' && (
+            <div style={{ gridColumn: '1 / -1', background: 'linear-gradient(to right, #FFF3E0, #FFE0B2)', padding: '24px', borderRadius: '16px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', border: '1px solid #FFCC80' }}>
+              {/* Instagram Bonus */}
+              <div style={{ background: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ color: '#E65100', margin: '0 0 10px' }}>📸 1 Point Gratuit</h3>
+                <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                  Suivez-nous sur Instagram pour obtenir un point bonus immédiatement sur votre carte !
+                </p>
+                <button 
+                  onClick={claimSocialBonus}
+                  disabled={profile.social_bonus_claimed || socialClaimLoading}
+                  style={{
+                    background: profile.social_bonus_claimed ? '#E0E0E0' : 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                    color: profile.social_bonus_claimed ? '#757575' : 'white',
+                    border: 'none', padding: '12px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: profile.social_bonus_claimed ? 'default' : 'pointer', width: '100%'
+                  }}
+                >
+                  {socialClaimLoading ? 'Vérification...' : profile.social_bonus_claimed ? '✅ Déjà réclamé' : 'S\'abonner à Instagram'}
+                </button>
+              </div>
+
+              {/* Parrainage */}
+              <div style={{ background: 'white', padding: '20px', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                <h3 style={{ color: '#E65100', margin: '0 0 10px' }}>👯‍♀️ Parrainez un ami</h3>
+                <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                  Partagez ce lien. Lorsqu'un ami crée un compte, <strong>vous recevez 1 point gratuit !</strong>
+                </p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input 
+                    type="text" 
+                    readOnly 
+                    value={typeof window !== 'undefined' ? `${window.location.origin}/inscription?ref=${profile?.referral_code || profile?.id}` : ''}
+                    style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.8rem', background: '#f9f9f9', color: '#666' }}
+                  />
+                  <button onClick={copyReferralLink} style={{ background: '#4CAF50', color: 'white', border: 'none', padding: '0 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    Copier
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div style={{ background: 'var(--beige)', padding: '20px', borderRadius: '12px' }}>
             <h3 style={{ fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--text-light)', marginBottom: '8px' }}>Informations de base</h3>
             <div style={{ marginBottom: '10px' }}><strong>Prénom :</strong> {profile.prenom}</div>

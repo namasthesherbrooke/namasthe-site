@@ -163,21 +163,41 @@ export default function Cart() {
           {cart.length === 0 ? (
             <p style={{ textAlign: 'center', color: '#666', marginTop: '50px' }}>Votre panier est vide.</p>
           ) : (
-            cart.map(item => (
-              <div key={item.id} style={{ display: 'flex', gap: '15px', marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #f5f5f5' }}>
-                <img src={item.image} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} />
-                <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 5px 0', color: '#2C1810' }}>{item.name}</h4>
-                  <p style={{ margin: '0 0 10px 0', color: 'var(--green-tropical)', fontWeight: 'bold' }}>{item.price.toFixed(2)} $</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)} style={{ padding: '2px 8px', borderRadius: '4px', border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>-</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)} style={{ padding: '2px 8px', borderRadius: '4px', border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>+</button>
+            <>
+              {cart.map(item => (
+                <div key={item.id} style={{ display: 'flex', gap: '15px', marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #f5f5f5' }}>
+                  <img src={item.image} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} />
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ margin: '0 0 5px 0', color: '#2C1810' }}>{item.name}</h4>
+                    <p style={{ margin: '0 0 10px 0', color: 'var(--green-tropical)', fontWeight: 'bold' }}>{item.price.toFixed(2)} $</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} style={{ padding: '2px 8px', borderRadius: '4px', border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>-</button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} style={{ padding: '2px 8px', borderRadius: '4px', border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>+</button>
+                    </div>
                   </div>
+                  <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#D32F2F', cursor: 'pointer', height: 'fit-content' }}>🗑️</button>
                 </div>
-                <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#D32F2F', cursor: 'pointer', height: 'fit-content' }}>🗑️</button>
+              ))}
+              
+              {/* NOUVEAU : Bannière de Cross-Selling */}
+              <div style={{ background: 'linear-gradient(135deg, #FFF8E1, #FFECB3)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px', border: '1px solid #FFE082', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', marginTop: '20px' }}>
+                <div style={{ fontSize: '2rem' }}>🍪</div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 'bold', color: '#E65100', fontSize: '0.95rem' }}>Une petite fringale ?</p>
+                  <p style={{ margin: '0', fontSize: '0.85rem', color: '#5A4A42' }}>Accompagnez votre breuvage d'une de nos succulentes collations santé.</p>
+                </div>
+                <button 
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    window.location.href = '/boutique';
+                  }}
+                  style={{ background: '#E65100', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                >
+                  Voir le menu
+                </button>
               </div>
-            ))
+            </>
           )}
         </div>
 

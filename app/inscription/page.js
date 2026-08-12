@@ -7,13 +7,14 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function InscriptionPage() {
+function InscriptionContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     prenom: '', nom: '', jourNaissance: '', moisNaissance: '', anneeNaissance: '', email: '',
     password: '', codePostal: '', source: '', newsletter: true, telephone: '', preference_contact: 'courriel'
@@ -95,6 +96,29 @@ export default function InscriptionPage() {
         console.error("Profile error:", profileError);
       } else {
         setSuccess(true);
+        
+        // --- NOUVEAU : Logique de parrainage ---
+        const referralCode = searchParams.get('ref');
+        if (referralCode) {
+          try {
+            // Trouver le parrain
+            const { data: referrer } = await supabase
+              .from('profiles')
+              .select('id, fidelite_points')
+              .or(`id.eq.${referralCode},referral_code.eq.${referralCode}`)
+              .single();
+              
+            if (referrer) {
+              // Assigner referred_by au nouveau user
+              await supabase.from('profiles').update({ referred_by: referrer.id }).eq('id', authData.user.id);
+              // Ajouter +1 point au parrain
+              await supabase.from('profiles').update({ fidelite_points: (referrer.fidelite_points || 0) + 1 }).eq('id', referrer.id);
+            }
+          } catch (err) {
+            console.error("Erreur lors de l'attribution du point de parrainage:", err);
+          }
+        }
+        // ---------------------------------------
         
         // Générer le code promo: prenom10 (sans espaces)
         const code = `${formData.prenom.trim().replace(/\s+/g, '')}10`;
@@ -326,5 +350,13 @@ export default function InscriptionPage() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function InscriptionPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '60px', textAlign: 'center' }}>Chargement...</div>}>
+      <InscriptionContent />
+    </Suspense>
   );
 }

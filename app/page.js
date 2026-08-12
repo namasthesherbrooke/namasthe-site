@@ -335,17 +335,19 @@ export default function Home() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '16px',
           maxWidth: '1200px',
           margin: '0 auto',
           padding: '0 24px'
         }}>
           {[
-            { src: '/esprit_namasthe_v2.jpg', alt: 'Ambiance zen au café' },
-            { src: '/bg-drink-candle.jpg', alt: 'Breuvage Namasthé avec chandelle' },
-            { src: '/images/products/Bubble tea.jpeg', alt: 'Nos fameux Bubble Teas' },
-            { src: '/images/products/Matcha glace.jpeg', alt: 'Matcha glacé rafraîchissant' }
+            { src: '/esprit_namasthe_v2.jpg', alt: 'Ambiance zen au café', user: '@laura.lifestyle' },
+            { src: '/bg-drink-candle.jpg', alt: 'Breuvage Namasthé avec chandelle', user: '@zen.moments' },
+            { src: '/images/products/Bubble tea.jpeg', alt: 'Nos fameux Bubble Teas', user: '@chloe.gourmande' },
+            { src: '/images/products/Matcha glace.jpeg', alt: 'Matcha glacé rafraîchissant', user: '@alex.fitness' },
+            { src: '/images/products/Smoothie bol.jpeg', alt: 'Smoothie Bol coloré', user: '@marie.sante' },
+            { src: '/images/products/Café glacé.jpeg', alt: 'Café glacé de spécialité', user: '@julien.coffee' }
           ].map((img, index) => (
             <a 
               key={index} 
@@ -359,12 +361,13 @@ export default function Home() {
                 borderRadius: '16px',
                 display: 'block',
                 cursor: 'pointer',
-                background: '#f0f0f0'
+                background: '#f0f0f0',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
               }}
               className="insta-post"
               onMouseEnter={(e) => {
                 e.currentTarget.querySelector('.insta-overlay').style.opacity = '1';
-                e.currentTarget.querySelector('img').style.transform = 'scale(1.05)';
+                e.currentTarget.querySelector('img').style.transform = 'scale(1.1)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.querySelector('.insta-overlay').style.opacity = '0';
@@ -374,25 +377,31 @@ export default function Home() {
               <img 
                 src={img.src} 
                 alt={img.alt} 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
               />
               <div 
                 className="insta-overlay"
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'rgba(0,0,0,0.4)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.2))',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   opacity: 0,
                   transition: 'opacity 0.3s ease'
                 }}
               >
-                <span style={{ color: 'white', fontSize: '2rem' }}>❤️</span>
+                <span style={{ color: 'white', fontSize: '2rem', marginBottom: '10px' }}>❤️</span>
+                <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1rem', background: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '20px', backdropFilter: 'blur(5px)' }}>{img.user}</span>
               </div>
             </a>
           ))}
+        </div>
+        
+        <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <p style={{ color: '#666', fontSize: '0.95rem' }}>Utilisez le hashtag <strong>#NamasTheSherbrooke</strong> pour apparaître ici ! ✨</p>
         </div>
       </section>
 
