@@ -16,6 +16,8 @@ export default function MonComptePage() {
   const [editing, setEditing] = useState({ email: false, codePostal: false });
   const [formData, setFormData] = useState({ email: '', codePostal: '' });
   const [message, setMessage] = useState({ type: '', text: '' });
+  
+  const [showPromptModal, setShowPromptModal] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,6 +71,14 @@ export default function MonComptePage() {
         if (profileData) {
           setProfile({ ...profileData, email: session.user.email });
           setFormData({ email: session.user.email, codePostal: profileData.code_postal || '' });
+          
+          // NOUVEAUTÉ : Afficher le pop-up s'ils ne sont pas abonnés et ne l'ont pas encore ignoré
+          if (profileData.newsletter === false && session.user.email !== 'namasthesherbrooke@gmail.com') {
+             const hasSeen = localStorage.getItem(`hasSeenNewsletterPrompt_${session.user.id}`);
+             if (!hasSeen) {
+                setTimeout(() => setShowPromptModal(true), 1500);
+             }
+          }
         } else {
           // Fallback si le profil n'existe pas dans la table (ex: compte administrateur créé manuellement)
           setProfile({ 
@@ -452,6 +462,42 @@ export default function MonComptePage() {
           </div>
         </div>
       </div>
+      
+      {/* MODAL INCITATIF INFOLETTRE */}
+      {showPromptModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
+          <div style={{ background: 'white', padding: '30px', borderRadius: '16px', maxWidth: '450px', width: '100%', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🎁</div>
+            <h3 style={{ color: '#2C1810', marginBottom: '15px', fontSize: '1.4rem' }}>Oups ! Vous manquez vos cadeaux !</h3>
+            <p style={{ color: '#5A4A42', marginBottom: '25px', lineHeight: '1.5' }}>
+              Nous avons remarqué que vous n'êtes pas abonné(e) à nos offres VIP. Vous allez manquer <strong>votre breuvage gratuit le jour de votre fête !</strong><br/><br/>
+              <em>Promis, pas de spam. Juste du bonheur et des gratuités.</em>
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button 
+                onClick={() => {
+                  toggleNewsletter(); // Toggle de false à true
+                  setShowPromptModal(false);
+                  localStorage.setItem(`hasSeenNewsletterPrompt_${profile.id}`, 'true');
+                }}
+                style={{ background: 'var(--green-tropical)', color: 'white', border: 'none', padding: '14px', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 4px 10px rgba(46, 125, 50, 0.3)' }}
+              >
+                M'abonner maintenant (Recommandé)
+              </button>
+              <button 
+                onClick={() => {
+                  setShowPromptModal(false);
+                  // Sauvegarde pour ne pas le remontrer à chaque fois
+                  localStorage.setItem(`hasSeenNewsletterPrompt_${profile.id}`, 'true');
+                }}
+                style={{ background: '#f5f5f5', color: '#666', border: '1px solid #ddd', padding: '12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Plus tard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

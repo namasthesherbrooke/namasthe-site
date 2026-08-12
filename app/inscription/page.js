@@ -28,6 +28,10 @@ export default function InscriptionPage() {
   const [success, setSuccess] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  // États pour le pop-up infolettre
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
+  const [newsletterWarningIgnored, setNewsletterWarningIgnored] = useState(false);
 
   // Génération des options pour les dates
   const jours = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -43,6 +47,12 @@ export default function InscriptionPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    
+    // Interception si le client refuse l'infolettre et n'a pas encore vu l'avertissement
+    if (!formData.newsletter && !newsletterWarningIgnored) {
+      setShowNewsletterModal(true);
+      return;
+    }
     
     // Formatage de la date de naissance (YYYY-MM-DD)
     let dateNaissanceFmt = null;
@@ -268,6 +278,53 @@ export default function InscriptionPage() {
           </>
         )}
       </form>
+
+      {/* MODAL INFOLETTRE */}
+      {showNewsletterModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
+          <div style={{ background: 'white', padding: '30px', borderRadius: '16px', maxWidth: '450px', width: '100%', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🥺</div>
+            <h3 style={{ color: '#2C1810', marginBottom: '15px', fontSize: '1.4rem' }}>Êtes-vous certain(e) de refuser ?</h3>
+            <p style={{ color: '#5A4A42', marginBottom: '25px', lineHeight: '1.5' }}>
+              En refusant, vous ne pourrez pas recevoir <strong>votre breuvage gratuit le jour de votre fête</strong> ni votre rabais de bienvenue.<br/><br/>
+              <em>Promis, on déteste le spam autant que vous. Nous n'envoyons que des cadeaux !</em>
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button 
+                type="button"
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, newsletter: true }));
+                  setShowNewsletterModal(false);
+                  setNewsletterWarningIgnored(true);
+                  // Laisser le state se mettre à jour puis soumettre
+                  setTimeout(() => {
+                    const form = document.getElementById('signup-form');
+                    if (form) form.requestSubmit();
+                  }, 150);
+                }}
+                style={{ background: 'var(--green-tropical)', color: 'white', border: 'none', padding: '14px', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', boxShadow: '0 4px 10px rgba(46, 125, 50, 0.3)' }}
+              >
+                🎁 Oui, je m'abonne (Recommandé)
+              </button>
+              <button 
+                type="button"
+                onClick={() => {
+                  setShowNewsletterModal(false);
+                  setNewsletterWarningIgnored(true);
+                  // Soumettre avec la newsletter à false
+                  setTimeout(() => {
+                    const form = document.getElementById('signup-form');
+                    if (form) form.requestSubmit();
+                  }, 150);
+                }}
+                style={{ background: '#f5f5f5', color: '#666', border: '1px solid #ddd', padding: '12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Non merci, je refuse mon cadeau
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
