@@ -190,7 +190,7 @@ export default function Cart() {
                 <button 
                   onClick={() => {
                     setIsCartOpen(false);
-                    window.location.href = '/boutique';
+                    window.location.href = '/commande';
                   }}
                   style={{ background: '#E65100', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
                 >
