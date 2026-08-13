@@ -39,12 +39,31 @@ export async function POST(request) {
     if (orderError) {
       console.error('[SHOPIFY WEBHOOK] Erreur création commande dans Supabase:', orderError);
     } else if (orderData && body.line_items) {
-      const orderItems = body.line_items.map(item => ({
-        order_id: orderData.id,
-        custom_instructions: `${item.title || item.name} - ${item.price}$`,
-        quantity: item.quantity,
-        item_total_price: parseFloat(item.price) * item.quantity
-      }));
+      const orderItems = body.line_items.map(item => {
+        let details = item.title || item.name || 'Produit';
+        
+        if (item.variant_title && item.variant_title !== 'Default Title') {
+          details += ` (${item.variant_title})`;
+        }
+        
+        if (item.properties && item.properties.length > 0) {
+          const props = item.properties
+            .filter(p => p.name && p.value)
+            .map(p => {
+              if (p.name === 'Nom Original (Avec Saveurs)') return `\n${p.value}`;
+              return `\n[${p.name}: ${p.value}]`;
+            })
+            .join('');
+          details += props;
+        }
+
+        return {
+          order_id: orderData.id,
+          custom_instructions: details,
+          quantity: item.quantity,
+          item_total_price: parseFloat(item.price) * item.quantity
+        };
+      });
       const { error: insertError } = await supabase.from('order_items').insert(orderItems);
       if (insertError) console.error('[SHOPIFY WEBHOOK] Erreur insertion items:', insertError);
     }
