@@ -11,9 +11,20 @@ export default function HistoriqueVentesPage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [updatingId, setUpdatingId] = useState(null);
 
+  const [lastPendingCount, setLastPendingCount] = useState(null);
+
   useEffect(() => {
     checkAdminAndFetch();
-  }, []);
+    
+    // Polling silencieux pour l'alarme sonore
+    let intervalId;
+    if (isAdmin) {
+      intervalId = setInterval(() => {
+        fetchAllOrdersSilent('namasthesherbrooke@gmail.com');
+      }, 15000);
+    }
+    return () => clearInterval(intervalId);
+  }, [isAdmin]);
 
   const checkAdminAndFetch = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -27,6 +38,11 @@ export default function HistoriqueVentesPage() {
 
   const fetchAllOrders = async (email) => {
     setLoading(true);
+    await fetchAllOrdersSilent(email);
+    setLoading(false);
+  };
+
+  const fetchAllOrdersSilent = async (email) => {
     try {
       const res = await fetch(`/api/admin/sales-history?adminEmail=${encodeURIComponent(email)}`);
       const data = await res.json();
@@ -39,8 +55,19 @@ export default function HistoriqueVentesPage() {
     } catch (err) {
       console.error("Erreur", err);
     }
-    setLoading(false);
   };
+
+  useEffect(() => {
+    if (orders.length > 0) {
+      const currentPendingCount = orders.filter(o => o.status === 'pending').length;
+      if (lastPendingCount !== null && currentPendingCount > lastPendingCount) {
+        // Nouvelle commande en attente !
+        const audio = new Audio('/bell.ogg');
+        audio.play().catch(e => console.error('Lecture audio bloquée:', e));
+      }
+      setLastPendingCount(currentPendingCount);
+    }
+  }, [orders, lastPendingCount]);
 
   const updateOrderStatus = async (orderId, newStatus) => {
     setUpdatingId(orderId);
@@ -260,6 +287,34 @@ export default function HistoriqueVentesPage() {
                     <p style={{ color: '#888', fontStyle: 'italic', margin: 0 }}>Aucun détail disponible</p>
                   )}
                 </div>
+
+                {/* Avis du client */}
+                {(order.rating_service || order.rating_items || order.rating) && (
+                  <div style={{ background: '#FFF8E1', border: '1px solid #FFE082', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+                    <h4 style={{ margin: '0 0 10px 0', color: '#F57F17' }}>⭐ Évaluation du client :</h4>
+                    <div style={{ display: 'flex', gap: '20px', marginBottom: order.feedback ? '10px' : '0' }}>
+                      {order.rating_service ? (
+                        <>
+                          <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                            Service: <strong style={{ color: '#F57F17' }}>{order.rating_service}/5</strong>
+                          </div>
+                          <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                            Produits: <strong style={{ color: '#F57F17' }}>{order.rating_items}/5</strong>
+                          </div>
+                        </>
+                      ) : (
+                        <div style={{ fontSize: '0.9rem', color: '#555' }}>
+                          Note globale: <strong style={{ color: '#F57F17' }}>{order.rating}/5</strong>
+                        </div>
+                      )}
+                    </div>
+                    {order.feedback && (
+                      <div style={{ background: 'white', padding: '10px', borderRadius: '6px', fontStyle: 'italic', color: '#444', fontSize: '0.9rem', borderLeft: '3px solid #FFCA28' }}>
+                        "{order.feedback}"
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Boutons d'action - changement de statut */}
                 {nextAction && (

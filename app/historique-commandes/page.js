@@ -4,6 +4,79 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
+function RatingForm({ order, onSubmit, loading }) {
+  const [hoverService, setHoverService] = useState(0);
+  const [ratingService, setRatingService] = useState(0);
+  const [hoverItems, setHoverItems] = useState(0);
+  const [ratingItems, setRatingItems] = useState(0);
+  const [feedback, setFeedback] = useState('');
+
+  const handleClickService = (val) => setRatingService(val);
+  const handleClickItems = (val) => setRatingItems(val);
+  
+  const isComplete = ratingService > 0 && ratingItems > 0;
+
+  return (
+    <div style={{ marginTop: '20px', padding: '20px', background: 'white', borderRadius: '8px', border: '1px dashed #ccc', textAlign: 'center' }}>
+      <p style={{ margin: '0 0 15px', color: '#2C1810', fontWeight: 'bold', fontSize: '1.1rem' }}>Comment était votre expérience ?</p>
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+        <div>
+          <p style={{ margin: '0 0 5px', color: '#666', fontSize: '0.9rem' }}>Service au comptoir</p>
+          <div style={{ fontSize: '2rem', display: 'flex', justifyContent: 'center', gap: '5px', cursor: 'pointer' }}>
+            {[1, 2, 3, 4, 5].map(star => (
+              <span 
+                key={`s-${star}`}
+                onMouseEnter={() => setHoverService(star)}
+                onMouseLeave={() => setHoverService(0)}
+                onClick={() => handleClickService(star)}
+                style={{ color: (hoverService || ratingService) >= star ? '#FFC107' : '#E0E0E0', transition: 'color 0.2s' }}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p style={{ margin: '0 0 5px', color: '#666', fontSize: '0.9rem' }}>Qualité des produits</p>
+          <div style={{ fontSize: '2rem', display: 'flex', justifyContent: 'center', gap: '5px', cursor: 'pointer' }}>
+            {[1, 2, 3, 4, 5].map(star => (
+              <span 
+                key={`i-${star}`}
+                onMouseEnter={() => setHoverItems(star)}
+                onMouseLeave={() => setHoverItems(0)}
+                onClick={() => handleClickItems(star)}
+                style={{ color: (hoverItems || ratingItems) >= star ? '#FFC107' : '#E0E0E0', transition: 'color 0.2s' }}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {isComplete && (
+        <div style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <textarea 
+            placeholder="Un commentaire pour l'équipe ? (Ce sera privé)" 
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '80px', fontFamily: 'inherit', boxSizing: 'border-box', resize: 'vertical' }}
+          />
+          <button 
+            onClick={() => onSubmit(order.id, ratingService, ratingItems, feedback)}
+            disabled={loading}
+            style={{ background: 'var(--crimson)', color: 'white', padding: '12px', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '1rem' }}
+          >
+            {loading ? 'Envoi...' : 'Envoyer mon avis'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OrderHistoryContent() {
   const searchParams = useSearchParams();
   const [orders, setOrders] = useState([]);
@@ -15,6 +88,54 @@ function OrderHistoryContent() {
   const [searchNumber, setSearchNumber] = useState(searchParams.get('numero') || '');
   const [searchEmail, setSearchEmail] = useState(searchParams.get('email') || '');
   const [searchError, setSearchError] = useState('');
+  const [ratingLoading, setRatingLoading] = useState(null);
+
+  const handleRateOrder = async (orderId, ratingService, ratingItems, feedback) => {
+    setRatingLoading(orderId);
+    try {
+      const res = await fetch('/api/orders/rate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, ratingService, ratingItems, feedback })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setOrders(orders.map(o => o.id === orderId ? { ...o, rating_service: ratingService, rating_items: ratingItems, feedback } : o));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRatingLoading(null);
+    }
+  };
+
+  const renderRating = (order) => {
+    if (order.rating_service || order.rating) {
+      const rs = order.rating_service || order.rating;
+      const ri = order.rating_items || order.rating;
+      
+      return (
+        <div style={{ marginTop: '20px', padding: '15px', background: '#E8F5E9', borderRadius: '8px', border: '1px solid #C8E6C9', textAlign: 'center' }}>
+          <p style={{ margin: '0 0 10px', color: '#2E7D32', fontWeight: 'bold' }}>Merci pour votre évaluation !</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+            <div>
+              <p style={{ margin: '0 0 5px', fontSize: '0.8rem', color: '#666' }}>Service</p>
+              <div style={{ fontSize: '1.2rem', color: '#FFC107' }}>
+                {'★'.repeat(rs)}{'☆'.repeat(5 - rs)}
+              </div>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 5px', fontSize: '0.8rem', color: '#666' }}>Produits</p>
+              <div style={{ fontSize: '1.2rem', color: '#FFC107' }}>
+                {'★'.repeat(ri)}{'☆'.repeat(5 - ri)}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return <RatingForm order={order} onSubmit={handleRateOrder} loading={ratingLoading === order.id} />;
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -260,6 +381,7 @@ function OrderHistoryContent() {
                           );
                         })}
                       </ul>
+                      {renderRating(order)}
                     </div>
                   </div>
                 ))}
