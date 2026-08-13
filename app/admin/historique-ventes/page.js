@@ -146,6 +146,12 @@ export default function HistoriqueVentesPage() {
         <h1 style={{ fontFamily: 'var(--font-serif)', color: '#E65100', fontSize: '2.5rem', margin: 0 }}>📈 Historique des Ventes</h1>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button 
+            onClick={() => { const audio = new Audio('/bell.ogg'); audio.play().catch(e => alert('Le son est bloqué par votre navigateur !')); }}
+            style={{ padding: '10px 20px', background: '#FFC107', color: '#2C1810', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            🔔 Tester l'alarme
+          </button>
+          <button 
             onClick={() => { const email = 'namasthesherbrooke@gmail.com'; fetchAllOrders(email); }}
             style={{ padding: '10px 20px', background: 'var(--crimson)', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
           >
