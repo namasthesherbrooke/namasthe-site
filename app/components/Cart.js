@@ -311,7 +311,7 @@ export default function Cart() {
                     const res = await fetch('/api/checkout', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ items })
+                      body: JSON.stringify({ items, pickupType, selectedDate, selectedTime })
                     });
                     const data = await res.json();
                     if (data.success && data.url) {

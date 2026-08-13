@@ -3,7 +3,12 @@ import { createShopifyCheckout, getShopifyProducts } from '@/lib/shopifySync';
 
 export async function POST(req) {
   try {
-    const { items } = await req.json();
+    const { items, pickupType, selectedDate, selectedTime } = await req.json();
+    
+    let note = "Dès que possible";
+    if (pickupType === 'later') {
+      note = `${selectedDate} à ${selectedTime}`;
+    }
     
     // 1. Fetch Shopify catalog to map items
     const shopifyProducts = await getShopifyProducts();
@@ -62,7 +67,7 @@ export async function POST(req) {
       return line;
     });
 
-    const cart = await createShopifyCheckout(lineItems);
+    const cart = await createShopifyCheckout(lineItems, note);
     
     if (cart && cart.checkoutUrl) {
       return NextResponse.json({ success: true, url: cart.checkoutUrl });
