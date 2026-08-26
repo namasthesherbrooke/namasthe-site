@@ -76,9 +76,14 @@ export default function NotreHistoire() {
         <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Anciennes photos avec description */}
           <div style={{ background: '#EAE4D8', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-            <p style={{ margin: 0, padding: '12px 16px', background: '#B8003E', color: 'white', fontWeight: 'bold', fontSize: '0.95rem', textAlign: 'center', letterSpacing: '0.5px' }}>
-              Coco La-Thé – Mes débuts chaleureux
-            </p>
+            <div style={{ padding: '16px', background: '#B8003E', color: 'white', textAlign: 'center' }}>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                Coco La-Thé – Mes débuts
+              </h3>
+              <p style={{ margin: 0, fontSize: '0.95rem', fontStyle: 'italic', lineHeight: '1.4', opacity: 0.95 }}>
+                « Le bar home made, tout petit, mais c'était mes débuts. J'avais une vision de chaleur, de communautaire... c'était petit mais ça le faisait ! »
+              </p>
+            </div>
             <img src="/images/story-old-1.jpg" alt="Coco La-Thé" style={{ width: '100%', height: 'auto', display: 'block' }} onError={(e) => { e.target.style.display = 'none'; }} />
           </div>
           <div style={{ background: '#EAE4D8', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
