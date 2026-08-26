@@ -42,6 +42,7 @@ export default function NotreHistoire() {
       id: 'fuego',
       title: 'Le Fuego',
       subtitle: 'Les débuts vibrants',
+      mapEmbed: 'https://www.google.com/maps/embed?pb=!4v1787769851728!6m8!1m7!1sBj5iEIURTyAmDY02tci-SA!2m2!1d45.3775559!2d-71.9785145!3f223.74!4f0!5f75',
       cover: '/images/nostalgia/fuego/fuego_1.jpg',
       images: [
         '/images/nostalgia/fuego/fuego_1.jpg',
@@ -70,6 +71,7 @@ export default function NotreHistoire() {
       id: 'namasthe1',
       title: 'Le Namasthé 1',
       subtitle: 'Brique rouge',
+      mapEmbed: 'https://www.google.com/maps/embed?pb=!4v1787769851728!6m8!1m7!1ss8v2TCxeYmFiNz-LEaJlAg!2m2!1d45.3939356!2d-71.8962321!3f121.19!4f0!5f75',
       cover: '/images/nostalgia/namasthe1/namasthe1_21.webp',
       images: [
         '/images/nostalgia/namasthe1/namasthe1_1.jpg',
@@ -100,6 +102,7 @@ export default function NotreHistoire() {
       id: 'coco2',
       title: 'Coco La-Thé 2',
       subtitle: 'Maison blanche de Deauville',
+      mapEmbed: 'https://www.google.com/maps/embed?pb=!4v1787769851728!6m8!1m7!1si7z_JQee1lLOWUNtWVw4pg!2m2!1d0!2d0!3f338.49594!4f0!5f100',
       cover: '/images/nostalgia/coco2/coco2_1.jpg',
       images: [
         '/images/nostalgia/coco2/coco2_1.jpg',
