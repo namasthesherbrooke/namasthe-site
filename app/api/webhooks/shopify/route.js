@@ -23,6 +23,11 @@ export async function POST(request) {
       finalCustomerName += ` (Pour : ${note})`;
     }
 
+    // Sécurité: Tronquer à 250 caractères maximum pour éviter l'erreur de varchar(255) dans Supabase
+    if (finalCustomerName.length > 250) {
+      finalCustomerName = finalCustomerName.substring(0, 247) + '...';
+    }
+
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .insert({
