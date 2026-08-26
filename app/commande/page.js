@@ -90,36 +90,44 @@ export default function OrderBuilder() {
            const item = data.menu.items.find(i => i.name.toLowerCase().includes(keyword.toLowerCase()));
            return item ? (item.variations?.[0]?.price || item.price) : 0;
         };
+        const findCategory = (keyword) => {
+           const cat = data.menu.categories.find(c => c.name.toLowerCase().includes(keyword.toLowerCase()));
+           return cat ? cat.id : null;
+        };
+
         const shakePrice = findPrice('shake') || 10.95;
         const megaThePrice = findPrice('méga thé') || 11.50;
         const chaiPrice = findPrice('chai') || 5.75;
         const cafePrice = findPrice('café') || 4.75;
+
+        const shakeCatId = findCategory('shake, smoothie');
+        const cafeCatId = findCategory('café et matcha');
+        const theCatId = findCategory('thé et boissons énergisantes');
         
-        const fallCategory = { id: 'cat_fall', name: '🍂 Spéciaux d\'Automne 🍁' };
         const fallItems = [
-          { id: 'f1', name: 'Shake Cheesecake pomme épicée', description: 'Saveurs : cheesecake + pomme épicée + cannelle. Profil : crémeux, pomme-cannelle, style gâteau au fromage.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f2', name: 'Shake Banana Bread Chai', description: 'Saveurs : banane + chai + orange + mangue. Profil : pain aux bananes fruité avec les épices chaudes du chai.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f3', name: 'Shake Cheesecake citrouille', description: 'Saveurs : cheesecake + citrouille + épices de citrouille. Profil : crémeux, gâteau au fromage à la citrouille.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f4', name: 'Shake Gâteau citrouille praliné', description: 'Saveurs : gâteau/citrouille + praliné + épices. Profil : plus riche et noisetté que le Cheesecake citrouille.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f1', name: 'Shake Cheesecake pomme épicée', description: 'Saveurs : cheesecake + pomme épicée + cannelle. Profil : crémeux, pomme-cannelle, style gâteau au fromage.', price: shakePrice, category_id: shakeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f2', name: 'Shake Banana Bread Chai', description: 'Saveurs : banane + chai + orange + mangue. Profil : pain aux bananes fruité avec les épices chaudes du chai.', price: shakePrice, category_id: shakeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f3', name: 'Shake Cheesecake citrouille', description: 'Saveurs : cheesecake + citrouille + épices de citrouille. Profil : crémeux, gâteau au fromage à la citrouille.', price: shakePrice, category_id: shakeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f4', name: 'Shake Gâteau citrouille praliné', description: 'Saveurs : gâteau/citrouille + praliné + épices. Profil : plus riche et noisetté que le Cheesecake citrouille.', price: shakePrice, category_id: shakeCatId, image_url: '/images/menu-automne.jpg' },
           
-          { id: 'f5', name: 'Chai Latté Cheesecake pomme épicée', description: 'Saveurs : chai + cheesecake + pomme épicée. Profil : pomme crémeuse, cheesecake et épices chai.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f6', name: 'Chai Latté Pumpkin Cream', description: 'Saveurs : chai + citrouille + épices de citrouille + crème. Profil : chai crémeux dominé par la citrouille épicée.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f7', name: 'Dirty Chai Latté érable', description: 'Saveurs : chai + érable + espresso. Profil : chai épicé, érable et café. (Inclus un Extra Espresso)', price: chaiPrice + 1.50, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f8', name: 'Chai Latté Cinnamon Roll', description: 'Saveurs : chai + brioche à la cannelle + cannelle/cassonade. Profil : style roulé à la cannelle, doux et épicé.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f5', name: 'Chai Latté Cheesecake pomme épicée', description: 'Saveurs : chai + cheesecake + pomme épicée. Profil : pomme crémeuse, cheesecake et épices chai.', price: chaiPrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f6', name: 'Chai Latté Pumpkin Cream', description: 'Saveurs : chai + citrouille + épices de citrouille + crème. Profil : chai crémeux dominé par la citrouille épicée.', price: chaiPrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f7', name: 'Dirty Chai Latté érable', description: 'Saveurs : chai + érable + espresso. Profil : chai épicé, érable et café. (Inclus un Extra Espresso)', price: chaiPrice + 1.50, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f8', name: 'Chai Latté Cinnamon Roll', description: 'Saveurs : chai + brioche à la cannelle + cannelle/cassonade. Profil : style roulé à la cannelle, doux et épicé.', price: chaiPrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
           
-          { id: 'f9', name: 'Café Latté Pumpkin Spice', description: 'Saveurs : espresso + citrouille + épices de citrouille. Profil : le classique café-citrouille épicé.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f10', name: 'Café Latté Tarte aux pommes caramel', description: 'Saveurs : espresso + pomme épicée + caramel + cannelle. Profil : tarte aux pommes chaude avec caramel.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f11', name: 'Café Latté pacane caramélisée', description: 'Saveurs : espresso + pacane/praliné + caramel. Profil : noix grillées, caramel et café.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f12', name: 'Café Moka blanc cannelle', description: 'Saveurs : espresso + chocolat blanc + cannelle. Profil : chocolat blanc crémeux avec cannelle.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f9', name: 'Café Latté Pumpkin Spice', description: 'Saveurs : espresso + citrouille + épices de citrouille. Profil : le classique café-citrouille épicé.', price: cafePrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f10', name: 'Café Latté Tarte aux pommes caramel', description: 'Saveurs : espresso + pomme épicée + caramel + cannelle. Profil : tarte aux pommes chaude avec caramel.', price: cafePrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f11', name: 'Café Latté pacane caramélisée', description: 'Saveurs : espresso + pacane/praliné + caramel. Profil : noix grillées, caramel et café.', price: cafePrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f12', name: 'Café Moka blanc cannelle', description: 'Saveurs : espresso + chocolat blanc + cannelle. Profil : chocolat blanc crémeux avec cannelle.', price: cafePrice, category_id: cafeCatId, image_url: '/images/menu-automne.jpg' },
           
-          { id: 'f13', name: 'Méga Thé Dragon d\'Automne', description: 'Saveurs : Lotus Gold + Fruit du dragon + Orange + Grenade. Profil : fruité, punché, légèrement acidulé.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f14', name: 'Méga Thé Moka blanc épicé', description: 'Saveurs : Ananas + Latté citrouille + Colada. Profil : tropical, crémeux en impression, citrouille en arrière-plan.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f15', name: 'Méga Thé Dirty Red Chai', description: 'Saveurs : Grenade + Cerise + Pêche sur base Chai. Profil : fruits rouges + pêche avec le chai derrière.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
-          { id: 'f16', name: 'Méga Thé Croustade aux pommes', description: 'Saveurs : Lotus Gold + Pomme + Caramel + Cannelle. Profil : pomme cuite, caramel, cannelle, style croustade.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' }
+          { id: 'f13', name: 'Méga Thé Dragon d\'Automne', description: 'Saveurs : Lotus Gold + Fruit du dragon + Orange + Grenade. Profil : fruité, punché, légèrement acidulé.', price: megaThePrice, category_id: theCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f14', name: 'Méga Thé Moka blanc épicé', description: 'Saveurs : Ananas + Latté citrouille + Colada. Profil : tropical, crémeux en impression, citrouille en arrière-plan.', price: megaThePrice, category_id: theCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f15', name: 'Méga Thé Dirty Red Chai', description: 'Saveurs : Grenade + Cerise + Pêche sur base Chai. Profil : fruits rouges + pêche avec le chai derrière.', price: megaThePrice, category_id: theCatId, image_url: '/images/menu-automne.jpg' },
+          { id: 'f16', name: 'Méga Thé Croustade aux pommes', description: 'Saveurs : Lotus Gold + Pomme + Caramel + Cannelle. Profil : pomme cuite, caramel, cannelle, style croustade.', price: megaThePrice, category_id: theCatId, image_url: '/images/menu-automne.jpg' }
         ];
 
-        data.menu.categories.unshift(fallCategory);
-        data.menu.items.push(...fallItems);
+        // On n'ajoute que les items qui ont trouvé leur catégorie (pour éviter les erreurs)
+        data.menu.items.push(...fallItems.filter(item => item.category_id !== null));
         // ------------------------------------
 
         setMenu(data.menu);
@@ -308,7 +316,6 @@ export default function OrderBuilder() {
   }
 
   const allowedCategories = [
-    '🍂 spéciaux d\'automne 🍁',
     'café et matcha',
     'gourmandises',
     'shake, smoothie bol et fruithé',
