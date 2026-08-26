@@ -104,16 +104,9 @@ export default function EvenementsPage() {
             
 
             <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>7, 14, 21 et 28 Août — 18h30 à 20h30</span>
+              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>28 Août — 18h30 à 20h30</span>
               <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Soirées découverte à la Placette</span>
               <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Parc Jacques-Cartier, Sherbrooke</span>
-            </li>
-
-            <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
-              <span style={{ color: 'var(--green-tropical)', fontWeight: 'bold', fontSize: '1.2rem', display: 'block', marginBottom: '6px' }}>15 Août — 9h à 15h</span>
-              <span style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: '600', display: 'block' }}>Fiesta Maïs — Moisson Estrie !</span>
-              <span style={{ fontSize: '1rem', color: 'var(--text-medium)', display: 'block', marginTop: '4px' }}>📍 Au Marché de la Gare de Sherbrooke</span>
-              <span style={{ fontSize: '0.95rem', color: 'var(--crimson)', display: 'block', marginTop: '4px', fontWeight: 'bold' }}>⚠️ Note : Notre succursale au 1086 King Ouest sera fermée.</span>
             </li>
 
             <li style={{ paddingBottom: '20px', borderBottom: '1px solid #Eae4d8' }}>
