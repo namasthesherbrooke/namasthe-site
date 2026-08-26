@@ -20,7 +20,10 @@ export default function NotreHistoire() {
         '/images/nostalgia-4.jpg',
         '/images/nostalgia-6.jpg', 
         '/images/nostalgia-7.jpg', 
-        '/images/nostalgia-8.jpg'
+        '/images/nostalgia-8.jpg',
+        '/images/nostalgia-9.jpg',
+        '/images/nostalgia/albums/coco2_1.jpg',
+        '/images/nostalgia/albums/coco2_3.jpg'
       ]
     },
     {
@@ -36,6 +39,7 @@ export default function NotreHistoire() {
         '/images/nostalgia/albums/fuego_5.jpg',
         '/images/nostalgia/albums/namasthe1_1.jpg', 
         '/images/nostalgia-12.jpg', 
+        '/images/nostalgia-10.jpg',
         '/images/nostalgia/albums/namasthe1_4.jpg'
       ]
     },
@@ -54,19 +58,13 @@ export default function NotreHistoire() {
       id: 'coco2',
       title: 'Coco La-Thé 2',
       subtitle: 'Maison blanche de Deauville',
-      cover: '/images/nostalgia-10.jpg',
+      cover: '/images/nostalgia-5.jpg',
       images: [
-        '/images/nostalgia-10.jpg', 
-        '/images/nostalgia-9.jpg', 
         '/images/nostalgia-5.jpg',
-        '/images/nostalgia/albums/coco2_1.jpg', 
-        '/images/nostalgia/albums/coco2_3.jpg',
         '/images/nostalgia/albums/coco2_4.jpg', 
         '/images/nostalgia/albums/coco2_5.jpg', 
         '/images/nostalgia/albums/coco2_6.jpg',
-        '/images/nostalgia/albums/namasthe1_3.jpg', 
-        '/images/nostalgia/albums/namasthe2_5.jpg', 
-        '/images/nostalgia/albums/namasthe2_6.jpg'  
+        '/images/nostalgia/albums/namasthe1_3.jpg'
       ]
     },
     {
@@ -76,7 +74,9 @@ export default function NotreHistoire() {
       cover: '/images/nostalgia/albums/coco2_2.jpg',
       images: [
         '/images/nostalgia/albums/coco2_2.jpg', 
-        '/images/nostalgia-11.jpg' 
+        '/images/nostalgia-11.jpg',
+        '/images/nostalgia/albums/namasthe2_5.jpg', 
+        '/images/nostalgia/albums/namasthe2_6.jpg'
       ]
     }
   ];
