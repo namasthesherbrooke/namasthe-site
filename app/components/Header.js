@@ -66,6 +66,7 @@ export default function Header() {
     { href: '/boutique', label: 'Boutique' },
     { href: '/promotions', label: 'Promotions' },
     { href: '/creations', label: 'Menu VIP 🔒' },
+    { href: '/notre-histoire', label: 'Notre Histoire' },
     { href: '/evenements', label: 'Événements' },
   ];
 
