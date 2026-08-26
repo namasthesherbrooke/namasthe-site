@@ -16,14 +16,41 @@ export default function HistoriqueVentesPage() {
   useEffect(() => {
     checkAdminAndFetch();
     
+    let wakeLock = null;
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.error("Wake Lock error:", err);
+      }
+    };
+
     // Polling silencieux pour l'alarme sonore
     let intervalId;
+    let handleVisibilityChange;
+
     if (isAdmin) {
+      requestWakeLock();
+      
+      handleVisibilityChange = () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+          requestWakeLock();
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
       intervalId = setInterval(() => {
         fetchAllOrdersSilent('namasthesherbrooke@gmail.com');
       }, 15000);
     }
-    return () => clearInterval(intervalId);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      if (handleVisibilityChange) document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (wakeLock !== null) wakeLock.release().catch(() => {});
+    };
   }, [isAdmin]);
 
   const checkAdminAndFetch = async () => {

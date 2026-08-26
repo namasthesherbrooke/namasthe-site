@@ -51,13 +51,12 @@ export default function EvenementsPage() {
           HERO — Titre centré avec icône
           ======================================== */}
       <section className="section" id="evenements-hero" style={{ textAlign: 'center', paddingBottom: 40 }}>
-        <h1>Événements</h1>
-        <p style={{ maxWidth: 500, margin: '12px auto 0' }}>
-          On aime faire des événements <em>pour tous</em>. Découvrez nos prochains 
-          rendez-vous bien-être et gourmands.
+        <h1>Transformez vos moments spéciaux en expériences inoubliables.</h1>
+        <p style={{ maxWidth: 700, margin: '16px auto 0', fontSize: '1.2rem', lineHeight: '1.6', color: 'var(--text-dark)' }}>
+          Que ce soit pour souder votre équipe, célébrer un moment unique ou lancer un projet, le Café Namasthé vous offre bien plus qu'un espace : nous créons une atmosphère zen, tropicale et sur-mesure. Fini les événements ennuyeux, place à la couleur et à l'énergie.
         </p>
 
-        <div style={{ marginTop: '24px' }}>
+        <div style={{ marginTop: '32px' }}>
           <a 
             href="#reserver-hero"
             style={{
@@ -71,7 +70,7 @@ export default function EvenementsPage() {
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
             }}
           >
-            Créez votre événement avec nous !
+            Créons votre événement de rêve
           </a>
         </div>
       </section>
@@ -228,15 +227,15 @@ export default function EvenementsPage() {
           </h1>
 
           <p style={{ marginTop: 16, marginBottom: 28 }}>
-            Confiez-nous l&apos;organisation de vos événements professionnels ou 
-            privés dans une atmosphère tropicale et zen. Une expérience 
-            rafraîchissante et sur-mesure.
+            Confiez-nous l&apos;organisation de vos événements d'entreprise ou privés. 
+            Une expérience rafraîchissante, conçue spécialement pour éblouir vos invités 
+            et faire de ce moment une réussite inoubliable.
           </p>
 
           {/* Boutons d'action */}
           <div className="btn-group" style={{ justifyContent: 'flex-start' }}>
             <a href="#formulaire" className="btn btn-primary" id="btn-devis">
-              Demander un devis
+              Obtenir un devis gratuit en 24h
             </a>
             <a href="#cal-booking" className="btn btn-outline" id="btn-menu">
               Réserver maintenant

@@ -289,8 +289,8 @@ export default function OrderBuilder() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '120px 20px 60px', fontFamily: 'var(--font-sans)' }}>
       <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', color: 'var(--crimson)', fontSize: '3rem', marginBottom: '15px' }}>Commandez d'avance</h1>
-        <p style={{ color: '#666', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>Construisez votre breuvage sur mesure, payez en ligne et passez le récupérer sans attendre.</p>
+        <h1 style={{ fontFamily: 'var(--font-serif)', color: 'var(--crimson)', fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', marginBottom: '15px' }}>Votre dose de bonheur,<br/>prête quand vous l'êtes.</h1>
+        <p style={{ color: '#666', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>Créez votre breuvage de rêve sur mesure. Payez en ligne, évitez la file, et savourez l'instant.</p>
         
         {/* Lien vers le suivi de commande */}
         <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
@@ -378,7 +378,7 @@ export default function OrderBuilder() {
         
         {/* ÉTAPE 1 : CHOIX DU PRODUIT */}
         <div>
-          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>1. Choisissez votre base</h2>
+          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>1. Par quoi commence votre aventure gourmande ?</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             {(!filteredItems || filteredItems.length === 0) ? (
               <p>Aucun produit n'est disponible dans ces catégories.</p>
@@ -438,7 +438,7 @@ export default function OrderBuilder() {
 
         {/* ÉTAPE 2 : PERSONNALISATION (Affiché seulement si un produit est sélectionné) */}
         <div id="personnalisation-section" style={{ opacity: selectedProduct ? 1 : 0.4, pointerEvents: selectedProduct ? 'auto' : 'none', transition: 'opacity 0.3s' }}>
-          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>2. Personnalisez-le</h2>
+          <h2 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', borderBottom: '2px solid var(--crimson)', paddingBottom: '10px', marginBottom: '20px' }}>2. La touche magique (À votre goût)</h2>
           
           {!selectedProduct && <p style={{ color: '#888' }}>Veuillez d'abord sélectionner une base.</p>}
 
