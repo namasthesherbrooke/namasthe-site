@@ -117,6 +117,7 @@ export default function NotreHistoire() {
       id: 'namasthe',
       title: 'Le Namasthé',
       subtitle: 'L\'emplacement actuel',
+      mapEmbed: 'https://www.google.com/maps/embed?pb=!4v1787769851728!6m8!1m7!1seSTx3AnxC7olApOs9m7Wng!2m2!1d45.3988577!2d-71.9051789!3f179.3!4f0!5f75',
       cover: '/images/nostalgia/namasthe/namasthe_13.webp',
       images: [
         '/images/nostalgia/namasthe/namasthe_1.jpg',
