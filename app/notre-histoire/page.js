@@ -11,72 +11,118 @@ export default function NotreHistoire() {
       id: 'coco1',
       title: 'Coco La-Thé 1',
       subtitle: '10e avenue Sud (2018)',
-      cover: '/images/nostalgia/albums/coco1_4.jpg',
+      cover: '/images/nostalgia/coco1/coco1_1.jpg',
       images: [
-        '/images/nostalgia/albums/coco1_4.jpg', 
-        '/images/nostalgia-1.jpg',
-        '/images/nostalgia-2.jpg',
-        '/images/nostalgia-3.jpg',
-        '/images/nostalgia-4.jpg',
-        '/images/nostalgia-6.jpg', 
-        '/images/nostalgia-7.jpg', 
-        '/images/nostalgia-8.jpg',
-        '/images/nostalgia-9.jpg',
-        '/images/nostalgia/albums/coco2_1.jpg',
-        '/images/nostalgia/albums/coco2_3.jpg'
+        '/images/nostalgia/coco1/coco1_1.jpg',
+        '/images/nostalgia/coco1/coco1_2.jpg',
+        '/images/nostalgia/coco1/coco1_3.jpg',
+        '/images/nostalgia/coco1/coco1_4.jpg',
+        '/images/nostalgia/coco1/coco1_5.jpg',
+        '/images/nostalgia/coco1/coco1_6.jpg',
+        '/images/nostalgia/coco1/coco1_7.jpg',
+        '/images/nostalgia/coco1/coco1_8.jpg',
+        '/images/nostalgia/coco1/coco1_9.jpg',
+        '/images/nostalgia/coco1/coco1_10.jpg',
+        '/images/nostalgia/coco1/coco1_11.jpg',
+        '/images/nostalgia/coco1/coco1_12.jpg',
+        '/images/nostalgia/coco1/coco1_13.jpg',
+        '/images/nostalgia/coco1/coco1_14.jpg',
+        '/images/nostalgia/coco1/coco1_15.jpg',
+        '/images/nostalgia/coco1/coco1_16.jpg',
+        '/images/nostalgia/coco1/coco1_17.jpg',
+        '/images/nostalgia/coco1/coco1_18.jpg',
+        '/images/nostalgia/coco1/coco1_19.jpg',
+        '/images/nostalgia/coco1/coco1_20.jpg',
+        '/images/nostalgia/coco1/coco1_21.jpeg'
       ]
     },
+
     {
       id: 'fuego',
       title: 'Le Fuego',
       subtitle: 'Les débuts vibrants',
-      cover: '/images/nostalgia/albums/fuego_6.jpg',
+      cover: '/images/nostalgia/fuego/fuego_1.jpg',
       images: [
-        '/images/nostalgia/albums/fuego_6.jpg', 
-        '/images/nostalgia/albums/fuego_2.jpg',
-        '/images/nostalgia/albums/fuego_3.jpg',
-        '/images/nostalgia/albums/fuego_4.jpg',
-        '/images/nostalgia/albums/fuego_5.jpg',
-        '/images/nostalgia/albums/namasthe1_1.jpg', 
-        '/images/nostalgia-12.jpg', 
-        '/images/nostalgia-10.jpg',
-        '/images/nostalgia/albums/namasthe1_4.jpg'
+        '/images/nostalgia/fuego/fuego_1.jpg',
+        '/images/nostalgia/fuego/fuego_2.jpg',
+        '/images/nostalgia/fuego/fuego_3.jpg',
+        '/images/nostalgia/fuego/fuego_4.jpg',
+        '/images/nostalgia/fuego/fuego_5.jpg',
+        '/images/nostalgia/fuego/fuego_6.jpg',
+        '/images/nostalgia/fuego/fuego_7.jpg',
+        '/images/nostalgia/fuego/fuego_8.jpg',
+        '/images/nostalgia/fuego/fuego_9.jpg',
+        '/images/nostalgia/fuego/fuego_10.jpg',
+        '/images/nostalgia/fuego/fuego_11.jpg',
+        '/images/nostalgia/fuego/fuego_12.jpg',
+        '/images/nostalgia/fuego/fuego_13.jpg',
+        '/images/nostalgia/fuego/fuego_14.jpg',
+        '/images/nostalgia/fuego/fuego_15.jpg',
+        '/images/nostalgia/fuego/fuego_16.jpg',
+        '/images/nostalgia/fuego/fuego_17.jpg',
+        '/images/nostalgia/fuego/fuego_18.jpeg',
+        '/images/nostalgia/fuego/fuego_19.webp'
       ]
     },
+
     {
       id: 'namasthe1',
       title: 'Le Namasthé 1',
       subtitle: 'Brique rouge',
-      cover: '/images/nostalgia/albums/namasthe1_new_3.jpg',
+      cover: '/images/nostalgia/namasthe1/namasthe1_1.jpg',
       images: [
-        '/images/nostalgia/albums/namasthe1_new_1.jpg', 
-        '/images/nostalgia/albums/namasthe1_new_2.jpg',
-        '/images/nostalgia/albums/namasthe1_new_3.jpg'
+        '/images/nostalgia/namasthe1/namasthe1_1.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_2.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_3.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_4.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_5.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_6.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_7.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_8.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_9.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_10.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_11.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_12.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_13.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_14.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_15.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_16.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_17.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_18.jpg',
+        '/images/nostalgia/namasthe1/namasthe1_19.jpeg'
       ]
     },
+
     {
       id: 'coco2',
       title: 'Coco La-Thé 2',
       subtitle: 'Maison blanche de Deauville',
-      cover: '/images/nostalgia-5.jpg',
+      cover: '/images/nostalgia/coco2/coco2_1.jpg',
       images: [
-        '/images/nostalgia-5.jpg',
-        '/images/nostalgia/albums/coco2_4.jpg', 
-        '/images/nostalgia/albums/coco2_5.jpg', 
-        '/images/nostalgia/albums/coco2_6.jpg',
-        '/images/nostalgia/albums/namasthe1_3.jpg'
+        '/images/nostalgia/coco2/coco2_1.jpg',
+        '/images/nostalgia/coco2/coco2_2.jpg',
+        '/images/nostalgia/coco2/coco2_3.jpg',
+        '/images/nostalgia/coco2/coco2_4.jpg',
+        '/images/nostalgia/coco2/coco2_5.jpeg'
       ]
     },
+
     {
       id: 'namasthe',
       title: 'Le Namasthé',
       subtitle: 'L\'emplacement actuel',
-      cover: '/images/nostalgia/albums/coco2_2.jpg',
+      cover: '/images/nostalgia/namasthe/namasthe_1.jpg',
       images: [
-        '/images/nostalgia/albums/coco2_2.jpg', 
-        '/images/nostalgia-11.jpg',
-        '/images/nostalgia/albums/namasthe2_5.jpg', 
-        '/images/nostalgia/albums/namasthe2_6.jpg'
+        '/images/nostalgia/namasthe/namasthe_1.jpg',
+        '/images/nostalgia/namasthe/namasthe_2.jpg',
+        '/images/nostalgia/namasthe/namasthe_3.jpg',
+        '/images/nostalgia/namasthe/namasthe_4.jpg',
+        '/images/nostalgia/namasthe/namasthe_5.jpg',
+        '/images/nostalgia/namasthe/namasthe_6.jpg',
+        '/images/nostalgia/namasthe/namasthe_7.jpg',
+        '/images/nostalgia/namasthe/namasthe_8.jpg',
+        '/images/nostalgia/namasthe/namasthe_9.jpg',
+        '/images/nostalgia/namasthe/namasthe_10.jpg'
       ]
     }
   ];
