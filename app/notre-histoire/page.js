@@ -11,6 +11,7 @@ export default function NotreHistoire() {
       id: 'coco1',
       title: 'Coco La-Thé 1',
       subtitle: '10e avenue Sud (2018)',
+      mapEmbed: 'https://www.google.com/maps/embed?pb=!4v1787769851728!6m8!1m7!1sGmH5mqgR0HWgTw63rb6ROw!2m2!1d45.40190811596992!2d-71.87258121970711!3f271.78669283766226!4f-2.8939100661235386!5f0.7820865974627469',
       cover: '/images/nostalgia/coco1/coco1_1.jpg',
       images: [
         '/images/nostalgia/coco1/coco1_1.jpg',
@@ -364,6 +365,19 @@ export default function NotreHistoire() {
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', width: '100%', maxWidth: '1200px', margin: '0 auto' }} onClick={(e) => e.stopPropagation()}>
+            {activeAlbum.mapEmbed && (
+              <div style={{ gridColumn: '1 / -1', height: '450px', borderRadius: '8px', overflow: 'hidden', marginBottom: '10px' }}>
+                <iframe 
+                  src={activeAlbum.mapEmbed} 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            )}
             {activeAlbum.images.map((src, index) => (
               <img key={index} src={src} alt={`Souvenir ${index + 1}`} style={{ width: '100%', height: 'auto', borderRadius: '8px', objectFit: 'contain' }} />
             ))}
