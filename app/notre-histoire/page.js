@@ -89,7 +89,9 @@ export default function NotreHistoire() {
         '/images/nostalgia/namasthe1/namasthe1_16.jpg',
         '/images/nostalgia/namasthe1/namasthe1_17.jpg',
         '/images/nostalgia/namasthe1/namasthe1_18.jpg',
-        '/images/nostalgia/namasthe1/namasthe1_19.jpeg'
+        '/images/nostalgia/namasthe1/namasthe1_19.jpeg',
+        '/images/nostalgia/namasthe1/namasthe1_20.webp',
+        '/images/nostalgia/namasthe1/namasthe1_21.webp'
       ]
     },
 
@@ -111,7 +113,7 @@ export default function NotreHistoire() {
       id: 'namasthe',
       title: 'Le Namasthé',
       subtitle: 'L\'emplacement actuel',
-      cover: '/images/nostalgia/namasthe/namasthe_1.jpg',
+      cover: '/images/nostalgia/namasthe/namasthe_13.webp',
       images: [
         '/images/nostalgia/namasthe/namasthe_1.jpg',
         '/images/nostalgia/namasthe/namasthe_2.jpg',
@@ -122,7 +124,10 @@ export default function NotreHistoire() {
         '/images/nostalgia/namasthe/namasthe_7.jpg',
         '/images/nostalgia/namasthe/namasthe_8.jpg',
         '/images/nostalgia/namasthe/namasthe_9.jpg',
-        '/images/nostalgia/namasthe/namasthe_10.jpg'
+        '/images/nostalgia/namasthe/namasthe_10.jpg',
+        '/images/nostalgia/namasthe/namasthe_11.webp',
+        '/images/nostalgia/namasthe/namasthe_12.webp',
+        '/images/nostalgia/namasthe/namasthe_13.webp'
       ]
     }
   ];
