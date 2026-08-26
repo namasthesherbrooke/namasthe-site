@@ -184,8 +184,8 @@ export default function Home() {
           <p style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '500', color: '#5A4A42' }}>
             Shake Cheesecake pomme épicée, Pumpkin Cream Chai, Café Latté Tarte aux pommes caramel ou Méga Thé Moka blanc épicé... Lequel allez-vous choisir en premier ?
           </p>
-          <Link href="/commande" className="btn" style={{ background: '#D35400', color: '#FFF', padding: '12px 28px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 15px rgba(211,84,0,0.3)', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-            Voir le menu complet
+          <Link href="/menu-automne" className="btn" style={{ background: '#D35400', color: '#FFF', padding: '12px 28px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 15px rgba(211,84,0,0.3)', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+            Découvrir toutes les nouveautés
           </Link>
         </div>
       </section>
