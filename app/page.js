@@ -163,6 +163,26 @@ export default function Home() {
       </section>
 
       {/* ========================================
+          Bannière Promotionnelle - Menu d'Automne
+          ======================================== */}
+      <section className="fade-in-hidden" style={{ background: 'linear-gradient(135deg, #D35400 0%, #8E44AD 100%)', padding: '30px 20px', textAlign: 'center', color: 'white', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-20px', left: '-20px', opacity: 0.15, fontSize: '8rem', transform: 'rotate(45deg)' }}>🍁</div>
+        <div style={{ position: 'absolute', bottom: '-40px', right: '10px', opacity: 0.15, fontSize: '8rem', transform: 'rotate(-20deg)' }}>🍂</div>
+        
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', marginBottom: '12px', fontFamily: 'var(--font-serif)', color: '#FFF8E1' }}>
+            🍂 Le menu d'Automne est enfin arrivé ! 🍁
+          </h2>
+          <p style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '500', lineHeight: '1.5' }}>
+            Laissez-vous réconforter par nos nouvelles saveurs de saison. Des créations épicées, chaleureuses et toujours 100% Namasthé.
+          </p>
+          <Link href="/commande" className="btn" style={{ background: '#FFF8E1', color: '#D35400', padding: '12px 28px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.3)', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+            Découvrir les nouveautés
+          </Link>
+        </div>
+      </section>
+
+      {/* ========================================
           SECTION NOUVELLE : NOS INCONTOURNABLES
           ======================================== */}
       <section className="section" id="incontournables" style={{ background: '#Fdfcfb', paddingTop: '60px', paddingBottom: '60px' }}>
