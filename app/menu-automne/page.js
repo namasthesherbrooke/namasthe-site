@@ -26,30 +26,30 @@ export default function MenuAutomne() {
       title: "🥤 SHAKES PROTÉINÉS",
       color: "#8B4513", // Brun chaleureux
       items: [
-        { name: "Cheesecake pomme épicée", desc: "Crémeux, gourmand, avec le goût réconfortant de la pomme épicée et du cheesecake." },
-        { name: "Banana Bread Chai", desc: "Le petit côté épicé du chai rencontre la douceur d’un banana bread. Un shake qui goûte littéralement l’automne." },
-        { name: "Cheesecake citrouille", desc: "Crémeux, légèrement épicé et juste assez gourmand pour les fans de pumpkin season. 🎃" },
-        { name: "Gâteau citrouille praliné", desc: "Citrouille + notes pralinées dans un shake protéiné ultra réconfortant." }
+        { name: "Cheesecake pomme épicée", desc: "Saveurs : cheesecake + pomme épicée + cannelle. Profil : crémeux, pomme-cannelle, style gâteau au fromage." },
+        { name: "Banana Bread Chai", desc: "Saveurs : banane + chai + orange + mangue. Profil : pain aux bananes fruité avec les épices chaudes du chai." },
+        { name: "Cheesecake citrouille", desc: "Saveurs : cheesecake + citrouille + épices de citrouille. Profil : crémeux, gâteau au fromage à la citrouille. 🎃" },
+        { name: "Gâteau citrouille praliné", desc: "Saveurs : gâteau/citrouille + praliné + épices. Profil : plus riche et noisetté que le Cheesecake citrouille." }
       ]
     },
     {
-      title: "🎃 CHAI LATTÉS",
+      title: "🎃 CHAI LATTÉS (Chaud ou froid)",
       color: "#D35400", // Orange automne
       items: [
-        { name: "Chai Cheesecake pomme épicée", desc: "Chai, pomme épicée et petite touche cheesecake. Celui-là, c’est le chandail de laine version breuvage. 🍎" },
-        { name: "Pumpkin Cream Chai", desc: "Un chai aux saveurs de citrouille épicée avec une finale douce et crémeuse." },
-        { name: "Dirty Chai érable", desc: "Chai + café + érable. Plus corsé, réconfortant et parfait quand tu veux ton petit boost avec ton automne. ☕️" },
-        { name: "Cinnamon Roll Chai", desc: "Cannelle, chai et côté gourmand inspiré du classique cinnamon roll." }
+        { name: "Chai Cheesecake pomme épicée", desc: "Saveurs : chai + cheesecake + pomme épicée. Profil : pomme crémeuse, cheesecake et épices chai. 🍎" },
+        { name: "Pumpkin Cream Chai", desc: "Saveurs : chai + citrouille + épices de citrouille + crème. Profil : chai crémeux dominé par la citrouille épicée." },
+        { name: "Dirty Chai érable", desc: "Saveurs : chai + érable + espresso ☕. Profil : chai épicé, érable et café." },
+        { name: "Cinnamon Roll Chai", desc: "Saveurs : chai + brioche à la cannelle + cannelle/cassonade. Profil : style roulé à la cannelle, doux et épicé." }
       ]
     },
     {
-      title: "☕ CAFÉS",
+      title: "☕ CAFÉS LATTÉS (Chaud ou froid)",
       color: "#5C4033", // Espresso foncé
       items: [
-        { name: "Pumpkin Spice Latte", desc: "Le grand classique de l’automne, version NamasThé. 🎃" },
-        { name: "Tarte aux pommes caramel", desc: "Pomme, caramel et café dans le même verre. Oui, ça goûte aussi bon que ça sonne. 🍏" },
-        { name: "Latte pacane caramélisée", desc: "Doux, noisetté et caramélisé. Le genre de café qu’on prend tranquillement et qu’on regrette d’avoir terminé." },
-        { name: "Moka blanc cannelle", desc: "Chocolat blanc, café et cannelle pour un latte riche et réconfortant." }
+        { name: "Pumpkin Spice Latte", desc: "Saveurs : espresso + citrouille + épices de citrouille. Profil : le classique café-citrouille épicé. 🎃" },
+        { name: "Tarte aux pommes caramel", desc: "Saveurs : espresso + pomme épicée + caramel + cannelle. Profil : tarte aux pommes chaude avec caramel. 🍏" },
+        { name: "Latte pacane caramélisée", desc: "Saveurs : espresso + pacane/praliné + caramel. Profil : noix grillées, caramel et café." },
+        { name: "Moka blanc cannelle", desc: "Saveurs : espresso + chocolat blanc + cannelle. Profil : chocolat blanc crémeux avec cannelle." }
       ]
     },
     {
@@ -57,10 +57,10 @@ export default function MenuAutomne() {
       color: "#C0392B", // Rouge cranberry/érable
       description: "Parce que l’automne n’est pas obligé d’être beige. 😂🍁",
       items: [
-        { name: "Moka blanc épicé", desc: "Fruité, énergisant et épicé avec une touche de moka blanc. Une combinaison surprenante qui mérite d’être goûtée." },
-        { name: "Croustade aux pommes", desc: "Les saveurs de pomme et d’épices d’une croustade, mais en version fraîche et énergisante. 🍎⚡" },
-        { name: "Chaleur épicée", desc: "Une création fruitée avec juste ce qu’il faut de chaleur et d’épices pour changer complètement du thé énergisant classique." },
-        { name: "Dirty Red Chai", desc: "Coloré, fruité et épicé avec une inspiration chai. Probablement le plus audacieux de la gang. ❤️🔥" }
+        { name: "Dragon d'Automne", desc: "Saveurs : Lotus Gold + Fruit du dragon + Orange + Grenade. Profil : fruité, punché, légèrement acidulé." },
+        { name: "Moka blanc épicé", desc: "Saveurs : Ananas + Latté citrouille + Colada. Profil : tropical, crémeux en impression, citrouille en arrière-plan." },
+        { name: "Dirty Red Chai", desc: "Saveurs : Grenade + Cerise + Pêche sur base Chai. Profil : fruits rouges + pêche avec le chai derrière. ❤️🔥" },
+        { name: "Croustade aux pommes", desc: "Saveurs : Lotus Gold + Pomme + Caramel + Cannelle. Profil : pomme cuite, caramel, cannelle, style croustade. 🍎⚡" }
       ]
     }
   ];
