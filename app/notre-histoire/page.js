@@ -74,14 +74,18 @@ export default function NotreHistoire() {
           </p>
         </div>
         <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Espace pour les anciennes photos de Coco La-Thé / Fuego */}
-          <div style={{ height: '300px', background: '#EAE4D8', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontSize: '0.9rem', fontStyle: 'italic', overflow: 'hidden' }}>
-            <img src="/images/story-old-1.jpg" alt="Ancien concept" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
-            <span style={{ display: 'none' }}>[Photo Coco La-Thé ou Fuego]</span>
+          {/* Anciennes photos avec description */}
+          <div style={{ background: '#EAE4D8', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+            <p style={{ margin: 0, padding: '12px 16px', background: '#B8003E', color: 'white', fontWeight: 'bold', fontSize: '0.95rem', textAlign: 'center', letterSpacing: '0.5px' }}>
+              Coco La-Thé – Mes débuts chaleureux
+            </p>
+            <img src="/images/story-old-1.jpg" alt="Coco La-Thé" style={{ width: '100%', height: 'auto', display: 'block' }} onError={(e) => { e.target.style.display = 'none'; }} />
           </div>
-          <div style={{ height: '200px', background: '#EAE4D8', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontSize: '0.9rem', fontStyle: 'italic', overflow: 'hidden' }}>
-            <img src="/images/story-old-2.jpg" alt="Ancien concept 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
-            <span style={{ display: 'none' }}>[Photo de l'ancien local]</span>
+          <div style={{ background: '#EAE4D8', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+            <p style={{ margin: 0, padding: '12px 16px', background: '#2C1810', color: 'white', fontWeight: 'bold', fontSize: '0.95rem', textAlign: 'center', letterSpacing: '0.5px' }}>
+              Le tout premier local Namasthé
+            </p>
+            <img src="/images/story-old-2.jpg" alt="Premier local Namasthé" style={{ width: '100%', height: 'auto', display: 'block' }} onError={(e) => { e.target.style.display = 'none'; }} />
           </div>
         </div>
       </section>
@@ -162,6 +166,33 @@ export default function NotreHistoire() {
             <img src="/images/story-community.jpg" alt="Événement communautaire au NamasThé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
             <span style={{ display: 'none' }}>[Photo: Événement ou communauté]</span>
           </div>
+        </div>
+      </section>
+
+      {/* 5.5. NOSTALGIE - Galerie de souvenirs */}
+      <section style={{ padding: '80px 20px', maxWidth: '1200px', margin: '0 auto' }} className="fade-in-hidden">
+        <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', color: '#2C1810', marginBottom: '16px', textAlign: 'center' }}>
+          Nostalgie & Souvenirs d'ailleurs
+        </h2>
+        <p style={{ fontSize: '1.1rem', color: '#5A4A42', textAlign: 'center', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
+          De Fuego à aujourd'hui, en passant par nos événements et nos rencontres mémorables... voici quelques instants capturés au fil des années.
+        </p>
+        
+        {/* Grille de photos */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+           {/* Placeholder en attendant les nouvelles photos du User */}
+           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
+             En attente de tes photos... 📸
+           </div>
+           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
+             En attente de tes photos... 📸
+           </div>
+           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
+             En attente de tes photos... 📸
+           </div>
+           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
+             En attente de tes photos... 📸
+           </div>
         </div>
       </section>
 
