@@ -148,10 +148,10 @@ export default function NotreHistoire() {
           {/* Anciennes photos avec description */}
           <div style={{ background: '#EAE4D8', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
             <div style={{ padding: '16px', background: '#B8003E', color: 'white', textAlign: 'center' }}>
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '1.1rem', fontWeight: 'bold', letterSpacing: '0.5px', color: 'white' }}>
                 Coco La-Thé – Mes débuts
               </h3>
-              <p style={{ margin: 0, fontSize: '0.95rem', fontStyle: 'italic', lineHeight: '1.4', opacity: 0.95 }}>
+              <p style={{ margin: 0, fontSize: '0.95rem', fontStyle: 'italic', lineHeight: '1.4', opacity: 0.95, color: 'white' }}>
                 « Le bar home made, tout petit, mais c'était mes débuts. J'avais une vision de chaleur, de communautaire... c'était petit mais ça le faisait ! »
               </p>
             </div>
