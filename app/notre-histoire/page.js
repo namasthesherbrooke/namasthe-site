@@ -38,12 +38,11 @@ export default function NotreHistoire() {
       id: 'namasthe1',
       title: 'Le Namasthé 1',
       subtitle: 'Brique rouge',
-      cover: '/images/nostalgia/albums/namasthe1_1.jpg',
+      cover: '/images/nostalgia/albums/namasthe1_new_3.jpg',
       images: [
-        '/images/nostalgia/albums/namasthe1_1.jpg', 
-        '/images/nostalgia-12.jpg',
-        '/images/nostalgia/albums/namasthe1_3.jpg',
-        '/images/nostalgia/albums/namasthe1_4.jpg'
+        '/images/nostalgia/albums/namasthe1_new_1.jpg', 
+        '/images/nostalgia/albums/namasthe1_new_2.jpg',
+        '/images/nostalgia/albums/namasthe1_new_3.jpg'
       ]
     },
     {
@@ -238,8 +237,8 @@ export default function NotreHistoire() {
             C’est cette proximité que je veux préserver : connaître vos goûts, écouter vos idées, préparer vos drinks et vous voir repartir avec le sourire et l’envie de revenir.
           </p>
           
-          <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto', height: '400px', background: 'rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFF8E1', fontStyle: 'italic' }}>
-            <img src="/images/story-community.jpg" alt="Événement communautaire au NamasThé" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
+          <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto', background: 'rgba(255,255,255,0.1)', borderRadius: '24px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFF8E1', fontStyle: 'italic' }}>
+            <img src="/images/story-community.jpg" alt="Événement communautaire au NamasThé" style={{ width: '100%', height: 'auto', display: 'block' }} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} />
             <span style={{ display: 'none' }}>[Photo: Événement ou communauté]</span>
           </div>
         </div>
