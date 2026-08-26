@@ -85,6 +85,43 @@ export default function OrderBuilder() {
       const data = await res.json();
       
       if (data.success && data.menu) {
+        // --- INJECTION DU MENU D'AUTOMNE ---
+        const findPrice = (keyword) => {
+           const item = data.menu.items.find(i => i.name.toLowerCase().includes(keyword.toLowerCase()));
+           return item ? (item.variations?.[0]?.price || item.price) : 0;
+        };
+        const shakePrice = findPrice('shake') || 10.95;
+        const megaThePrice = findPrice('méga thé') || 11.50;
+        const chaiPrice = findPrice('chai') || 5.75;
+        const cafePrice = findPrice('café') || 4.75;
+        
+        const fallCategory = { id: 'cat_fall', name: '🍂 Spéciaux d\'Automne 🍁' };
+        const fallItems = [
+          { id: 'f1', name: 'Shake Cheesecake pomme épicée', description: 'Crémeux, avec le goût réconfortant de la pomme épicée et du cheesecake.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f2', name: 'Shake Banana Bread Chai', description: 'Le petit côté épicé du chai rencontre la douceur d’un banana bread.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f3', name: 'Shake Cheesecake citrouille', description: 'Crémeux, légèrement épicé et juste assez gourmand.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f4', name: 'Shake Gâteau citrouille praliné', description: 'Citrouille + notes pralinées dans un shake protéiné ultra réconfortant.', price: shakePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          
+          { id: 'f5', name: 'Chai Latté Cheesecake pomme épicée', description: 'Chai, pomme épicée et petite touche cheesecake.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f6', name: 'Chai Latté Pumpkin Cream', description: 'Un chai aux saveurs de citrouille épicée avec une finale douce et crémeuse.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f7', name: 'Dirty Chai Latté érable', description: 'Chai + café + érable. Plus corsé et réconfortant.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f8', name: 'Chai Latté Cinnamon Roll', description: 'Cannelle, chai et côté gourmand.', price: chaiPrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          
+          { id: 'f9', name: 'Café Latté Pumpkin Spice', description: 'Le grand classique de l’automne, version NamasThé.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f10', name: 'Café Latté Tarte aux pommes caramel', description: 'Pomme, caramel et café dans le même verre.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f11', name: 'Café Latté pacane caramélisée', description: 'Doux, noisetté et caramélisé.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f12', name: 'Café Moka blanc cannelle', description: 'Chocolat blanc, café et cannelle pour un latte riche.', price: cafePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          
+          { id: 'f13', name: 'Méga Thé Moka blanc épicé', description: 'Fruité, énergisant et épicé avec une touche de moka blanc.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f14', name: 'Méga Thé Croustade aux pommes', description: 'Les saveurs de pomme et d’épices d’une croustade.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f15', name: 'Méga Thé Chaleur épicée', description: 'Une création fruitée avec juste ce qu’il faut de chaleur et d’épices.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' },
+          { id: 'f16', name: 'Méga Thé Dirty Red Chai', description: 'Coloré, fruité et épicé avec une inspiration chai.', price: megaThePrice, category_id: 'cat_fall', image_url: '/images/menu-automne.jpg' }
+        ];
+
+        data.menu.categories.unshift(fallCategory);
+        data.menu.items.push(...fallItems);
+        // ------------------------------------
+
         setMenu(data.menu);
       }
     } catch (err) {
@@ -271,6 +308,7 @@ export default function OrderBuilder() {
   }
 
   const allowedCategories = [
+    '🍂 spéciaux d\'automne 🍁',
     'café et matcha',
     'gourmandises',
     'shake, smoothie bol et fruithé',
