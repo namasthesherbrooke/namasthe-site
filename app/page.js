@@ -165,19 +165,27 @@ export default function Home() {
       {/* ========================================
           Bannière Promotionnelle - Menu d'Automne
           ======================================== */}
-      <section className="fade-in-hidden" style={{ background: 'linear-gradient(135deg, #D35400 0%, #8E44AD 100%)', padding: '30px 20px', textAlign: 'center', color: 'white', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-20px', left: '-20px', opacity: 0.15, fontSize: '8rem', transform: 'rotate(45deg)' }}>🍁</div>
-        <div style={{ position: 'absolute', bottom: '-40px', right: '10px', opacity: 0.15, fontSize: '8rem', transform: 'rotate(-20deg)' }}>🍂</div>
-        
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', marginBottom: '12px', fontFamily: 'var(--font-serif)', color: '#FFF8E1' }}>
-            🍂 Le menu d'Automne est enfin arrivé ! 🍁
+      <section className="fade-in-hidden" style={{ background: '#FFFDF9', padding: '40px 20px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <img 
+            src="/images/menu-automne.jpg" 
+            alt="Le menu d'Automne arrive au NamasThé" 
+            style={{ 
+              width: '100%', 
+              height: 'auto', 
+              borderRadius: '20px', 
+              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+              marginBottom: '24px'
+            }} 
+          />
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', marginBottom: '12px', fontFamily: 'var(--font-serif)', color: '#D35400' }}>
+            🍂 Le menu automnal arrive bientôt ! 🍁
           </h2>
-          <p style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '500', lineHeight: '1.5' }}>
-            Laissez-vous réconforter par nos nouvelles saveurs de saison. Des créations épicées, chaleureuses et toujours 100% Namasthé.
+          <p style={{ fontSize: '1.1rem', marginBottom: '20px', fontWeight: '500', color: '#5A4A42' }}>
+            Shake Cheesecake pomme épicée, Pumpkin Cream Chai, Café Latté Tarte aux pommes caramel ou Méga Thé Moka blanc épicé... Lequel allez-vous choisir en premier ?
           </p>
-          <Link href="/commande" className="btn" style={{ background: '#FFF8E1', color: '#D35400', padding: '12px 28px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 15px rgba(0,0,0,0.3)', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-            Découvrir les nouveautés
+          <Link href="/commande" className="btn" style={{ background: '#D35400', color: '#FFF', padding: '12px 28px', borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', boxShadow: '0 4px 15px rgba(211,84,0,0.3)', transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+            Voir le menu complet
           </Link>
         </div>
       </section>
