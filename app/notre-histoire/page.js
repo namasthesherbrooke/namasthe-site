@@ -69,7 +69,7 @@ export default function NotreHistoire() {
       id: 'namasthe1',
       title: 'Le Namasthé 1',
       subtitle: 'Brique rouge',
-      cover: '/images/nostalgia/namasthe1/namasthe1_1.jpg',
+      cover: '/images/nostalgia/namasthe1/namasthe1_21.webp',
       images: [
         '/images/nostalgia/namasthe1/namasthe1_1.jpg',
         '/images/nostalgia/namasthe1/namasthe1_2.jpg',
