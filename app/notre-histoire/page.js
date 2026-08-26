@@ -179,9 +179,17 @@ export default function NotreHistoire() {
         <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', color: '#2C1810', marginBottom: '16px', textAlign: 'center' }}>
           Nostalgie & Souvenirs d'ailleurs
         </h2>
-        <p style={{ fontSize: '1.1rem', color: '#5A4A42', textAlign: 'center', marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px' }}>
-          De Fuego à aujourd'hui, en passant par nos événements et nos rencontres mémorables... voici quelques instants capturés au fil des années.
-        </p>
+        <div style={{ fontSize: '1.15rem', color: '#5A4A42', textAlign: 'center', marginBottom: '40px', maxWidth: '850px', margin: '0 auto 40px', lineHeight: '1.8' }}>
+          <p style={{ marginBottom: '16px' }}>
+            Mon aventure a débuté en 2018 avec <strong>Coco La-Thé</strong> sur la 10e avenue Sud. Un tout petit bar <i>home made</i>, mais qui portait déjà toute ma vision de chaleur et de communauté. 
+          </p>
+          <p style={{ marginBottom: '16px' }}>
+            Puis est venu le chapitre vibrant du <strong>Fuego</strong>, suivi de la création du tout premier <strong>NamasThé</strong> (le fameux emplacement en brique rouge !). J'ai ensuite renoué avec mes racines avec <strong>Coco La-Thé 2</strong> (la chaleureuse maison blanche de Deauville), pour finalement rassembler toute mon expérience et créer le <strong>NamasThé</strong> tel que vous le connaissez aujourd'hui.
+          </p>
+          <p style={{ fontStyle: 'italic', color: '#B8003E' }}>
+            De 2018 à aujourd'hui, j'ai acquis énormément d'expérience, et voici quelques instants capturés au fil de cette belle évolution...
+          </p>
+        </div>
         
         {/* Grille de photos */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
