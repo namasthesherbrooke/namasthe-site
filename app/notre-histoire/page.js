@@ -20,9 +20,7 @@ export default function NotreHistoire() {
         '/images/nostalgia-4.jpg',
         '/images/nostalgia-6.jpg', 
         '/images/nostalgia-7.jpg', 
-        '/images/nostalgia-8.jpg', 
-        '/images/nostalgia/albums/fuego_2.jpg', 
-        '/images/nostalgia/albums/fuego_4.jpg'  
+        '/images/nostalgia-8.jpg'
       ]
     },
     {
@@ -32,11 +30,13 @@ export default function NotreHistoire() {
       cover: '/images/nostalgia/albums/fuego_6.jpg',
       images: [
         '/images/nostalgia/albums/fuego_6.jpg', 
+        '/images/nostalgia/albums/fuego_2.jpg',
+        '/images/nostalgia/albums/fuego_3.jpg',
+        '/images/nostalgia/albums/fuego_4.jpg',
+        '/images/nostalgia/albums/fuego_5.jpg',
         '/images/nostalgia/albums/namasthe1_1.jpg', 
         '/images/nostalgia-12.jpg', 
-        '/images/nostalgia/albums/namasthe1_4.jpg', 
-        '/images/nostalgia/albums/fuego_3.jpg',
-        '/images/nostalgia/albums/fuego_5.jpg'
+        '/images/nostalgia/albums/namasthe1_4.jpg'
       ]
     },
     {
