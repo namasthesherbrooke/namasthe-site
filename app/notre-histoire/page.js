@@ -185,19 +185,11 @@ export default function NotreHistoire() {
         
         {/* Grille de photos */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-           {/* Placeholder en attendant les nouvelles photos du User */}
-           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
-             En attente de tes photos... 📸
-           </div>
-           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
-             En attente de tes photos... 📸
-           </div>
-           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
-             En attente de tes photos... 📸
-           </div>
-           <div style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7A6E', fontStyle: 'italic' }}>
-             En attente de tes photos... 📸
-           </div>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+            <div key={num} style={{ background: '#EAE4D8', borderRadius: '16px', height: '250px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+              <img src={`/images/nostalgia-${num}.jpg`} alt={`Souvenir ${num}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.style.display = 'none'; }} />
+            </div>
+          ))}
         </div>
       </section>
 
