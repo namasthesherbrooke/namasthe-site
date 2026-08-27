@@ -994,6 +994,77 @@ export default function FinancesPage() {
                       </p>
                     </div>
 
+                    {/* NEW SECTION: Bilan du Mois (Conjoint) */}
+                    {(() => {
+                      const conjointRealIncomes = transactions
+                        .filter(t => t.entity === 'Conjoint' && t.type === 'income' && !t.is_ghost && !t.is_simulation && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear)
+                        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+                      const conjointBudget = 1935;
+                      const conjointDiff = conjointRealIncomes - conjointBudget;
+
+                      // Prévision du 1er du mois prochain
+                      const endOfMonthConjoint = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Conjoint');
+                      
+                      const uniqueFixedConjoint = new Map();
+                      transactions.filter(t => t.entity === 'Conjoint' && t.type === 'expense' && t.is_fixed && !t.is_ghost && !t.is_simulation)
+                        .forEach(t => {
+                           if (!uniqueFixedConjoint.has(t.description) || parseDateLocal(t.date) > parseDateLocal(uniqueFixedConjoint.get(t.description).date)) {
+                               uniqueFixedConjoint.set(t.description, t);
+                           }
+                        });
+                        
+                      const firstDayNextMonthExpenses = Array.from(uniqueFixedConjoint.values())
+                        .filter(t => parseDateLocal(t.date).getDate() === 1 || Number(t.priority) === 1)
+                        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+                      
+                      const deficit1er = endOfMonthConjoint - firstDayNextMonthExpenses;
+
+                      return (
+                        <div style={{ background: '#F8FAFC', padding: '20px', borderRadius: '12px', border: '1px solid #CBD5E1', gridColumn: '1 / -1', marginTop: '10px' }}>
+                          <h4 style={{ margin: '0 0 15px 0', color: '#1E293B', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            📊 Bilan du Mois & Prévisions (Compte Conjoint)
+                          </h4>
+                          
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+                            {/* Bilan */}
+                            <div style={{ background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                              <h5 style={{ margin: '0 0 10px 0', color: '#334155' }}>💰 Respect du Budget (Ce mois-ci)</h5>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#475569' }}>
+                                Dépôts réels : <strong>{formatMoney(conjointRealIncomes)}</strong>
+                              </p>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#475569' }}>
+                                Objectif théorique : <strong>{formatMoney(conjointBudget)}</strong>
+                              </p>
+                              <div style={{ padding: '10px', background: conjointDiff >= 0 ? '#ECFDF5' : '#FEF2F2', borderRadius: '8px', border: `1px solid ${conjointDiff >= 0 ? '#10B981' : '#EF4444'}`, marginTop: '10px' }}>
+                                <p style={{ margin: 0, fontSize: '0.9rem', color: conjointDiff >= 0 ? '#065F46' : '#991B1B' }}>
+                                  {conjointDiff >= 0 
+                                    ? `✅ Vous avez déposé ${formatMoney(conjointDiff)} de plus que votre budget !` 
+                                    : `⚠️ Vous êtes sous le budget de ${formatMoney(Math.abs(conjointDiff))}. (Payé de votre poche/surplus)`}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Prévisions 1er du mois */}
+                            <div style={{ background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                              <h5 style={{ margin: '0 0 10px 0', color: '#334155' }}>🔮 Préparation du 1er du mois prochain</h5>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#475569' }}>
+                                Solde projeté le 31 : <strong>{formatMoney(endOfMonthConjoint)}</strong>
+                              </p>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '0.9rem', color: '#475569' }}>
+                                Factures du 1er (Loyers) : <strong>{formatMoney(firstDayNextMonthExpenses)}</strong>
+                              </p>
+                              <div style={{ padding: '10px', background: deficit1er >= 0 ? '#ECFDF5' : '#FFFBEB', borderRadius: '8px', border: `1px solid ${deficit1er >= 0 ? '#10B981' : '#F59E0B'}`, marginTop: '10px' }}>
+                                <p style={{ margin: 0, fontSize: '0.9rem', color: deficit1er >= 0 ? '#065F46' : '#92400E' }}>
+                                  {deficit1er >= 0 
+                                    ? `✅ Vos loyers et factures du 1er passeront sans problème.` 
+                                    : `🚨 Attention ! Il vous manquera ${formatMoney(Math.abs(deficit1er))} le 1er. Faites un virement avant le 31 !`}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               )}
