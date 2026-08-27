@@ -810,10 +810,10 @@ export default function FinancesPage() {
                         
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <input 
-                            type="number" 
-                            step="0.01" 
+                            type="text" 
+                            inputMode="decimal"
                             value={currentBankBalance} 
-                            onChange={(e) => setCurrentBankBalance(e.target.value)}
+                            onChange={(e) => setCurrentBankBalance(e.target.value.replace(',', '.'))}
                             placeholder="Solde bancaire actuel..."
                             style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
                           />
