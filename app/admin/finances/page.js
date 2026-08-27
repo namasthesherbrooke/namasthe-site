@@ -67,15 +67,21 @@ export default function FinancesPage() {
         fetch('/api/admin/finances?action=transactions', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=categories', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=balances', { headers: { 'x-finance-pin': currentPin } }),
-        fetch('/api/admin/finances?action=patterns', { headers: { 'x-finance-pin': currentPin } })
+        fetch('/api/admin/finances?action=patterns', { headers: { 'x-finance-pin': currentPin } }).catch(() => ({ ok: false }))
       ]);
 
-      if (!transRes.ok || !catRes.ok || !balRes.ok || !patRes.ok) throw new Error("Erreur de chargement des données");
+      if (!transRes.ok || !catRes.ok || !balRes.ok) throw new Error("Erreur de chargement des données principales");
 
       const transData = await transRes.json();
       const catData = await catRes.json();
       const balData = await balRes.json();
-      const patData = await patRes.json();
+      
+      let patData = { patterns: [] };
+      if (patRes.ok) {
+        try {
+          patData = await patRes.json();
+        } catch (e) {}
+      }
 
       setTransactions(transData.transactions || []);
       setCategories(catData.categories || []);
