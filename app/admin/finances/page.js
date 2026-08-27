@@ -225,7 +225,16 @@ export default function FinancesPage() {
   const safeSurplus = isCombinedView ? projectedBalance : 0;
 
   // --- GRAND TOTAL (Valeur Nette) ---
-  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getProjectedBalance(acc), 0);
+  const getLatestBalance = (accountName) => {
+    const latestBal = balances.find(b => {
+      const d = new Date(b.date);
+      return b.account === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    return latestBal ? parseFloat(latestBal.amount) : 0;
+  };
+
+  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedBalance(acc), 0) + getProjectedBalance('CELI');
+  const combinedBaseBalance = getLatestBalance('Entreprise') + getLatestBalance('Perso') + getLatestBalance('Conjoint');
   
   return (
     <FinanceLock onUnlock={handleUnlock}>
@@ -293,9 +302,15 @@ export default function FinancesPage() {
                   </h3>
                   
                   {isCombinedView ? (
-                    <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', color: '#4B5563', fontSize: '0.9rem' }}>
-                      <p>Pour mettre à jour les soldes bancaires initiaux, veuillez vous rendre dans les onglets individuels (Entreprise, Perso, Conjoint).</p>
-                    </div>
+                    <>
+                      <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', marginBottom: '15px' }}>
+                        <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes initiaux (Ent. + Perso + Conj.)</p>
+                        <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(combinedBaseBalance)}</div>
+                      </div>
+                      <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#4F46E5', fontSize: '0.85rem' }}>
+                        <p style={{ margin: 0 }}>*Pour modifier un solde, veuillez vous rendre dans l'onglet individuel correspondant.</p>
+                      </div>
+                    </>
                   ) : (
                     <>
                       {balances.find(b => {
