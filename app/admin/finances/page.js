@@ -22,6 +22,12 @@ export default function FinancesPage() {
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
 
+  const parseDateLocal = (dStr) => {
+    if (!dStr) return new Date();
+    const [y, m, d] = dStr.split('T')[0].split('-');
+    return new Date(y, m - 1, d);
+  };
+
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
@@ -177,7 +183,7 @@ export default function FinancesPage() {
   const accountTransactions = transactions.filter(t => targetAccounts.includes(t.entity));
   
   const currentMonthTransactions = accountTransactions.filter(t => {
-    const d = new Date(t.date);
+    const d = parseDateLocal(t.date);
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });  
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
@@ -185,11 +191,11 @@ export default function FinancesPage() {
 
   const viewedDate = new Date(currentYear, currentMonth, 1);
   let baseCurrentMonthTransactions = transactions.filter(t => {
-    const d = new Date(t.date);
+    const d = parseDateLocal(t.date);
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
 
-  const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && new Date(t.date) < viewedDate);
+  const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && parseDateLocal(t.date) < viewedDate);
   const latestFixedMap = new Map();
   pastFixed.forEach(t => {
     const existsInCurrentMonth = baseCurrentMonthTransactions.some(current => 
@@ -197,7 +203,7 @@ export default function FinancesPage() {
     );
     if (!existsInCurrentMonth) {
       const key = `${t.entity}-${t.category_id}-${t.description || ''}`;
-      if (!latestFixedMap.has(key) || new Date(t.date) > new Date(latestFixedMap.get(key).date)) {
+      if (!latestFixedMap.has(key) || parseDateLocal(t.date) > parseDateLocal(latestFixedMap.get(key).date)) {
         latestFixedMap.set(key, t);
       }
     }
@@ -264,12 +270,12 @@ export default function FinancesPage() {
 
   // --- LE CONSEILLER FINANCIER ---
   // 1. Viabilité Entreprise
-  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
   const profitMargin = entrepriseIncomes > 0 ? ((entrepriseIncomes - entrepriseExpenses) / entrepriseIncomes) * 100 : (entrepriseExpenses > 0 ? -100 : 0);
   
   // 2. Provisions (Basé sur vos objectifs Personnels)
-  const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
   
   const taxProvision = persoIncomes * 0.25; // 25% Impôts
   const emergencyProvision = persoIncomes * 0.15; // 10% Urgence + 5% Imprévus
@@ -282,7 +288,7 @@ export default function FinancesPage() {
   // --- GRAND TOTAL (Valeur Nette) ---
   const getLatestBalance = (accountName) => {
     const latestBal = balances.find(b => {
-      const d = new Date(b.date);
+      const d = parseDateLocal(b.date);
       return b.account === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
     return latestBal ? parseFloat(latestBal.amount) : 0;
@@ -369,7 +375,7 @@ export default function FinancesPage() {
                   <h3 style={{ margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>💰 Point sur le compte</h3>
                   {(() => {
                     const currentBankBalanceObj = bankBalances.find(b => {
-                      const d = new Date(b.date);
+                      const d = parseDateLocal(b.date);
                       return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
                     });
                     
