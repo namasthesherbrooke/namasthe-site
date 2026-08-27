@@ -802,11 +802,16 @@ export default function FinancesPage() {
                     return (
                       <>
                         <p style={{ color: '#6B7280', margin: '0 0 10px 0', fontSize: '0.9rem' }}>
-                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde reporté automatiquement :</span> : "Dernier solde relevé ce mois-ci :"}
+                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde (Reporté du mois précédent) :</span> : "🧮 Solde mathématique (Recalculé au 1er du mois) :"}
                         </p>
-                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '20px' }}>
+                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '5px' }}>
                           {formatMoney(currentBalance)}
                         </div>
+                        {currentBankBalanceObj && (
+                          <p style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#059669', fontWeight: '500' }}>
+                            📝 Solde réel que vous avez saisi le {String(parseDateLocal(currentBankBalanceObj.date).getDate()).padStart(2, '0')} : {formatMoney(currentBankBalanceObj.amount)}
+                          </p>
+                        )}
                         
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <input 
