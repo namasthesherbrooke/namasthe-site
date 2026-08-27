@@ -233,6 +233,7 @@ export default function FinancesPage() {
     return latestBal ? parseFloat(latestBal.amount) : 0;
   };
 
+  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getLatestBalance(acc), 0);
   const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedBalance(acc), 0) + getProjectedBalance('CELI');
   const combinedBaseBalance = getLatestBalance('Entreprise') + getLatestBalance('Perso') + getLatestBalance('Conjoint');
   
@@ -248,9 +249,16 @@ export default function FinancesPage() {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{ background: '#F0FDF4', padding: '10px 20px', borderRadius: '30px', border: '1px solid #BBF7D0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <span style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 'bold', textTransform: 'uppercase' }}>Valeur Nette Globale</span>
-              <span style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#15803D' }}>{formatMoney(grandTotalProjected)}</span>
+            <div style={{ background: '#F8FAFC', padding: '10px 20px', borderRadius: '12px', border: '1px solid #E2E8F0', display: 'flex', gap: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 'bold', textTransform: 'uppercase' }}>Total Actuel</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#334155' }}>{formatMoney(grandTotalCurrent)}</span>
+              </div>
+              <div style={{ width: '1px', background: '#E2E8F0' }}></div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 'bold', textTransform: 'uppercase' }}>Projection Fin de Mois</span>
+                <span style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#15803D' }}>{formatMoney(grandTotalProjected)}</span>
+              </div>
             </div>
             
             <button 
