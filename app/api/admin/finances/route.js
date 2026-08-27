@@ -134,6 +134,18 @@ export async function POST(req) {
       return NextResponse.json({ success: true, balance: data[0] });
     }
 
+    if (action === 'import_recurring') {
+      const { transactions } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_transactions')
+        .insert(transactions)
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, imported: data });
+    }
+
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });
 
   } catch (error) {

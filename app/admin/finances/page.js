@@ -18,6 +18,7 @@ export default function FinancesPage() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionToEdit, setTransactionToEdit] = useState(null);
+  const [isImporting, setIsImporting] = useState(false);
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
 
@@ -79,6 +80,55 @@ export default function FinancesPage() {
 
   const handleEditTransaction = (updatedTransaction) => {
     setTransactions(transactions.map(t => t.id === updatedTransaction.id ? updatedTransaction : t));
+  };
+
+  const getImportableFixedExpenses = () => {
+    const viewedDate = new Date(currentYear, currentMonth, 1);
+    const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && new Date(t.date) < viewedDate);
+    
+    const latestFixedMap = new Map();
+    pastFixed.forEach(t => {
+      const key = `${t.entity}-${t.category_id}-${t.description || ''}`;
+      if (!latestFixedMap.has(key) || new Date(t.date) > new Date(latestFixedMap.get(key).date)) {
+        latestFixedMap.set(key, t);
+      }
+    });
+    
+    return Array.from(latestFixedMap.values());
+  };
+
+  const handleImportRecurring = async () => {
+    const toImport = getImportableFixedExpenses().filter(t => isCombinedView || t.entity === activeTab);
+    if (toImport.length === 0) return;
+    
+    setIsImporting(true);
+    try {
+      const newTransactions = toImport.map(t => ({
+        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+        type: t.type,
+        amount: t.amount,
+        category_id: t.category_id,
+        description: t.description,
+        entity: t.entity,
+        status: 'pending',
+        priority: t.priority,
+        is_fixed: true
+      }));
+      
+      const res = await fetch('/api/admin/finances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({ action: 'import_recurring', data: { transactions: newTransactions } })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      
+      setTransactions([...data.imported, ...transactions]);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   const handleUpdateTransactionStatus = async (id, newStatus) => {
@@ -509,7 +559,20 @@ export default function FinancesPage() {
                     <span style={{ fontWeight: 'bold', color: '#6B7280' }}>{formatMoney(fixedExpenses.reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
                   </div>
                   <div style={{ padding: '10px 20px' }}>
-                    {fixedExpenses.length === 0 ? <p style={{ color: '#9CA3AF' }}>Aucune dépense fixe.</p> : fixedExpenses.map(t => (
+                    {fixedExpenses.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '20px' }}>
+                        <p style={{ color: '#9CA3AF', marginBottom: '15px' }}>Aucune dépense fixe enregistrée ce mois-ci.</p>
+                        {getImportableFixedExpenses().filter(t => isCombinedView || t.entity === activeTab).length > 0 && (
+                          <button 
+                            onClick={handleImportRecurring}
+                            disabled={isImporting}
+                            style={{ padding: '10px 20px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            {isImporting ? 'Importation...' : '🔄 Importer les dépenses fixes du mois précédent'}
+                          </button>
+                        )}
+                      </div>
+                    ) : fixedExpenses.map(t => (
                       <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
                         <div>
                           <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>{t.description || getCategory(t.category_id).name}</div>
