@@ -138,7 +138,9 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
 
-      if (initialData && onUpdate) {
+      const isConversion = initialData && (String(initialData.id).startsWith('ghost-') || String(initialData.id).startsWith('sim-'));
+      
+      if (initialData && onUpdate && !isConversion) {
         onUpdate(data.transaction);
       } else if (onAdd) {
         onAdd(data.transaction);
