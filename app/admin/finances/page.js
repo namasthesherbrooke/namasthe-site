@@ -178,14 +178,7 @@ export default function FinancesPage() {
   };
 
   const isCombinedView = activeTab === 'Vue Combinée';
-  const targetAccounts = isCombinedView ? ['Entreprise', 'Perso', 'Conjoint'] : [activeTab];
-  
-  const accountTransactions = transactions.filter(t => targetAccounts.includes(t.entity));
-  
-  const currentMonthTransactions = accountTransactions.filter(t => {
-    const d = parseDateLocal(t.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  });  
+
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
   const formatMoney = (amount) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount);
 
