@@ -13,8 +13,8 @@ export default function FinancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const accounts = ['Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon'];
-  const [activeTab, setActiveTab] = useState('Entreprise'); 
+  const accounts = ['Vue Combinée', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon'];
+  const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBankBalance, setCurrentBankBalance] = useState('');
@@ -91,7 +91,7 @@ export default function FinancesPage() {
   };
 
   const saveBankBalance = async () => {
-    if (!currentBankBalance) return;
+    if (!currentBankBalance || activeTab === 'Vue Combinée') return;
     setIsSavingBalance(true);
     try {
       const res = await fetch(`/api/admin/finances`, {
@@ -113,8 +113,10 @@ export default function FinancesPage() {
     }
   };
 
-  // Filtrage des données pour le compte actif et le mois en cours
-  const accountTransactions = transactions.filter(t => t.entity === activeTab);
+  const isCombinedView = activeTab === 'Vue Combinée';
+  const targetAccounts = isCombinedView ? ['Entreprise', 'Perso', 'Conjoint'] : [activeTab];
+  
+  const accountTransactions = transactions.filter(t => targetAccounts.includes(t.entity));
   
   const currentMonthTransactions = accountTransactions.filter(t => {
     const d = new Date(t.date);
@@ -129,24 +131,81 @@ export default function FinancesPage() {
   const sporadicExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
   const incomes = currentMonthTransactions.filter(t => t.type === 'income');
 
-  // Dernier solde enregistré pour ce compte ce mois-ci
-  const latestBalance = balances.find(b => {
-    const d = new Date(b.date);
-    return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  });
+  // Fonction pour calculer la projection d'un compte spécifique
+  const getProjectedBalance = (accountName) => {
+    const accTrans = transactions.filter(t => {
+      const d = new Date(t.date);
+      return t.entity === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    
+    const latestBal = balances.find(b => {
+      const d = new Date(b.date);
+      return b.account === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    
+    const baseBal = latestBal ? parseFloat(latestBal.amount) : 0;
+    
+    const pendInc = accTrans.filter(t => t.type === 'income' && t.status === 'pending').reduce((a, b) => a + parseFloat(b.amount), 0);
+    const pendExp = accTrans.filter(t => t.type === 'expense' && t.status === 'pending').reduce((a, b) => a + parseFloat(b.amount), 0);
+    
+    return baseBal + pendInc - pendExp;
+  };
 
-  // Calculs Projection
-  const baseBalance = latestBalance ? parseFloat(latestBalance.amount) : 0;
-  
-  // Ce qui est encore "pending" (à recevoir ou à payer) impacte la projection
-  const pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  
-  const projectedBalance = baseBalance + pendingIncomes - pendingExpenses;
+  // Calculs Projection globale ou par compte
+  let projectedBalance = 0;
+  let baseBalanceTotal = 0;
+  let pendingIncomes = 0;
+  let pendingExpenses = 0;
+  let suggestions = [];
 
-  // Calculs Totaux
-  const totalPaidIncomes = incomes.filter(t => t.status === 'paid').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const totalPaidExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'paid').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  if (isCombinedView) {
+    const pEnt = getProjectedBalance('Entreprise');
+    const pPer = getProjectedBalance('Perso');
+    const pCon = getProjectedBalance('Conjoint');
+    
+    projectedBalance = pEnt + pPer + pCon;
+    
+    pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+    pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+
+    // Algorithme d'équilibrage
+    const accountsStatus = [
+      { name: 'Entreprise', bal: pEnt },
+      { name: 'Perso', bal: pPer },
+      { name: 'Conjoint', bal: pCon }
+    ];
+    
+    // Créer des copies pour itérer sans modifier l'original
+    let surpluses = accountsStatus.filter(a => a.bal > 0).map(a => ({...a})).sort((a,b) => b.bal - a.bal);
+    let deficits = accountsStatus.filter(a => a.bal < 0).map(a => ({...a})).sort((a,b) => a.bal - b.bal); // Plus grand déficit en premier
+    
+    for (let def of deficits) {
+      let needed = Math.abs(def.bal);
+      for (let sur of surpluses) {
+        if (needed === 0) break;
+        if (sur.bal > 0) {
+          let transfer = Math.min(sur.bal, needed);
+          suggestions.push({
+            from: sur.name,
+            to: def.name,
+            amount: transfer
+          });
+          sur.bal -= transfer;
+          needed -= transfer;
+        }
+      }
+    }
+  } else {
+    // Vue classique pour 1 compte
+    const latestBalance = balances.find(b => {
+      const d = new Date(b.date);
+      return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    baseBalanceTotal = latestBalance ? parseFloat(latestBalance.amount) : 0;
+    pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+    pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+    projectedBalance = baseBalanceTotal + pendingIncomes - pendingExpenses;
+  }
 
   return (
     <FinanceLock onUnlock={handleUnlock}>
@@ -179,13 +238,13 @@ export default function FinancesPage() {
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                background: activeTab === tab ? '#2C1810' : '#F3F4F6',
+                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : '#2C1810') : '#F3F4F6',
                 color: activeTab === tab ? 'white' : '#6B7280',
                 transition: 'all 0.2s',
                 boxShadow: activeTab === tab ? '0 4px 10px rgba(0,0,0,0.15)' : 'none'
               }}
             >
-              {tab}
+              {tab === 'Vue Combinée' ? '🌐 ' + tab : tab}
             </button>
           ))}
         </div>
@@ -201,33 +260,49 @@ export default function FinancesPage() {
                 
                 {/* Solde Actuel */}
                 <div>
-                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>💰 Point sur le compte</h3>
-                  {latestBalance ? (
-                    <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px' }}>
-                      <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Dernier solde relevé le {new Date(latestBalance.date).toLocaleDateString()}</p>
-                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(latestBalance.amount)}</div>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>
+                    {isCombinedView ? '💰 Soldes Actuels' : '💰 Point sur le compte'}
+                  </h3>
+                  
+                  {isCombinedView ? (
+                    <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', color: '#4B5563', fontSize: '0.9rem' }}>
+                      <p>Pour mettre à jour les soldes bancaires initiaux, veuillez vous rendre dans les onglets individuels (Entreprise, Perso, Conjoint).</p>
                     </div>
                   ) : (
-                    <div style={{ color: '#9CA3AF', marginBottom: '10px' }}>Aucun solde relevé ce mois-ci.</div>
+                    <>
+                      {balances.find(b => {
+                        const d = new Date(b.date);
+                        return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                      }) ? (
+                        <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px' }}>
+                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Dernier solde relevé ce mois-ci</p>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(baseBalanceTotal)}</div>
+                        </div>
+                      ) : (
+                        <div style={{ color: '#9CA3AF', marginBottom: '10px' }}>Aucun solde relevé ce mois-ci.</div>
+                      )}
+                      
+                      <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+                        <input 
+                          type="number" 
+                          placeholder="Solde bancaire actuel..."
+                          value={currentBankBalance}
+                          onChange={(e) => setCurrentBankBalance(e.target.value)}
+                          style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
+                        />
+                        <button onClick={saveBankBalance} disabled={isSavingBalance} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                          MAJ
+                        </button>
+                      </div>
+                    </>
                   )}
-                  
-                  <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-                    <input 
-                      type="number" 
-                      placeholder="Solde bancaire actuel..."
-                      value={currentBankBalance}
-                      onChange={(e) => setCurrentBankBalance(e.target.value)}
-                      style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
-                    />
-                    <button onClick={saveBankBalance} disabled={isSavingBalance} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                      Mettre à jour
-                    </button>
-                  </div>
                 </div>
 
                 {/* Projection */}
-                <div style={{ borderLeft: '1px solid #E5E7EB', paddingLeft: '30px' }}>
-                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>🔮 Projection fin de mois</h3>
+                <div style={{ borderLeft: isCombinedView ? 'none' : '1px solid #E5E7EB', paddingLeft: isCombinedView ? '0' : '30px' }}>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>
+                    {isCombinedView ? '🔮 Projection Combinée' : '🔮 Projection fin de mois'}
+                  </h3>
                   <div style={{ background: projectedBalance >= 0 ? '#ECFDF5' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${projectedBalance >= 0 ? '#10B981' : '#EF4444'}` }}>
                     <p style={{ margin: '0 0 5px 0', color: '#6B7280' }}>Si tous les paiements prévus passent :</p>
                     <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: projectedBalance >= 0 ? '#059669' : '#DC2626' }}>
@@ -241,6 +316,37 @@ export default function FinancesPage() {
                 </div>
 
               </div>
+              
+              {/* ALGORITHME D'ÉQUILIBRAGE (Seulement dans la Vue Combinée) */}
+              {isCombinedView && (
+                <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #E5E7EB' }}>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#4F46E5', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🤖 Algorithme d'Équilibrage Suggéré
+                  </h3>
+                  
+                  {suggestions.length === 0 ? (
+                    <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', color: '#166534', border: '1px solid #BBF7D0' }}>
+                      <strong>Parfait !</strong> Aucun des 3 comptes (Entreprise, Perso, Conjoint) n'est projeté dans le rouge ce mois-ci. Aucun virement n'est nécessaire pour le moment.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {suggestions.map((s, idx) => (
+                        <div key={idx} style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#3730A3', border: '1px solid #C7D2FE', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div>
+                            Transférer depuis <strong>{s.from}</strong> vers <strong>{s.to}</strong>
+                          </div>
+                          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                            {formatMoney(s.amount)}
+                          </div>
+                        </div>
+                      ))}
+                      <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: '#6B7280' }}>
+                        *Ces virements permettront de couvrir les dépenses prévues des comptes en déficit grâce aux surplus des autres.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
@@ -251,7 +357,7 @@ export default function FinancesPage() {
                 {/* Dépenses Fixes */}
                 <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden' }}>
                   <div style={{ padding: '20px', background: '#F9FAFB', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between' }}>
-                    <h3 style={{ margin: 0, color: '#374151' }}>🏢 Dépenses Fixes</h3>
+                    <h3 style={{ margin: 0, color: '#374151' }}>🏢 Dépenses Fixes {isCombinedView ? '(Global)' : ''}</h3>
                     <span style={{ fontWeight: 'bold', color: '#6B7280' }}>{formatMoney(fixedExpenses.reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
                   </div>
                   <div style={{ padding: '10px 20px' }}>
@@ -259,7 +365,10 @@ export default function FinancesPage() {
                       <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
                         <div>
                           <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>{t.description || getCategory(t.category_id).name}</div>
-                          <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>{getCategory(t.category_id).name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>
+                            {isCombinedView && <span style={{ fontWeight: 'bold', marginRight: '5px' }}>[{t.entity}]</span>}
+                            {getCategory(t.category_id).name}
+                          </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                           <span style={{ fontWeight: 'bold', color: t.status === 'paid' ? '#9CA3AF' : '#EF4444' }}>{formatMoney(t.amount)}</span>
@@ -292,7 +401,10 @@ export default function FinancesPage() {
                         borderLeft: `4px solid ${t.priority === 1 ? '#EF4444' : t.priority === 3 ? '#10B981' : '#D1D5DB'}`
                       }}>
                         <div>
-                          <div style={{ fontWeight: 'bold', color: t.priority === 1 ? '#991B1B' : '#111827' }}>{t.description || getCategory(t.category_id).name}</div>
+                          <div style={{ fontWeight: 'bold', color: t.priority === 1 ? '#991B1B' : '#111827' }}>
+                            {isCombinedView && <span style={{ fontSize: '0.8rem', fontWeight: 'normal', display: 'block', color: '#6B7280' }}>[{t.entity}]</span>}
+                            {t.description || getCategory(t.category_id).name}
+                          </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
@@ -324,6 +436,7 @@ export default function FinancesPage() {
                       <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
                         <div>
                           <div style={{ fontWeight: '500', color: '#111827' }}>{t.description || getCategory(t.category_id).name}</div>
+                          {isCombinedView && <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>[{t.entity}]</div>}
                           {t.status === 'pending' && <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#D97706', padding: '2px 6px', borderRadius: '4px' }}>En attente</span>}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -344,7 +457,9 @@ export default function FinancesPage() {
                     {sporadicExpenses.filter(e => e.status === 'paid').length === 0 ? <p style={{ color: '#9CA3AF', fontSize: '0.9rem' }}>Aucun historique.</p> : 
                     sporadicExpenses.filter(e => e.status === 'paid').map(t => (
                       <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F3F4F6' }}>
-                        <div style={{ fontSize: '0.9rem', color: '#6B7280', textDecoration: 'line-through' }}>{t.description || getCategory(t.category_id).name}</div>
+                        <div style={{ fontSize: '0.9rem', color: '#6B7280', textDecoration: 'line-through' }}>
+                          {isCombinedView && `[${t.entity}] `}{t.description || getCategory(t.category_id).name}
+                        </div>
                         <span style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>{formatMoney(t.amount)}</span>
                       </div>
                     ))}
