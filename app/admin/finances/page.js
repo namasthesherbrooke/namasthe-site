@@ -22,7 +22,10 @@ export default function FinancesPage() {
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
-  const [dailyProjections, setDailyProjections] = useState({ 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
+  const [incomePatterns, setIncomePatterns] = useState([]);
+  
+  // Nouveaux états pour le formulaire d'ajout de patron de revenus
+  const [newPattern, setNewPattern] = useState({ entity: 'Entreprise', category_id: '', description: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
 
   const parseDateLocal = (dStr) => {
     if (!dStr) return new Date();
@@ -60,21 +63,24 @@ export default function FinancesPage() {
     setIsLoading(true);
     setError('');
     try {
-      const [transRes, catRes, balRes] = await Promise.all([
+      const [transRes, catRes, balRes, patRes] = await Promise.all([
         fetch('/api/admin/finances?action=transactions', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=categories', { headers: { 'x-finance-pin': currentPin } }),
-        fetch('/api/admin/finances?action=balances', { headers: { 'x-finance-pin': currentPin } })
+        fetch('/api/admin/finances?action=balances', { headers: { 'x-finance-pin': currentPin } }),
+        fetch('/api/admin/finances?action=patterns', { headers: { 'x-finance-pin': currentPin } })
       ]);
 
-      if (!transRes.ok || !catRes.ok || !balRes.ok) throw new Error("Erreur de chargement des données");
+      if (!transRes.ok || !catRes.ok || !balRes.ok || !patRes.ok) throw new Error("Erreur de chargement des données");
 
       const transData = await transRes.json();
       const catData = await catRes.json();
       const balData = await balRes.json();
+      const patData = await patRes.json();
 
       setTransactions(transData.transactions || []);
       setCategories(catData.categories || []);
       setBalances(balData.balances || []);
+      setIncomePatterns(patData.patterns || []);
     } catch (err) {
       setError("Impossible de charger les données financières. " + err.message);
     } finally {
@@ -136,6 +142,48 @@ export default function FinancesPage() {
     } catch (err) {
       alert(err.message);
     }
+  };
+
+  const handleAddPattern = async (e) => {
+    e.preventDefault();
+    if (!newPattern.category_id) return alert("Veuillez sélectionner une catégorie");
+    try {
+      const res = await fetch('/api/admin/finances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'add_pattern',
+          data: {
+            entity: newPattern.entity,
+            category_id: newPattern.category_id,
+            description: newPattern.description,
+            monday_amount: newPattern[1] || 0,
+            tuesday_amount: newPattern[2] || 0,
+            wednesday_amount: newPattern[3] || 0,
+            thursday_amount: newPattern[4] || 0,
+            friday_amount: newPattern[5] || 0,
+            saturday_amount: newPattern[6] || 0,
+            sunday_amount: newPattern[0] || 0
+          }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setIncomePatterns([...incomePatterns, data.pattern]);
+      setNewPattern({ entity: 'Entreprise', category_id: '', description: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
+    } catch (err) { alert(err.message); }
+  };
+
+  const handleDeletePattern = async (id) => {
+    if (!confirm("Supprimer ce patron de revenus ?")) return;
+    try {
+      const res = await fetch(`/api/admin/finances?id=${id}&table=finances_income_patterns`, {
+        method: 'DELETE',
+        headers: { 'x-finance-pin': pin }
+      });
+      if (!res.ok) throw new Error("Erreur de suppression");
+      setIncomePatterns(incomePatterns.filter(p => p.id !== id));
+    } catch (err) { alert(err.message); }
   };
 
   const handleDelete = async (id) => {
@@ -228,36 +276,53 @@ export default function FinancesPage() {
   const todayForSim = new Date();
   const isCurrentMonthView = todayForSim.getMonth() === currentMonth && todayForSim.getFullYear() === currentYear;
   const startDay = isCurrentMonthView ? todayForSim.getDate() : 1;
-  const hasProjections = Object.values(dailyProjections).some(val => parseFloat(val) > 0);
+  const hasProjections = incomePatterns.length > 0;
   
   let virtualIncomes = [];
   if (hasProjections) {
     for (let day = startDay; day <= daysInMonthForSim; day++) {
       const d = new Date(currentYear, currentMonth, day);
       const dayOfWeek = d.getDay();
-      const projectedAmount = parseFloat(dailyProjections[dayOfWeek]) || 0;
       
-      if (projectedAmount > 0) {
-        const hasRealIncomeToday = transactions.some(t => 
-          t.type === 'income' && t.entity === 'Entreprise' && 
-          parseDateLocal(t.date).getMonth() === currentMonth && 
-          parseDateLocal(t.date).getFullYear() === currentYear &&
-          parseDateLocal(t.date).getDate() === day
-        );
-        if (!hasRealIncomeToday) {
-          virtualIncomes.push({
-            id: `sim-${currentMonth}-${day}`,
-            date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-            type: 'income',
-            amount: projectedAmount,
-            entity: 'Entreprise',
-            description: 'Ventes simulées',
-            status: 'pending',
-            is_ghost: true,
-            is_simulation: true
-          });
+      const dayMapping = {
+        1: 'monday_amount',
+        2: 'tuesday_amount',
+        3: 'wednesday_amount',
+        4: 'thursday_amount',
+        5: 'friday_amount',
+        6: 'saturday_amount',
+        0: 'sunday_amount'
+      };
+      const column = dayMapping[dayOfWeek];
+
+      incomePatterns.forEach(pattern => {
+        const projectedAmount = parseFloat(pattern[column]) || 0;
+        if (projectedAmount > 0) {
+          const hasRealIncomeToday = transactions.some(t => 
+            t.type === 'income' && 
+            t.entity === pattern.entity && 
+            t.category_id === pattern.category_id &&
+            parseDateLocal(t.date).getMonth() === currentMonth && 
+            parseDateLocal(t.date).getFullYear() === currentYear &&
+            parseDateLocal(t.date).getDate() === day
+          );
+          
+          if (!hasRealIncomeToday) {
+            virtualIncomes.push({
+              id: `sim-${pattern.id}-${currentMonth}-${day}`,
+              date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+              type: 'income',
+              amount: projectedAmount,
+              category_id: pattern.category_id,
+              entity: pattern.entity,
+              description: pattern.description || 'Revenu simulé',
+              status: 'pending',
+              is_ghost: true,
+              is_simulation: true
+            });
+          }
         }
-      }
+      });
     }
   }
 
@@ -746,37 +811,73 @@ export default function FinancesPage() {
               </div>
 
               {isSimulatorOpen && (
-                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '20px', borderRadius: '12px', marginBottom: '20px' }}>
-                  <h4 style={{ margin: '0 0 15px 0', color: '#065F46' }}>🧪 Projections des revenus de l'entreprise</h4>
-                  <p style={{ margin: '0 0 15px 0', fontSize: '0.9rem', color: '#047857' }}>
-                    Saisissez vos prévisions moyennes pour chaque jour de la semaine. Ces revenus virtuels s'afficheront dans la frise pour les jours futurs sans revenus réels, afin de vous rassurer sur le solde final !
+                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '25px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <h4 style={{ margin: '0 0 15px 0', color: '#065F46' }}>🧪 Patrons de Revenus (Simulateur Persistant)</h4>
+                  <p style={{ margin: '0 0 20px 0', fontSize: '0.9rem', color: '#047857' }}>
+                    Ces patrons généreront automatiquement des revenus virtuels pour les jours futurs. Idéal pour voir vos "vrais" surplus sans rien oublier !
                   </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '15px' }}>
-                    {[
-                      { k: 1, l: 'Lundi' }, { k: 2, l: 'Mardi' }, { k: 3, l: 'Mercredi' }, 
-                      { k: 4, l: 'Jeudi' }, { k: 5, l: 'Vendredi' }, { k: 6, l: 'Samedi' }, { k: 0, l: 'Dimanche' }
-                    ].map(day => (
-                      <div key={day.k}>
-                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#065F46', marginBottom: '5px' }}>{day.l}</label>
-                        <input 
-                          type="number" 
-                          step="1"
-                          placeholder="0 $"
-                          value={dailyProjections[day.k]}
-                          onChange={e => setDailyProjections({...dailyProjections, [day.k]: e.target.value})}
-                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #A7F3D0', background: 'white' }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ marginTop: '15px', textAlign: 'right' }}>
-                    <button 
-                      onClick={() => setDailyProjections({ 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' })}
-                      style={{ background: 'transparent', color: '#059669', border: 'none', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
-                    >
-                      Effacer la simulation
+
+                  {/* Liste des patrons existants */}
+                  {incomePatterns.length > 0 && (
+                    <div style={{ marginBottom: '30px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {incomePatterns.map(p => (
+                        <div key={p.id} style={{ background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #A7F3D0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ fontWeight: 'bold', color: '#065F46' }}>
+                              [{p.entity}] {getCategory(p.category_id)?.name} {p.description ? `- ${p.description}` : ''}
+                            </div>
+                            <div style={{ fontSize: '0.85rem', color: '#4B5563', marginTop: '5px', display: 'flex', gap: '10px' }}>
+                              <span>L: {p.monday_amount}$</span>
+                              <span>M: {p.tuesday_amount}$</span>
+                              <span>M: {p.wednesday_amount}$</span>
+                              <span>J: {p.thursday_amount}$</span>
+                              <span>V: {p.friday_amount}$</span>
+                              <span>S: {p.saturday_amount}$</span>
+                              <span>D: {p.sunday_amount}$</span>
+                            </div>
+                          </div>
+                          <button onClick={() => handleDeletePattern(p.id)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Supprimer</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Formulaire d'ajout */}
+                  <form onSubmit={handleAddPattern} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '1px dashed #34D399' }}>
+                    <h5 style={{ margin: '0 0 15px 0', color: '#059669' }}>Ajouter un patron de revenus</h5>
+                    <div style={{ display: 'flex', gap: '15px', marginBottom: '15px', flexWrap: 'wrap' }}>
+                      <select value={newPattern.entity} onChange={e => setNewPattern({...newPattern, entity: e.target.value})} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', flex: 1, minWidth: '150px' }}>
+                        {accounts.filter(a => a !== 'Vue Combinée').map(a => <option key={a} value={a}>{a}</option>)}
+                      </select>
+                      <select value={newPattern.category_id} onChange={e => setNewPattern({...newPattern, category_id: e.target.value})} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', flex: 2, minWidth: '200px' }} required>
+                        <option value="">-- Catégorie --</option>
+                        {categories.filter(c => c.type === 'income').map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                      <input type="text" placeholder="Description courte (ex: Pourboires)" value={newPattern.description} onChange={e => setNewPattern({...newPattern, description: e.target.value})} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', flex: 2, minWidth: '200px' }} />
+                    </div>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '10px', marginBottom: '15px' }}>
+                      {[
+                        { k: 1, l: 'Lun' }, { k: 2, l: 'Mar' }, { k: 3, l: 'Mer' }, 
+                        { k: 4, l: 'Jeu' }, { k: 5, l: 'Ven' }, { k: 6, l: 'Sam' }, { k: 0, l: 'Dim' }
+                      ].map(day => (
+                        <div key={day.k}>
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: '#065F46', marginBottom: '3px' }}>{day.l}</label>
+                          <input 
+                            type="number" 
+                            step="0.01"
+                            placeholder="0"
+                            value={newPattern[day.k]}
+                            onChange={e => setNewPattern({...newPattern, [day.k]: e.target.value})}
+                            style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #A7F3D0' }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <button type="submit" style={{ background: '#10B981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                      Enregistrer le patron
                     </button>
-                  </div>
+                  </form>
                 </div>
               )}
               <div style={{ overflowX: 'auto' }}>

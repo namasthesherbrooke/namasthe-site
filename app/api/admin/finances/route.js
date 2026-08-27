@@ -61,6 +61,15 @@ export async function GET(req) {
       return NextResponse.json({ success: true, balances: data });
     }
 
+    if (action === 'patterns') {
+      const { data, error } = await supabaseAdmin
+        .from('finances_income_patterns')
+        .select('*');
+      
+      if (error) throw error;
+      return NextResponse.json({ success: true, patterns: data });
+    }
+
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });
 
   } catch (error) {
@@ -146,6 +155,18 @@ export async function POST(req) {
       return NextResponse.json({ success: true, imported: data });
     }
 
+    if (action === 'add_pattern') {
+      const { entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_income_patterns')
+        .insert([{ entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount }])
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, pattern: data[0] });
+    }
+
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });
 
   } catch (error) {
@@ -162,7 +183,7 @@ export async function DELETE(req) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
-    const table = searchParams.get('table'); // finances_transactions ou finances_categories
+    const table = searchParams.get('table'); // finances_transactions, finances_categories, finances_income_patterns
 
     if (!id || !table) {
       return NextResponse.json({ error: "ID ou table manquant" }, { status: 400 });
