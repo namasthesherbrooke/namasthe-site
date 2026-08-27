@@ -308,7 +308,8 @@ export default function FinancesPage() {
       
       transactions.forEach(t => {
         const d = parseDateLocal(t.date);
-        if (t.entity === acc && d.getMonth() === m && d.getFullYear() === y && d <= manualDate) {
+        // Seulement ajuster avec les transactions 'paid', car les 'pending' n'ont pas encore affecté le vrai solde bancaire !
+        if (t.entity === acc && d.getMonth() === m && d.getFullYear() === y && d <= manualDate && t.status === 'paid') {
           if (t.type === 'income') backwardAdjustment += parseFloat(t.amount);
           else backwardAdjustment -= parseFloat(t.amount);
         }
