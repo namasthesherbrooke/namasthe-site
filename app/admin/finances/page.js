@@ -425,7 +425,7 @@ export default function FinancesPage() {
   const getTransferRecommendations = () => {
     // We only recommend transfers if Entreprise is negative, but we evaluate for the current viewed month.
     const entBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
-    if (entBalance >= 0) return []; // No deficit, no recommendation needed
+    if (entBalance >= 0) return null; // No deficit, no recommendation needed
 
     const recommendations = [];
     let deficit = Math.abs(entBalance);
