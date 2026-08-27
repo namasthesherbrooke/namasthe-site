@@ -177,6 +177,48 @@ export default function FinancesPage() {
     }
   };
 
+  const getCalculatedStartBalance = (m, y, acc) => {
+    const manualBal = balances.find(b => {
+      const d = parseDateLocal(b.date);
+      return b.account === acc && d.getMonth() === m && d.getFullYear() === y;
+    });
+    if (manualBal) return parseFloat(manualBal.amount);
+    
+    let prevM = m - 1;
+    let prevY = y;
+    if (prevM < 0) { prevM = 11; prevY -= 1; }
+    if (prevY < 2024) return 0;
+    
+    return getProjectedEndBalanceForMonth(prevM, prevY, acc);
+  };
+
+  const getProjectedEndBalanceForMonth = (m, y, acc) => {
+    const startBal = getCalculatedStartBalance(m, y, acc);
+    
+    const incs = transactions.filter(t => t.entity === acc && t.type === 'income' && parseDateLocal(t.date).getMonth() === m && parseDateLocal(t.date).getFullYear() === y)
+      .reduce((a, t) => a + parseFloat(t.amount), 0);
+      
+    const exps = transactions.filter(t => t.entity === acc && t.type === 'expense' && parseDateLocal(t.date).getMonth() === m && parseDateLocal(t.date).getFullYear() === y)
+      .reduce((a, t) => a + parseFloat(t.amount), 0);
+      
+    const viewedDate = new Date(y, m, 1);
+    const pastFixeds = transactions.filter(t => t.is_fixed && t.type === 'expense' && parseDateLocal(t.date) < viewedDate);
+    const ghostMap = new Map();
+    pastFixeds.forEach(t => {
+      const currentExists = transactions.some(c => c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && parseDateLocal(c.date).getMonth() === m && parseDateLocal(c.date).getFullYear() === y);
+      if (!currentExists && t.entity === acc) {
+        const k = `${t.entity}-${t.category_id}-${t.description}`;
+        if (!ghostMap.has(k) || parseDateLocal(t.date) > parseDateLocal(ghostMap.get(k).date)) {
+          ghostMap.set(k, t);
+        }
+      }
+    });
+    
+    const ghostSum = Array.from(ghostMap.values()).reduce((a, t) => a + parseFloat(t.amount), 0);
+    
+    return startBal + incs - exps - ghostSum;
+  };
+
   const isCombinedView = activeTab === 'Vue Combinée';
 
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
@@ -359,7 +401,7 @@ export default function FinancesPage() {
                 <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', border: '1px solid #E5E7EB' }}>
                   <h3 style={{ margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>💰 Point sur le compte</h3>
                   {(() => {
-                    const currentBankBalanceObj = bankBalances.find(b => {
+                    const currentBankBalanceObj = balances.find(b => {
                       const d = parseDateLocal(b.date);
                       return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
                     });
