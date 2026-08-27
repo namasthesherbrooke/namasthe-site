@@ -779,11 +779,19 @@ export default function FinancesPage() {
                     {isCombinedView ? '💰 Soldes Actuels' : '💰 Point sur le compte'}
                   </h3>
                   {isCombinedView ? (() => {
-                    const combinedBalance = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise') + getCalculatedStartBalance(currentMonth, currentYear, 'Perso') + getCalculatedStartBalance(currentMonth, currentYear, 'Conjoint');
+                    const getDisplayBalance = (acc) => {
+                      const b = balances.find(b => {
+                        const d = parseDateLocal(b.date);
+                        return b.account === acc && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                      });
+                      if (b) return parseFloat(b.amount);
+                      return getCalculatedStartBalance(currentMonth, currentYear, acc); // rollover
+                    };
+                    const combinedBalance = getDisplayBalance('Entreprise') + getDisplayBalance('Perso') + getDisplayBalance('Conjoint');
                     return (
                       <>
                         <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', marginBottom: '15px' }}>
-                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes (Ent. + Perso + Conj.)</p>
+                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes actuels (Ent. + Perso + Conj.)</p>
                           <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(combinedBalance)}</div>
                         </div>
                         <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#4F46E5', fontSize: '0.85rem' }}>
@@ -803,16 +811,11 @@ export default function FinancesPage() {
                     return (
                       <>
                         <p style={{ color: '#6B7280', margin: '0 0 10px 0', fontSize: '0.9rem' }}>
-                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde (Reporté du mois précédent) :</span> : "🧮 Solde mathématique (Recalculé au 1er du mois) :"}
+                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde (Reporté du mois précédent) :</span> : `🏦 Votre solde actuel (saisi le ${String(parseDateLocal(currentBankBalanceObj.date).getDate()).padStart(2, '0')}) :`}
                         </p>
-                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '5px' }}>
-                          {formatMoney(currentBalance)}
+                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '15px' }}>
+                          {formatMoney(isRollover ? currentBalance : currentBankBalanceObj.amount)}
                         </div>
-                        {currentBankBalanceObj && (
-                          <p style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#059669', fontWeight: '500' }}>
-                            📝 Solde réel que vous avez saisi le {String(parseDateLocal(currentBankBalanceObj.date).getDate()).padStart(2, '0')} : {formatMoney(currentBankBalanceObj.amount)}
-                          </p>
-                        )}
                         
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <input 
