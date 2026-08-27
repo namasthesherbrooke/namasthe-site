@@ -588,9 +588,9 @@ export default function FinancesPage() {
                             {t.is_ghost && <span title="Projeté automatiquement" style={{marginRight: '5px'}}>👻</span>}
                             {t.description || getCategory(t.category_id).name}
                             <span style={{ fontSize: '0.7rem', background: '#F3F4F6', color: '#4B5563', padding: '2px 6px', borderRadius: '4px', marginLeft: '8px', textDecoration: 'none', display: 'inline-block' }}>
-                              {`📅 Le ${String(parseDateLocal(t.date).getDate()).padStart(2, '0')}`}
+                              {(t.priority === 3 || t.priority === 4) ? '🔄 Date variable' : `📅 Le ${String(parseDateLocal(t.date).getDate()).padStart(2, '0')}`}
                             </span>
-                            {t.priority === 1 && (
+                            {(t.priority === 1 || t.priority === 4) && (
                               <span style={{ fontSize: '0.7rem', background: '#FEF3C7', color: '#D97706', padding: '2px 6px', borderRadius: '4px', marginLeft: '5px', textDecoration: 'none', display: 'inline-block' }}>
                                 🔄 Montant variable
                               </span>

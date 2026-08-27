@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData }) {
   const [date, setDate] = useState('');
   const [isVariableAmount, setIsVariableAmount] = useState(false);
+  const [isVariableDate, setIsVariableDate] = useState(false);
   const [type, setType] = useState('expense');
   const [entity, setEntity] = useState('Entreprise');
   const [amount, setAmount] = useState('');
@@ -27,7 +28,8 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     if (isOpen) {
       if (initialData) {
         setDate(initialData.date);
-        setIsVariableAmount(initialData.is_fixed && initialData.priority === 1);
+        setIsVariableAmount(initialData.is_fixed && (initialData.priority === 1 || initialData.priority === 4));
+        setIsVariableDate(initialData.is_fixed && (initialData.priority === 3 || initialData.priority === 4));
         setType(initialData.type);
         setEntity(initialData.entity);
         setAmount(initialData.amount ? initialData.amount.toString() : '');
@@ -48,6 +50,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
         
         setDate(`${yyyy}-${mm}-${dd}`);
         setIsVariableAmount(false);
+        setIsVariableDate(false);
         setType('expense');
         setAmount('');
         setDescription('');
@@ -61,6 +64,15 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     if (!amount || !categoryId) {
       setError('Veuillez remplir le montant et la catégorie.');
       return;
+    }
+
+    let finalPriority = 2;
+    if (isFixed) {
+      if (isVariableAmount && isVariableDate) finalPriority = 4;
+      else if (isVariableAmount) finalPriority = 1;
+      else if (isVariableDate) finalPriority = 3;
+    } else {
+      finalPriority = parseInt(priority);
     }
 
     setIsSubmitting(true);
@@ -86,7 +98,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
               description,
               is_fixed: isFixed,
               status,
-              priority: isFixed ? (isVariableAmount ? 1 : 2) : parseInt(priority)
+              priority: finalPriority
             }
           }
         } : {
@@ -100,7 +112,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
             description,
             is_fixed: isFixed,
             status,
-            priority: isFixed ? (isVariableAmount ? 1 : 2) : parseInt(priority)
+            priority: finalPriority
           }
         })
       });
@@ -238,14 +250,24 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
               </label>
               
               {isFixed && (
-                <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563', marginLeft: 'auto' }}>
-                  <input 
-                    type="checkbox" 
-                    checked={isVariableAmount}
-                    onChange={(e) => setIsVariableAmount(e.target.checked)}
-                  />
-                  Montant variable (fluctue)
-                </label>
+                <div style={{ display: 'flex', gap: '15px', marginLeft: 'auto' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={isVariableDate}
+                      onChange={(e) => setIsVariableDate(e.target.checked)}
+                    />
+                    Date variable
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={isVariableAmount}
+                      onChange={(e) => setIsVariableAmount(e.target.checked)}
+                    />
+                    Montant variable
+                  </label>
+                </div>
               )}
               
               {!isFixed && status === 'pending' && (
