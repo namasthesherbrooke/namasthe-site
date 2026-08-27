@@ -221,42 +221,17 @@ export default function FinancesPage() {
   const sporadicExpenses = accountTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
   const incomes = accountTransactions.filter(t => t.type === 'income');
 
-  const getProjectedBalance = (accountName) => {
-    const accTrans = transactions.filter(t => {
-      const d = new Date(t.date);
-      return t.entity === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-    
-    const latestBal = balances.find(b => {
-      const d = new Date(b.date);
-      return b.account === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-    
-    const baseBal = latestBal ? parseFloat(latestBal.amount) : 0;
-    
-    const pendInc = accTrans.filter(t => t.type === 'income' && t.status === 'pending').reduce((a, b) => a + parseFloat(b.amount), 0);
-    const pendExp = accTrans.filter(t => t.type === 'expense' && t.status === 'pending').reduce((a, b) => a + parseFloat(b.amount), 0);
-    
-    return baseBal + pendInc - pendExp;
-  };
-
   // Calculs Projection globale ou par compte
-  let projectedBalance = 0;
-  let baseBalanceTotal = 0;
-  let pendingIncomes = 0;
-  let pendingExpenses = 0;
+  let projectedBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, isCombinedView ? 'Vue Combinée' : activeTab);
+  let pendingIncomes = accountTransactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  let pendingExpenses = accountTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   let suggestions = [];
 
   if (isCombinedView) {
-    const pEnt = getProjectedBalance('Entreprise');
-    const pPer = getProjectedBalance('Perso');
-    const pCon = getProjectedBalance('Conjoint');
+    const pEnt = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
+    const pPer = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Perso');
+    const pCon = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Conjoint');
     
-    projectedBalance = pEnt + pPer + pCon;
-    
-    pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-    pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-
     // Algorithme d'équilibrage
     const accountsStatus = [
       { name: 'Entreprise', bal: pEnt },
@@ -284,16 +259,6 @@ export default function FinancesPage() {
         }
       }
     }
-  } else {
-    // Vue classique pour 1 compte
-    const latestBalance = balances.find(b => {
-      const d = new Date(b.date);
-      return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-    baseBalanceTotal = latestBalance ? parseFloat(latestBalance.amount) : 0;
-    pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-    pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-    projectedBalance = baseBalanceTotal + pendingIncomes - pendingExpenses;
   }
 
   // --- LE CONSEILLER FINANCIER ---
@@ -323,8 +288,7 @@ export default function FinancesPage() {
   };
 
   const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getLatestBalance(acc), 0);
-  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedBalance(acc), 0) + getProjectedBalance('CELI');
-  const combinedBaseBalance = getLatestBalance('Entreprise') + getLatestBalance('Perso') + getLatestBalance('Conjoint');
+  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedEndBalanceForMonth(currentMonth, currentYear, acc), 0) + getProjectedEndBalanceForMonth(currentMonth, currentYear, 'CELI');
   
   return (
     <FinanceLock onUnlock={handleUnlock}>
@@ -400,49 +364,46 @@ export default function FinancesPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
                 
                 {/* Solde Actuel */}
-                <div>
-                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>
-                    {isCombinedView ? '💰 Soldes Actuels' : '💰 Point sur le compte'}
-                  </h3>
-                  
-                  {isCombinedView ? (
-                    <>
-                      <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', marginBottom: '15px' }}>
-                        <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes initiaux (Ent. + Perso + Conj.)</p>
-                        <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(combinedBaseBalance)}</div>
-                      </div>
-                      <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#4F46E5', fontSize: '0.85rem' }}>
-                        <p style={{ margin: 0 }}>*Pour modifier un solde, veuillez vous rendre dans l'onglet individuel correspondant.</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {balances.find(b => {
-                        const d = new Date(b.date);
-                        return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-                      }) ? (
-                        <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px' }}>
-                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Dernier solde relevé ce mois-ci</p>
-                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(baseBalanceTotal)}</div>
+                <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', border: '1px solid #E5E7EB' }}>
+                  <h3 style={{ margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>💰 Point sur le compte</h3>
+                  {(() => {
+                    const currentBankBalanceObj = bankBalances.find(b => {
+                      const d = new Date(b.date);
+                      return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                    });
+                    
+                    const currentBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
+                    const isRollover = !currentBankBalanceObj;
+
+                    return (
+                      <>
+                        <p style={{ color: '#6B7280', margin: '0 0 10px 0', fontSize: '0.9rem' }}>
+                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde reporté automatiquement :</span> : "Dernier solde relevé ce mois-ci :"}
+                        </p>
+                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '20px' }}>
+                          {formatMoney(currentBalance)}
                         </div>
-                      ) : (
-                        <div style={{ color: '#9CA3AF', marginBottom: '10px' }}>Aucun solde relevé ce mois-ci.</div>
-                      )}
-                      
-                      <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-                        <input 
-                          type="number" 
-                          placeholder="Solde bancaire actuel..."
-                          value={currentBankBalance}
-                          onChange={(e) => setCurrentBankBalance(e.target.value)}
-                          style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
-                        />
-                        <button onClick={saveBankBalance} disabled={isSavingBalance} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                          MAJ
-                        </button>
-                      </div>
-                    </>
-                  )}
+                        
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <input 
+                            type="number" 
+                            step="0.01" 
+                            value={currentBankBalance} 
+                            onChange={(e) => setCurrentBankBalance(e.target.value)}
+                            placeholder="Solde bancaire actuel..."
+                            style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
+                          />
+                          <button 
+                            onClick={saveBankBalance}
+                            disabled={isSavingBalance || !currentBankBalance}
+                            style={{ padding: '10px 20px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            {isSavingBalance ? '...' : 'MAJ'}
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* Projection */}
