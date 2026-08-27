@@ -406,13 +406,29 @@ export default function FinancesPage() {
 
   const ghostExpenses = Array.from(latestFixedMap.values())
     .filter(t => t.priority !== 99)
-    .map(t => ({
-      ...t,
-      id: `ghost-${t.id}`,
-      status: 'pending',
-      date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
-      is_ghost: true
-    }));
+    .flatMap(t => {
+      // Pour les dépenses variables (ex: Épicerie), on les divise en 4 semaines pour ne pas plomber le solde le jour 1
+      if (t.priority === 3 || t.priority === 4) {
+        const weeklyAmount = (parseFloat(t.amount) / 4).toFixed(2);
+        return [7, 14, 21, 28].map((day, idx) => ({
+          ...t,
+          id: `ghost-${t.id}-${idx}`,
+          status: 'pending',
+          amount: weeklyAmount,
+          date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+          is_ghost: true
+        }));
+      }
+
+      // Pour les dépenses fixes normales, on les place le jour 1 par défaut, ou à leur jour habituel si on le connaissait (ici on force le 1 pour l'instant)
+      return [{
+        ...t,
+        id: `ghost-${t.id}`,
+        status: 'pending',
+        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+        is_ghost: true
+      }];
+    });
 
   const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses, ...virtualIncomes];
 
@@ -957,9 +973,6 @@ export default function FinancesPage() {
                       const isNegative = t.runningBalance < 0;
                       const d = parseDateLocal(t.date);
                       let dateStr = String(d.getDate()).padStart(2, '0');
-                      if (t.is_fixed && (t.priority === 3 || t.priority === 4)) {
-                        dateStr = 'Var.';
-                      }
                       
                       return (
                         <tr key={idx} style={{ 
