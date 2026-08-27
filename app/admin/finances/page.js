@@ -421,35 +421,34 @@ export default function FinancesPage() {
     return startBal + incs - exps - ghostSum + simSum;
   };
 
-  // Transfer Recommendation Algorithm
+  // Transfer Recommendation Algorithm (Centralization)
   const getTransferRecommendations = () => {
-    // We only recommend transfers if Entreprise is negative, but we evaluate for the current viewed month.
-    const entBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
-    if (entBalance >= 0) return null; // No deficit, no recommendation needed
-
     const recommendations = [];
-    let deficit = Math.abs(entBalance);
+    let totalTransferred = 0;
 
-    // Prioritize 'Conjoint', then 'Perso' (since Herbalife/Uber etc. go there often)
+    // Accounts that generate surplus to be transferred to Entreprise
     const otherAccounts = ['Conjoint', 'Perso'];
     
     for (const acc of otherAccounts) {
-      if (deficit <= 0.01) break; // Deficit solved
-
       const accSurplus = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
       if (accSurplus > 0) {
-        const amountToTake = Math.min(accSurplus, deficit);
         recommendations.push({
           from: acc,
           to: 'Entreprise',
-          amount: amountToTake
+          amount: accSurplus
         });
-        deficit -= amountToTake;
+        totalTransferred += accSurplus;
       }
     }
     
-    // Return recommendations and whether the deficit is fully covered
-    return { recommendations, fullyCovered: deficit <= 0.01, remainingDeficit: deficit };
+    // Calculate if Entreprise is still in deficit after these transfers
+    const entBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
+    const remainingDeficit = (entBalance + totalTransferred) < 0 ? Math.abs(entBalance + totalTransferred) : 0;
+    
+    // Return recommendations and if Entreprise is fully covered
+    if (recommendations.length === 0 && entBalance >= 0) return null; // Nothing to do
+
+    return { recommendations, fullyCovered: remainingDeficit === 0, remainingDeficit };
   };
 
   const isCombinedView = activeTab === 'Vue Combinée';
@@ -828,31 +827,38 @@ export default function FinancesPage() {
                     </div>
                   </div>
 
-                  {/* Recommandations de Transferts (Visible only for Entreprise deficit) */}
+                  {/* Recommandations de Transferts (Visible if surplus exists or deficit in Entreprise) */}
                   {(activeTab === 'Entreprise' || isCombinedView) && (() => {
                     const recsData = getTransferRecommendations();
-                    if (!recsData || recsData.recommendations.length === 0) return null;
+                    if (!recsData || (recsData.recommendations.length === 0 && recsData.fullyCovered)) return null;
                     
                     return (
-                      <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', border: '1px solid #BBF7D0', marginTop: '15px' }}>
-                        <h4 style={{ margin: '0 0 10px 0', color: '#166534', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '1rem' }}>
-                          💡 Recommandations de Transferts
+                      <div style={{ background: '#EFF6FF', padding: '15px', borderRadius: '12px', border: '1px solid #BFDBFE', marginTop: '15px' }}>
+                        <h4 style={{ margin: '0 0 10px 0', color: '#1E3A8A', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '1rem' }}>
+                          💡 Centralisation des Fonds
                         </h4>
-                        <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#15803D' }}>
-                          Le compte Entreprise projette un déficit. Voici comment rééquilibrer vos fonds :
+                        <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#1E40AF' }}>
+                          Il est recommandé de consolider vos surplus vers l'Entreprise pour couvrir vos opérations et fournisseurs :
                           <br/><br/>
                           <em>📅 <strong>Fréquence suggérée :</strong> Effectuez ces transferts 2x par semaine (le lundi et le jeudi, après vos grosses rentrées d'argent) pour un roulement optimal.</em>
                         </p>
-                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#166534', fontSize: '0.9rem' }}>
-                          {recsData.recommendations.map((r, i) => (
+                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem' }}>
+                          {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
                             <li key={i} style={{ marginBottom: '5px' }}>
                               Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise
                             </li>
-                          ))}
+                          )) : (
+                            <li style={{ marginBottom: '5px', color: '#991B1B' }}>Aucun surplus disponible dans vos comptes Perso/Conjoint.</li>
+                          )}
                         </ul>
                         {!recsData.fullyCovered && (
                           <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#991B1B' }}>
-                            ⚠️ Même avec ces transferts, il manquera {formatMoney(recsData.remainingDeficit)} pour l'Entreprise.
+                            ⚠️ Même avec ces transferts (si disponibles), l'Entreprise sera en déficit de {formatMoney(recsData.remainingDeficit)}.
+                          </p>
+                        )}
+                        {recsData.fullyCovered && recsData.recommendations.length > 0 && (
+                          <p style={{ margin: '10px 0 0 0', fontSize: '0.85rem', color: '#065F46' }}>
+                            ✅ L'entreprise aura assez de liquidités pour toutes ses dépenses. Le solde restant pourra être utilisé pour l'épargne.
                           </p>
                         )}
                       </div>
