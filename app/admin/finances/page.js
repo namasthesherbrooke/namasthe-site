@@ -264,7 +264,10 @@ export default function FinancesPage() {
   const incomes = accountTransactions.filter(t => t.type === 'income');
 
   // Calculs Projection globale ou par compte
-  let projectedBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, isCombinedView ? 'Vue Combinée' : activeTab);
+  let projectedBalance = 0;
+  if (!isCombinedView) {
+    projectedBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, activeTab);
+  }
   let pendingIncomes = accountTransactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   let pendingExpenses = accountTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   let suggestions = [];
@@ -273,6 +276,7 @@ export default function FinancesPage() {
     const pEnt = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
     const pPer = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Perso');
     const pCon = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Conjoint');
+    projectedBalance = pEnt + pPer + pCon;
     
     // Algorithme d'équilibrage
     const accountsStatus = [
@@ -399,8 +403,23 @@ export default function FinancesPage() {
                 
                 {/* Solde Actuel */}
                 <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', border: '1px solid #E5E7EB' }}>
-                  <h3 style={{ margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>💰 Point sur le compte</h3>
-                  {(() => {
+                  <h3 style={{ margin: '0 0 15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isCombinedView ? '💰 Soldes Actuels' : '💰 Point sur le compte'}
+                  </h3>
+                  {isCombinedView ? (() => {
+                    const combinedBalance = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise') + getCalculatedStartBalance(currentMonth, currentYear, 'Perso') + getCalculatedStartBalance(currentMonth, currentYear, 'Conjoint');
+                    return (
+                      <>
+                        <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', marginBottom: '15px' }}>
+                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes (Ent. + Perso + Conj.)</p>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(combinedBalance)}</div>
+                        </div>
+                        <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#4F46E5', fontSize: '0.85rem' }}>
+                          <p style={{ margin: 0 }}>*Pour modifier un solde, veuillez vous rendre dans l'onglet individuel correspondant.</p>
+                        </div>
+                      </>
+                    );
+                  })() : (() => {
                     const currentBankBalanceObj = balances.find(b => {
                       const d = parseDateLocal(b.date);
                       return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
