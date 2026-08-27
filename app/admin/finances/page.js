@@ -302,7 +302,20 @@ export default function FinancesPage() {
       const d = parseDateLocal(b.date);
       return b.account === acc && d.getMonth() === m && d.getFullYear() === y;
     });
-    if (manualBal) return parseFloat(manualBal.amount);
+    if (manualBal) {
+      const manualDate = parseDateLocal(manualBal.date);
+      let backwardAdjustment = 0;
+      
+      transactions.forEach(t => {
+        const d = parseDateLocal(t.date);
+        if (t.entity === acc && d.getMonth() === m && d.getFullYear() === y && d <= manualDate) {
+          if (t.type === 'income') backwardAdjustment += parseFloat(t.amount);
+          else backwardAdjustment -= parseFloat(t.amount);
+        }
+      });
+      
+      return parseFloat(manualBal.amount) - backwardAdjustment;
+    }
     
     let prevM = m - 1;
     let prevY = y;
@@ -480,16 +493,40 @@ export default function FinancesPage() {
   let suggestions = [];
 
   // --- CHRONOLOGIE DU SOLDE ---
+  const getManualBalanceDate = (acc) => {
+    const manualBal = balances.find(b => {
+      const d = parseDateLocal(b.date);
+      return b.account === acc && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    return manualBal ? parseDateLocal(manualBal.date) : new Date(currentYear, currentMonth, 1);
+  };
+
   let timelineStartBalance = 0;
+  let manualDateCombined = new Date(currentYear, currentMonth, 1);
+  
   if (isCombinedView) {
     timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise') +
                            getCalculatedStartBalance(currentMonth, currentYear, 'Perso') +
                            getCalculatedStartBalance(currentMonth, currentYear, 'Conjoint');
+    // On prend la date la plus récente parmi les soldes manuels
+    const d1 = getManualBalanceDate('Entreprise');
+    const d2 = getManualBalanceDate('Perso');
+    const d3 = getManualBalanceDate('Conjoint');
+    manualDateCombined = new Date(Math.max(d1, d2, d3));
   } else {
     timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
+    manualDateCombined = getManualBalanceDate(activeTab);
   }
 
-  const sortedTransactions = [...accountTransactions].sort((a, b) => {
+  // Filtrer les fantômes et simulations qui sont passés par rapport au solde manuel
+  const filteredAccountTransactions = accountTransactions.filter(t => {
+    if (t.is_ghost || t.is_simulation) {
+      return parseDateLocal(t.date) > manualDateCombined;
+    }
+    return true;
+  });
+
+  const sortedTransactions = [...filteredAccountTransactions].sort((a, b) => {
     const da = parseDateLocal(a.date);
     const db = parseDateLocal(b.date);
     if (da.getTime() !== db.getTime()) {
@@ -1031,6 +1068,25 @@ export default function FinancesPage() {
                                 {t.description || getCategory(t.category_id)?.name || 'N/A'}
                               </span>
                               {isCombinedView && <span style={{ fontSize: '0.7rem', color: '#6B7280' }}>[{t.entity}]</span>}
+                              
+                              {(t.is_ghost || t.is_simulation) && (
+                                <button 
+                                  onClick={() => {
+                                    setTransactionToEdit({
+                                      ...t,
+                                      id: null,
+                                      is_ghost: false,
+                                      is_simulation: false,
+                                      status: 'paid'
+                                    });
+                                    setIsModalOpen(true);
+                                  }} 
+                                  style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem', marginLeft: 'auto' }} 
+                                  title="Transformer en vraie transaction"
+                                >
+                                  ✎
+                                </button>
+                              )}
                             </div>
                           </td>
                           <td style={{ padding: '12px 15px', textAlign: 'right', color: t.type === 'income' ? '#059669' : '#DC2626', fontWeight: 'bold' }}>
