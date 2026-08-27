@@ -363,7 +363,7 @@ export default function FinancesPage() {
           const hasRealIncomeNearby = transactions.some(t => 
             t.type === 'income' && 
             t.entity === pattern.entity && 
-            (!pattern.category_id || t.category_id === pattern.category_id) &&
+            (t.description === (pattern.description || 'Revenu simulé') || (!pattern.category_id || t.category_id === pattern.category_id)) &&
             parseDateLocal(t.date).getMonth() === currentMonth && 
             parseDateLocal(t.date).getFullYear() === currentYear &&
             Math.abs(parseDateLocal(t.date).getDate() - day) <= 3
