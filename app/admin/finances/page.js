@@ -890,6 +890,7 @@ export default function FinancesPage() {
         selectedMonth={currentMonth}
         selectedYear={currentYear}
         initialData={transactionToEdit}
+        currentMonthTransactions={currentMonthTransactions}
       />
     </FinanceLock>
   );

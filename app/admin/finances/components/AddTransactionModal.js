@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData }) {
+export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData, currentMonthTransactions = [] }) {
   const [date, setDate] = useState('');
   const [isVariableAmount, setIsVariableAmount] = useState(false);
   const [isVariableDate, setIsVariableDate] = useState(false);
@@ -77,6 +77,24 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
 
     setIsSubmitting(true);
     setError('');
+
+    // Vérification des doublons suspects (uniquement en création, pas en édition)
+    if (!initialData || (initialData && String(initialData.id).startsWith('ghost-'))) {
+      const isDuplicate = currentMonthTransactions.some(t => {
+        return !t.is_ghost && 
+               parseFloat(t.amount) === parseFloat(amount) && 
+               t.type === type && 
+               t.entity === entity && 
+               t.category_id === categoryId;
+      });
+
+      if (isDuplicate) {
+        if (!confirm("⚠️ SUSPECT : Une transaction du MÊME MONTANT et MÊME CATÉGORIE a déjà été ajoutée ce mois-ci.\n\nÊtes-vous sûr de vouloir créer ce doublon ?")) {
+          setIsSubmitting(false);
+          return;
+        }
+      }
+    }
 
     try {
       const res = await fetch('/api/admin/finances', {
