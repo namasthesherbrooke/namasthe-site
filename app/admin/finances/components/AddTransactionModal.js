@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData }) {
   const [date, setDate] = useState('');
@@ -24,7 +24,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     c.type === type && (c.entity === entity || c.entity === 'Mixte')
   );
 
-  import { useEffect } from 'react';
+
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
