@@ -51,13 +51,14 @@ export async function GET(req) {
       return NextResponse.json({ success: true, categories: data });
     }
 
-    if (action === 'budgets') {
+    if (action === 'balances') {
       const { data, error } = await supabaseAdmin
-        .from('finances_budgets')
-        .select('*');
+        .from('finances_balances')
+        .select('*')
+        .order('date', { ascending: false });
       
       if (error) throw error;
-      return NextResponse.json({ success: true, budgets: data });
+      return NextResponse.json({ success: true, balances: data });
     }
 
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });
@@ -79,7 +80,7 @@ export async function POST(req) {
     const supabaseAdmin = getSupabaseAdmin();
 
     if (action === 'add_transaction') {
-      const { date, type, amount, category_id, description, entity } = body.data;
+      const { date, type, amount, category_id, description, entity, status = 'paid', priority = 2, is_fixed = false } = body.data;
       
       if (!date || !type || !amount || !category_id || !entity) {
         return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
@@ -88,7 +89,7 @@ export async function POST(req) {
       const { data, error } = await supabaseAdmin
         .from('finances_transactions')
         .insert([{
-          date, type, amount: parseFloat(amount), category_id, description, entity
+          date, type, amount: parseFloat(amount), category_id, description, entity, status, priority, is_fixed
         }])
         .select();
 
@@ -106,6 +107,31 @@ export async function POST(req) {
 
       if (error) throw error;
       return NextResponse.json({ success: true, category: data[0] });
+    }
+
+    if (action === 'update_transaction') {
+      const { id, updates } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_transactions')
+        .update(updates)
+        .eq('id', id)
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, transaction: data[0] });
+    }
+
+    if (action === 'add_balance') {
+      const { account, date, amount } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_balances')
+        .insert([{ account, date, amount: parseFloat(amount) }])
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, balance: data[0] });
     }
 
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });

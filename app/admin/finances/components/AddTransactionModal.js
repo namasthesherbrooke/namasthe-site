@@ -5,10 +5,14 @@ import { useState } from 'react';
 export default function AddTransactionModal({ isOpen, onClose, onAdd, categories, currentPin }) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [type, setType] = useState('expense');
-  const [entity, setEntity] = useState('Namasthé');
+  const [entity, setEntity] = useState('Entreprise');
   const [amount, setAmount] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [description, setDescription] = useState('');
+  const [isFixed, setIsFixed] = useState(false);
+  const [status, setStatus] = useState('paid');
+  const [priority, setPriority] = useState(2); // 1: Urgent, 2: Normal, 3: Bas
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -44,7 +48,10 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
             entity,
             amount: parseFloat(amount),
             category_id: categoryId,
-            description
+            description,
+            is_fixed: isFixed,
+            status,
+            priority: parseInt(priority)
           }
         })
       });
@@ -53,7 +60,6 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
       if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'ajout');
 
       onAdd(data.transaction);
-      // Réinitialiser le formulaire mais garder l'entité et le type
       setAmount('');
       setDescription('');
       onClose();
@@ -68,7 +74,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
       <div style={{ background: 'white', padding: '30px', borderRadius: '16px', width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ margin: 0, color: '#2C1810', fontSize: '1.5rem' }}>Nouvelle Transaction</h2>
+          <h2 style={{ margin: 0, color: '#2C1810', fontSize: '1.5rem' }}>Nouvelle {type === 'expense' ? 'Dépense' : 'Entrée'}</h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#999' }}>&times;</button>
         </div>
 
@@ -85,31 +91,48 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
                 style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
               >
                 <option value="expense">Dépense (-)</option>
-                <option value="income">Revenu (+)</option>
+                <option value="income">Entrée (+)</option>
               </select>
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Entité</label>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Compte</label>
               <select 
                 value={entity} 
                 onChange={(e) => { setEntity(e.target.value); setCategoryId(''); }}
                 style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
               >
-                <option value="Namasthé">Namasthé (Business)</option>
-                <option value="Personnel">Personnel (Maison)</option>
+                <option value="Entreprise">Entreprise</option>
+                <option value="Perso">Perso</option>
+                <option value="Conjoint">Conjoint</option>
+                <option value="Impôts et taxes">Impôts et taxes</option>
+                <option value="Urgence">Urgence</option>
+                <option value="Voyage et mon garçon">Voyage et mon garçon</option>
               </select>
             </div>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Date</label>
-            <input 
-              type="date" 
-              value={date} 
-              onChange={(e) => setDate(e.target.value)}
-              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-              required
-            />
+          <div style={{ display: 'flex', gap: '10px' }}>
+             <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Date</label>
+              <input 
+                type="date" 
+                value={date} 
+                onChange={(e) => setDate(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                required
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Statut</label>
+              <select 
+                value={status} 
+                onChange={(e) => setStatus(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+              >
+                <option value="paid">{type === 'expense' ? 'Déjà payé' : 'Déjà reçu'}</option>
+                <option value="pending">{type === 'expense' ? 'À payer (Prévu)' : 'À recevoir (Prévu)'}</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -140,6 +163,37 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
               ))}
             </select>
           </div>
+
+          {type === 'expense' && (
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: '#F9FAFB', padding: '10px', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                <input 
+                  type="checkbox" 
+                  checked={isFixed}
+                  onChange={(e) => setIsFixed(e.target.checked)}
+                  style={{ width: '18px', height: '18px' }}
+                />
+                Dépense Fixe (Récurrente)
+              </label>
+              
+              {!isFixed && status === 'pending' && (
+                <div style={{ flex: 1 }}>
+                  <select 
+                    value={priority}
+                    onChange={(e) => setPriority(e.target.value)}
+                    style={{ 
+                      width: '100%', padding: '6px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem',
+                      background: priority == 1 ? '#FEE2E2' : priority == 3 ? '#DCFCE7' : 'white'
+                    }}
+                  >
+                    <option value={1}>Urgent 🔴</option>
+                    <option value={2}>Normal ⚪</option>
+                    <option value={3}>Bas 🟢</option>
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
 
           <div>
             <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Description / Note (Optionnel)</label>

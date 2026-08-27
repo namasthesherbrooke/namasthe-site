@@ -8,10 +8,20 @@ export default function FinancesPage() {
   const [pin, setPin] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [balances, setBalances] = useState([]);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('Global'); // Global, Namasthé, Personnel
+  
+  const accounts = ['Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon'];
+  const [activeTab, setActiveTab] = useState('Entreprise'); 
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentBankBalance, setCurrentBankBalance] = useState('');
+  const [isSavingBalance, setIsSavingBalance] = useState(false);
+
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
 
   const handleUnlock = (validPin) => {
     setPin(validPin);
@@ -22,18 +32,21 @@ export default function FinancesPage() {
     setIsLoading(true);
     setError('');
     try {
-      const [transRes, catRes] = await Promise.all([
+      const [transRes, catRes, balRes] = await Promise.all([
         fetch('/api/admin/finances?action=transactions', { headers: { 'x-finance-pin': currentPin } }),
-        fetch('/api/admin/finances?action=categories', { headers: { 'x-finance-pin': currentPin } })
+        fetch('/api/admin/finances?action=categories', { headers: { 'x-finance-pin': currentPin } }),
+        fetch('/api/admin/finances?action=balances', { headers: { 'x-finance-pin': currentPin } })
       ]);
 
-      if (!transRes.ok || !catRes.ok) throw new Error("Erreur de chargement des données");
+      if (!transRes.ok || !catRes.ok || !balRes.ok) throw new Error("Erreur de chargement des données");
 
       const transData = await transRes.json();
       const catData = await catRes.json();
+      const balData = await balRes.json();
 
       setTransactions(transData.transactions || []);
       setCategories(catData.categories || []);
+      setBalances(balData.balances || []);
     } catch (err) {
       setError("Impossible de charger les données financières. " + err.message);
     } finally {
@@ -45,9 +58,26 @@ export default function FinancesPage() {
     setTransactions([newTransaction, ...transactions]);
   };
 
+  const handleUpdateTransactionStatus = async (id, newStatus) => {
+    try {
+      const res = await fetch(`/api/admin/finances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'update_transaction',
+          data: { id, updates: { status: newStatus } }
+        })
+      });
+      if (!res.ok) throw new Error("Erreur de mise à jour");
+      const { transaction } = await res.json();
+      setTransactions(transactions.map(t => t.id === id ? transaction : t));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleDelete = async (id) => {
-    if (!confirm('Voulez-vous vraiment supprimer cette transaction ?')) return;
-    
+    if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) return;
     try {
       const res = await fetch(`/api/admin/finances?id=${id}&table=finances_transactions`, {
         method: 'DELETE',
@@ -60,61 +90,99 @@ export default function FinancesPage() {
     }
   };
 
-  // Filtrage des données selon l'onglet actif
-  const filteredTransactions = transactions.filter(t => 
-    activeTab === 'Global' ? true : t.entity === activeTab
-  );
+  const saveBankBalance = async () => {
+    if (!currentBankBalance) return;
+    setIsSavingBalance(true);
+    try {
+      const res = await fetch(`/api/admin/finances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'add_balance',
+          data: { account: activeTab, date: new Date().toISOString().split('T')[0], amount: currentBankBalance }
+        })
+      });
+      if (!res.ok) throw new Error("Erreur de sauvegarde du solde");
+      const { balance } = await res.json();
+      setBalances([balance, ...balances]);
+      setCurrentBankBalance('');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsSavingBalance(false);
+    }
+  };
 
-  // Calculs pour le mois en cours
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+  // Filtrage des données pour le compte actif et le mois en cours
+  const accountTransactions = transactions.filter(t => t.entity === activeTab);
   
-  const currentMonthTransactions = filteredTransactions.filter(t => {
+  const currentMonthTransactions = accountTransactions.filter(t => {
     const d = new Date(t.date);
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
 
-  const totalIncome = currentMonthTransactions.filter(t => t.type === 'income').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const totalExpense = currentMonthTransactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const netBalance = totalIncome - totalExpense;
+  const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
+  const formatMoney = (amount) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount);
 
-  // Formatter pour l'affichage ($)
-  const formatMoney = (amount) => {
-    return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount);
-  };
+  // Groupes de transactions
+  const fixedExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.is_fixed);
+  const sporadicExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
+  const incomes = currentMonthTransactions.filter(t => t.type === 'income');
+
+  // Dernier solde enregistré pour ce compte ce mois-ci
+  const latestBalance = balances.find(b => {
+    const d = new Date(b.date);
+    return b.account === activeTab && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  // Calculs Projection
+  const baseBalance = latestBalance ? parseFloat(latestBalance.amount) : 0;
+  
+  // Ce qui est encore "pending" (à recevoir ou à payer) impacte la projection
+  const pendingIncomes = incomes.filter(t => t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const pendingExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  
+  const projectedBalance = baseBalance + pendingIncomes - pendingExpenses;
+
+  // Calculs Totaux
+  const totalPaidIncomes = incomes.filter(t => t.status === 'paid').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const totalPaidExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.status === 'paid').reduce((acc, t) => acc + parseFloat(t.amount), 0);
 
   return (
     <FinanceLock onUnlock={handleUnlock}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', fontFamily: 'var(--font-sans)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', flexWrap: 'wrap', gap: '15px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', fontFamily: 'var(--font-sans)', paddingBottom: '50px' }}>
+        
+        {/* EN-TÊTE */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
           <div>
-            <h1 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', margin: '0 0 5px 0' }}>💰 Gestion Budgétaire</h1>
-            <p style={{ color: '#666', margin: 0 }}>Mois en cours : {new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</p>
+            <h1 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', margin: '0 0 5px 0' }}>📊 Gestion Budgétaire</h1>
+            <p style={{ color: '#666', margin: 0 }}>Mois en cours : <strong style={{color: '#2C1810'}}>{new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</strong></p>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
             style={{ padding: '12px 24px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
           >
-            <span style={{ fontSize: '1.2rem' }}>+</span> Nouvelle Transaction
+            <span style={{ fontSize: '1.2rem' }}>+</span> Nouvelle Entrée / Dépense
           </button>
         </div>
 
-        {/* TABS */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', background: 'white', padding: '10px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-          {['Global', 'Namasthé', 'Personnel'].map(tab => (
+        {/* ONGLETS DES COMPTES */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', overflowX: 'auto', paddingBottom: '10px', scrollbarWidth: 'none' }}>
+          {accounts.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               style={{
-                flex: 1,
-                padding: '12px',
+                padding: '12px 20px',
                 border: 'none',
-                borderRadius: '8px',
+                borderRadius: '12px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
-                background: activeTab === tab ? (tab === 'Namasthé' ? '#FCE7F3' : tab === 'Personnel' ? '#DBEAFE' : '#F3F4F6') : 'transparent',
-                color: activeTab === tab ? (tab === 'Namasthé' ? '#BE185D' : tab === 'Personnel' ? '#1D4ED8' : '#374151') : '#6B7280',
-                transition: 'all 0.2s'
+                whiteSpace: 'nowrap',
+                background: activeTab === tab ? '#2C1810' : '#F3F4F6',
+                color: activeTab === tab ? 'white' : '#6B7280',
+                transition: 'all 0.2s',
+                boxShadow: activeTab === tab ? '0 4px 10px rgba(0,0,0,0.15)' : 'none'
               }}
             >
               {tab}
@@ -122,90 +190,172 @@ export default function FinancesPage() {
           ))}
         </div>
 
-        {/* SUMMARY CARDS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-          <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', borderLeft: '5px solid #10B981' }}>
-            <p style={{ margin: '0 0 10px 0', color: '#6B7280', fontSize: '0.9rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Revenus (Ce mois)</p>
-            <h2 style={{ margin: 0, fontSize: '2.5rem', color: '#10B981' }}>{formatMoney(totalIncome)}</h2>
-          </div>
-          <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', borderLeft: '5px solid #EF4444' }}>
-            <p style={{ margin: '0 0 10px 0', color: '#6B7280', fontSize: '0.9rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Dépenses (Ce mois)</p>
-            <h2 style={{ margin: 0, fontSize: '2.5rem', color: '#EF4444' }}>{formatMoney(totalExpense)}</h2>
-          </div>
-          <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', borderLeft: `5px solid ${netBalance >= 0 ? '#10B981' : '#EF4444'}` }}>
-            <p style={{ margin: '0 0 10px 0', color: '#6B7280', fontSize: '0.9rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Solde Net (Ce mois)</p>
-            <h2 style={{ margin: 0, fontSize: '2.5rem', color: netBalance >= 0 ? '#10B981' : '#EF4444' }}>{formatMoney(netBalance)}</h2>
-          </div>
-        </div>
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>Chargement...</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            
+            {/* RÉCONCILIATION ET PROJECTION */}
+            <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+                
+                {/* Solde Actuel */}
+                <div>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>💰 Point sur le compte</h3>
+                  {latestBalance ? (
+                    <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px' }}>
+                      <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Dernier solde relevé le {new Date(latestBalance.date).toLocaleDateString()}</p>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(latestBalance.amount)}</div>
+                    </div>
+                  ) : (
+                    <div style={{ color: '#9CA3AF', marginBottom: '10px' }}>Aucun solde relevé ce mois-ci.</div>
+                  )}
+                  
+                  <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="number" 
+                      placeholder="Solde bancaire actuel..."
+                      value={currentBankBalance}
+                      onChange={(e) => setCurrentBankBalance(e.target.value)}
+                      style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
+                    />
+                    <button onClick={saveBankBalance} disabled={isSavingBalance} style={{ background: '#3B82F6', color: 'white', border: 'none', padding: '0 15px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                      Mettre à jour
+                    </button>
+                  </div>
+                </div>
 
-        {/* RECENT TRANSACTIONS */}
-        <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden' }}>
-          <div style={{ padding: '20px', borderBottom: '1px solid #F3F4F6' }}>
-            <h3 style={{ margin: 0, color: '#374151', fontSize: '1.2rem' }}>Dernières Transactions ({activeTab})</h3>
-          </div>
-          
-          {isLoading ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: '#6B7280' }}>Chargement des données...</div>
-          ) : filteredTransactions.length === 0 ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: '#6B7280' }}>Aucune transaction trouvée pour cette vue.</div>
-          ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ background: '#F9FAFB', color: '#6B7280', fontSize: '0.85rem', textTransform: 'uppercase' }}>
-                    <th style={{ padding: '15px 20px', fontWeight: '600' }}>Date</th>
-                    <th style={{ padding: '15px 20px', fontWeight: '600' }}>Description & Catégorie</th>
-                    <th style={{ padding: '15px 20px', fontWeight: '600' }}>Entité</th>
-                    <th style={{ padding: '15px 20px', fontWeight: '600', textAlign: 'right' }}>Montant</th>
-                    <th style={{ padding: '15px 20px', fontWeight: '600', textAlign: 'center' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTransactions.slice(0, 50).map(t => {
-                    const cat = categories.find(c => c.id === t.category_id);
-                    const catColor = cat ? cat.color : '#CBD5E1';
-                    const isExpense = t.type === 'expense';
-                    
-                    return (
-                      <tr key={t.id} style={{ borderBottom: '1px solid #F3F4F6' }}>
-                        <td style={{ padding: '15px 20px', color: '#4B5563', whiteSpace: 'nowrap' }}>
-                          {new Date(t.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </td>
-                        <td style={{ padding: '15px 20px' }}>
-                          <div style={{ fontWeight: '500', color: '#111827' }}>{t.description || (cat ? cat.name : 'Inconnue')}</div>
-                          <div style={{ display: 'inline-block', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', background: `${catColor}20`, color: catColor, fontWeight: 'bold', marginTop: '4px' }}>
-                            {cat ? cat.name : 'Inconnue'}
-                          </div>
-                        </td>
-                        <td style={{ padding: '15px 20px' }}>
-                          <span style={{ 
-                            padding: '4px 10px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: '600',
-                            background: t.entity === 'Namasthé' ? '#FCE7F3' : '#DBEAFE',
-                            color: t.entity === 'Namasthé' ? '#BE185D' : '#1D4ED8'
-                          }}>
-                            {t.entity}
-                          </span>
-                        </td>
-                        <td style={{ padding: '15px 20px', textAlign: 'right', fontWeight: 'bold', color: isExpense ? '#EF4444' : '#10B981', whiteSpace: 'nowrap' }}>
-                          {isExpense ? '-' : '+'}{formatMoney(t.amount)}
-                        </td>
-                        <td style={{ padding: '15px 20px', textAlign: 'center' }}>
-                          <button 
-                            onClick={() => handleDelete(t.id)}
-                            style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem', opacity: 0.7 }}
-                            title="Supprimer"
-                          >
-                            ×
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                {/* Projection */}
+                <div style={{ borderLeft: '1px solid #E5E7EB', paddingLeft: '30px' }}>
+                  <h3 style={{ margin: '0 0 15px 0', color: '#374151', fontSize: '1.2rem' }}>🔮 Projection fin de mois</h3>
+                  <div style={{ background: projectedBalance >= 0 ? '#ECFDF5' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${projectedBalance >= 0 ? '#10B981' : '#EF4444'}` }}>
+                    <p style={{ margin: '0 0 5px 0', color: '#6B7280' }}>Si tous les paiements prévus passent :</p>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: projectedBalance >= 0 ? '#059669' : '#DC2626' }}>
+                      {formatMoney(projectedBalance)}
+                    </div>
+                    <div style={{ marginTop: '10px', fontSize: '0.85rem', color: '#6B7280', display: 'flex', justifyContent: 'space-between' }}>
+                      <span>À recevoir : <strong style={{color: '#10B981'}}>+{formatMoney(pendingIncomes)}</strong></span>
+                      <span>À payer : <strong style={{color: '#EF4444'}}>-{formatMoney(pendingExpenses)}</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
-          )}
-        </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
+              
+              {/* COLONNE GAUCHE : DÉPENSES */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                
+                {/* Dépenses Fixes */}
+                <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden' }}>
+                  <div style={{ padding: '20px', background: '#F9FAFB', borderBottom: '1px solid #E5E7EB', display: 'flex', justifyContent: 'space-between' }}>
+                    <h3 style={{ margin: 0, color: '#374151' }}>🏢 Dépenses Fixes</h3>
+                    <span style={{ fontWeight: 'bold', color: '#6B7280' }}>{formatMoney(fixedExpenses.reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
+                  </div>
+                  <div style={{ padding: '10px 20px' }}>
+                    {fixedExpenses.length === 0 ? <p style={{ color: '#9CA3AF' }}>Aucune dépense fixe.</p> : fixedExpenses.map(t => (
+                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
+                        <div>
+                          <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>{t.description || getCategory(t.category_id).name}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>{getCategory(t.category_id).name}</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: t.status === 'paid' ? '#9CA3AF' : '#EF4444' }}>{formatMoney(t.amount)}</span>
+                          <input 
+                            type="checkbox" 
+                            checked={t.status === 'paid'} 
+                            onChange={() => handleUpdateTransactionStatus(t.id, t.status === 'paid' ? 'pending' : 'paid')}
+                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                            title="Marquer comme payé"
+                          />
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer' }}>×</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Dépenses Sporadiques */}
+                <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden' }}>
+                  <div style={{ padding: '20px', background: '#FEF2F2', borderBottom: '1px solid #FEE2E2', display: 'flex', justifyContent: 'space-between' }}>
+                    <h3 style={{ margin: 0, color: '#991B1B' }}>🛒 Achats / Paiements à venir</h3>
+                    <span style={{ fontWeight: 'bold', color: '#991B1B' }}>{formatMoney(sporadicExpenses.filter(e => e.status === 'pending').reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
+                  </div>
+                  <div style={{ padding: '10px 20px' }}>
+                    {sporadicExpenses.filter(e => e.status === 'pending').length === 0 ? <p style={{ color: '#9CA3AF' }}>Aucun paiement en attente.</p> : 
+                    sporadicExpenses.filter(e => e.status === 'pending').sort((a,b) => a.priority - b.priority).map(t => (
+                      <div key={t.id} style={{ 
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', marginBottom: '10px', borderRadius: '8px',
+                        background: t.priority === 1 ? '#FEF2F2' : t.priority === 3 ? '#F0FDF4' : '#F9FAFB',
+                        borderLeft: `4px solid ${t.priority === 1 ? '#EF4444' : t.priority === 3 ? '#10B981' : '#D1D5DB'}`
+                      }}>
+                        <div>
+                          <div style={{ fontWeight: 'bold', color: t.priority === 1 ? '#991B1B' : '#111827' }}>{t.description || getCategory(t.category_id).name}</div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
+                          <button 
+                            onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
+                            style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                          >
+                            Payer
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* COLONNE DROITE : REVENUS ET HISTORIQUE */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                
+                {/* Entrées */}
+                <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden' }}>
+                  <div style={{ padding: '20px', background: '#ECFDF5', borderBottom: '1px solid #D1FAE5', display: 'flex', justifyContent: 'space-between' }}>
+                    <h3 style={{ margin: 0, color: '#065F46' }}>💵 Entrées (Revenus)</h3>
+                    <span style={{ fontWeight: 'bold', color: '#065F46' }}>{formatMoney(incomes.reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
+                  </div>
+                  <div style={{ padding: '10px 20px' }}>
+                    {incomes.length === 0 ? <p style={{ color: '#9CA3AF' }}>Aucun revenu pour ce mois.</p> : incomes.map(t => (
+                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
+                        <div>
+                          <div style={{ fontWeight: '500', color: '#111827' }}>{t.description || getCategory(t.category_id).name}</div>
+                          {t.status === 'pending' && <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#D97706', padding: '2px 6px', borderRadius: '4px' }}>En attente</span>}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                          <span style={{ fontWeight: 'bold', color: '#10B981' }}>+{formatMoney(t.amount)}</span>
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer' }}>×</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Historique des paiements complétés (Sporadiques) */}
+                <div style={{ background: 'white', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', overflow: 'hidden', opacity: 0.8 }}>
+                  <div style={{ padding: '15px 20px', borderBottom: '1px solid #F3F4F6' }}>
+                    <h3 style={{ margin: 0, color: '#6B7280', fontSize: '1rem' }}>✅ Achats complétés ce mois-ci</h3>
+                  </div>
+                  <div style={{ padding: '10px 20px', maxHeight: '200px', overflowY: 'auto' }}>
+                    {sporadicExpenses.filter(e => e.status === 'paid').length === 0 ? <p style={{ color: '#9CA3AF', fontSize: '0.9rem' }}>Aucun historique.</p> : 
+                    sporadicExpenses.filter(e => e.status === 'paid').map(t => (
+                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F3F4F6' }}>
+                        <div style={{ fontSize: '0.9rem', color: '#6B7280', textDecoration: 'line-through' }}>{t.description || getCategory(t.category_id).name}</div>
+                        <span style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>{formatMoney(t.amount)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        )}
       </div>
 
       <AddTransactionModal 
