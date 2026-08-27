@@ -422,9 +422,31 @@ export default function FinancesPage() {
   };
 
   // Transfer Recommendation Algorithm (Centralization)
+  const getRemainingMondaysAndThursdays = (viewMonth, viewYear) => {
+    const today = new Date();
+    const isCurrentMonth = today.getMonth() === viewMonth && today.getFullYear() === viewYear;
+    const isPastMonth = today.getFullYear() > viewYear || (today.getFullYear() === viewYear && today.getMonth() > viewMonth);
+    
+    if (isPastMonth) return 1;
+    
+    let startDay = isCurrentMonth ? today.getDate() : 1;
+    let daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    
+    let count = 0;
+    for (let d = startDay; d <= daysInMonth; d++) {
+      const date = new Date(viewYear, viewMonth, d);
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek === 1 || dayOfWeek === 4) count++;
+    }
+    
+    return count > 0 ? count : 1;
+  };
+
   const getTransferRecommendations = () => {
     const recommendations = [];
     let totalTransferred = 0;
+    
+    const divisor = getRemainingMondaysAndThursdays(currentMonth, currentYear);
 
     // Accounts that generate surplus to be transferred to Entreprise
     const otherAccounts = ['Conjoint', 'Perso'];
@@ -432,10 +454,13 @@ export default function FinancesPage() {
     for (const acc of otherAccounts) {
       const accSurplus = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
       if (accSurplus > 0) {
+        const amountPerTransfer = accSurplus / divisor;
         recommendations.push({
           from: acc,
           to: 'Entreprise',
-          amount: accSurplus
+          amount: amountPerTransfer,
+          totalAmount: accSurplus,
+          frequencyText: divisor > 1 ? `(à chaque Lundi/Jeudi, ${divisor}x ce mois)` : `(immédiatement)`
         });
         totalTransferred += accSurplus;
       }
@@ -840,12 +865,12 @@ export default function FinancesPage() {
                         <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#1E40AF' }}>
                           Il est recommandé de consolider vos surplus vers l'Entreprise pour couvrir vos opérations et fournisseurs :
                           <br/><br/>
-                          <em>📅 <strong>Fréquence suggérée :</strong> Effectuez ces transferts 2x par semaine (le lundi et le jeudi, après vos grosses rentrées d'argent) pour un roulement optimal.</em>
+                          <em>📅 <strong>Fréquence calculée :</strong> L'algorithme a divisé vos surplus globaux par le nombre de lundis et jeudis restants dans ce mois pour vous donner des montants réguliers.</em>
                         </p>
                         <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem' }}>
                           {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
                             <li key={i} style={{ marginBottom: '5px' }}>
-                              Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise
+                              Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em>{r.frequencyText}</em>
                             </li>
                           )) : (
                             <li style={{ marginBottom: '5px', color: '#991B1B' }}>Aucun surplus disponible dans vos comptes Perso/Conjoint.</li>
