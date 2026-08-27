@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData }) {
   const [date, setDate] = useState('');
-  const [isVariableDate, setIsVariableDate] = useState(false);
+  const [isVariableAmount, setIsVariableAmount] = useState(false);
   const [type, setType] = useState('expense');
   const [entity, setEntity] = useState('Entreprise');
   const [amount, setAmount] = useState('');
@@ -27,7 +27,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     if (isOpen) {
       if (initialData) {
         setDate(initialData.date);
-        setIsVariableDate(initialData.date && initialData.date.endsWith('-01') && initialData.is_fixed); // Devine si c'est une date variable selon la convention du -01 et is_fixed, sinon on l'affiche
+        setIsVariableAmount(initialData.is_fixed && initialData.priority === 1);
         setType(initialData.type);
         setEntity(initialData.entity);
         setAmount(initialData.amount ? initialData.amount.toString() : '');
@@ -47,7 +47,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
         const dd = isCurrentMonth ? String(today.getDate()).padStart(2, '0') : '01';
         
         setDate(`${yyyy}-${mm}-${dd}`);
-        setIsVariableDate(false);
+        setIsVariableAmount(false);
         setType('expense');
         setAmount('');
         setDescription('');
@@ -78,29 +78,29 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
           data: {
             id: initialData.id,
             updates: {
-              date: isVariableDate ? `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01` : date,
+              date,
               type,
               entity,
               amount: parseFloat(amount),
               category_id: categoryId,
               description,
               is_fixed: isFixed,
-              status: isVariableDate ? 'paid' : status,
-              priority: parseInt(priority)
+              status,
+              priority: isFixed ? (isVariableAmount ? 1 : 2) : parseInt(priority)
             }
           }
         } : {
           action: 'add_transaction',
           data: {
-            date: isVariableDate ? `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01` : date,
+            date,
             type,
             entity,
             amount: parseFloat(amount),
             category_id: categoryId,
             description,
             is_fixed: isFixed,
-            status: isVariableDate ? 'paid' : status,
-            priority: parseInt(priority)
+            status,
+            priority: isFixed ? (isVariableAmount ? 1 : 2) : parseInt(priority)
           }
         })
       });
@@ -172,26 +172,16 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
 
           <div style={{ display: 'flex', gap: '10px' }}>
              <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+              <div style={{ marginBottom: '5px' }}>
                 <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Date</label>
-                <label style={{ fontSize: '0.75rem', color: '#666', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                  <input type="checkbox" checked={isVariableDate} onChange={(e) => setIsVariableDate(e.target.checked)} />
-                  Variable (Dans le mois)
-                </label>
               </div>
-              {!isVariableDate ? (
-                <input 
-                  type="date" 
-                  value={date} 
-                  onChange={(e) => setDate(e.target.value)}
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-                  required
-                />
-              ) : (
-                <div style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', background: '#F3F4F6', color: '#6B7280', fontSize: '0.9rem', textAlign: 'center' }}>
-                  Appliqué au mois affiché
-                </div>
-              )}
+              <input 
+                type="date" 
+                value={date} 
+                onChange={(e) => setDate(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                required
+              />
             </div>
             <div style={{ flex: 1 }}>
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Statut</label>
@@ -236,7 +226,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
           </div>
 
           {type === 'expense' && (
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: '#F9FAFB', padding: '10px', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: '#F9FAFB', padding: '10px', borderRadius: '8px', border: '1px solid #E5E7EB', flexWrap: 'wrap' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem' }}>
                 <input 
                   type="checkbox" 
@@ -246,6 +236,17 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                 />
                 Dépense Fixe (Récurrente)
               </label>
+              
+              {isFixed && (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563', marginLeft: 'auto' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={isVariableAmount}
+                    onChange={(e) => setIsVariableAmount(e.target.checked)}
+                  />
+                  Montant variable (fluctue)
+                </label>
+              )}
               
               {!isFixed && status === 'pending' && (
                 <div style={{ flex: 1 }}>
