@@ -17,8 +17,6 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  if (!isOpen) return null;
-
   // Filtrer les catégories selon l'entité et le type choisis
   const availableCategories = categories.filter(c => 
     c.type === type && (c.entity === entity || c.entity === 'Mixte')
@@ -29,10 +27,10 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     if (isOpen) {
       if (initialData) {
         setDate(initialData.date);
-        setIsVariableDate(initialData.date.endsWith('-01') && initialData.is_fixed); // Devine si c'est une date variable selon la convention du -01 et is_fixed, sinon on l'affiche
+        setIsVariableDate(initialData.date && initialData.date.endsWith('-01') && initialData.is_fixed); // Devine si c'est une date variable selon la convention du -01 et is_fixed, sinon on l'affiche
         setType(initialData.type);
         setEntity(initialData.entity);
-        setAmount(initialData.amount.toString());
+        setAmount(initialData.amount ? initialData.amount.toString() : '');
         setCategoryId(initialData.category_id);
         setDescription(initialData.description || '');
         setIsFixed(initialData.is_fixed);
@@ -125,6 +123,8 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
       setIsSubmitting(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
