@@ -422,6 +422,28 @@ export default function FinancesPage() {
     return startBal + incs - exps - ghostSum + simSum;
   };
 
+  const getLiveBalanceForAccount = (m, y, acc) => {
+    const startBal = getCalculatedStartBalance(m, y, acc);
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    
+    const paidTxs = transactions.filter(t => 
+      t.entity === acc && 
+      t.status === 'paid' &&
+      parseDateLocal(t.date).getMonth() === m && 
+      parseDateLocal(t.date).getFullYear() === y &&
+      parseDateLocal(t.date) <= today
+    );
+    
+    let sum = startBal;
+    paidTxs.forEach(t => {
+      if (t.type === 'income') sum += parseFloat(t.amount);
+      else sum -= parseFloat(t.amount);
+    });
+    return sum;
+  };
+
+
   // Transfer Recommendation Algorithm (Centralization)
   const getTotalMondaysAndThursdays = (viewMonth, viewYear) => {
     let daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
@@ -694,7 +716,7 @@ export default function FinancesPage() {
   const celiProvision = persoIncomes * 0.08; // 8% CELI
 
   // --- GRAND TOTAL (Valeur Nette) ---
-  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getCalculatedStartBalance(currentMonth, currentYear, acc), 0);
+  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getLiveBalanceForAccount(currentMonth, currentYear, acc), 0);
   const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedEndBalanceForMonth(currentMonth, currentYear, acc), 0) + getProjectedEndBalanceForMonth(currentMonth, currentYear, 'CELI');
   
   return (
@@ -779,20 +801,22 @@ export default function FinancesPage() {
                     {isCombinedView ? '💰 Soldes Actuels' : '💰 Point sur le compte'}
                   </h3>
                   {isCombinedView ? (() => {
-                    const getDisplayBalance = (acc) => {
-                      const b = balances.find(b => {
-                        const d = parseDateLocal(b.date);
-                        return b.account === acc && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-                      });
-                      if (b) return parseFloat(b.amount);
-                      return getCalculatedStartBalance(currentMonth, currentYear, acc); // rollover
-                    };
-                    const combinedBalance = getDisplayBalance('Entreprise') + getDisplayBalance('Perso') + getDisplayBalance('Conjoint');
+                    // Calcul du solde combiné en direct pour AUJOURD'HUI
+                    const today = new Date();
+                    today.setHours(23, 59, 59, 999);
+                    
+                    let liveCombinedBalance = timelineStartBalance;
+                    for (const t of timelineEvents) {
+                      if (parseDateLocal(t.date) <= today) {
+                        liveCombinedBalance = t.runningBalance;
+                      }
+                    }
+
                     return (
                       <>
                         <div style={{ background: '#F3F4F6', padding: '15px', borderRadius: '12px', marginBottom: '15px' }}>
-                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes actuels (Ent. + Perso + Conj.)</p>
-                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(combinedBalance)}</div>
+                          <p style={{ margin: '0 0 5px 0', color: '#6B7280', fontSize: '0.9rem' }}>Somme des soldes estimés aujourd'hui (Ent. + Perso + Conj.)</p>
+                          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827' }}>{formatMoney(liveCombinedBalance)}</div>
                         </div>
                         <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '12px', color: '#4F46E5', fontSize: '0.85rem' }}>
                           <p style={{ margin: 0 }}>*Pour modifier un solde, veuillez vous rendre dans l'onglet individuel correspondant.</p>
@@ -808,15 +832,29 @@ export default function FinancesPage() {
                     const currentBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
                     const isRollover = !currentBankBalanceObj;
 
+                    // Calcul du solde en direct pour AUJOURD'HUI
+                    const today = new Date();
+                    today.setHours(23, 59, 59, 999);
+                    let liveBalance = timelineStartBalance;
+                    for (const t of timelineEvents) {
+                      if (parseDateLocal(t.date) <= today) {
+                        liveBalance = t.runningBalance;
+                      }
+                    }
+
                     return (
                       <>
                         <p style={{ color: '#6B7280', margin: '0 0 10px 0', fontSize: '0.9rem' }}>
-                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde (Reporté du mois précédent) :</span> : `🏦 Votre solde actuel (saisi le ${String(parseDateLocal(currentBankBalanceObj.date).getDate()).padStart(2, '0')}) :`}
+                          {isRollover ? <span style={{color: '#3B82F6', fontWeight: 'bold'}}>🪄 Solde (Reporté du mois précédent) :</span> : `🏦 Votre solde estimé aujourd'hui :`}
                         </p>
-                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '15px' }}>
-                          {formatMoney(isRollover ? currentBalance : currentBankBalanceObj.amount)}
+                        <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#111827', marginBottom: '5px' }}>
+                          {formatMoney(isRollover ? currentBalance : liveBalance)}
                         </div>
-                        
+                        {currentBankBalanceObj && (
+                          <p style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#059669', fontWeight: '500' }}>
+                            📝 (Dernier solde réel validé le {String(parseDateLocal(currentBankBalanceObj.date).getDate()).padStart(2, '0')} : {formatMoney(currentBankBalanceObj.amount)})
+                          </p>
+                        )}
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <input 
                             type="text" 
