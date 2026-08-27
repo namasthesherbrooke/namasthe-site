@@ -17,6 +17,7 @@ export default function FinancesPage() {
   const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [transactionToEdit, setTransactionToEdit] = useState(null);
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
 
@@ -74,6 +75,10 @@ export default function FinancesPage() {
 
   const handleAddTransaction = (newTransaction) => {
     setTransactions([newTransaction, ...transactions]);
+  };
+
+  const handleEditTransaction = (updatedTransaction) => {
+    setTransactions(transactions.map(t => t.id === updatedTransaction.id ? updatedTransaction : t));
   };
 
   const handleUpdateTransactionStatus = async (id, newStatus) => {
@@ -287,7 +292,7 @@ export default function FinancesPage() {
             </div>
             
             <button 
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => { setTransactionToEdit(null); setIsModalOpen(true); }}
               style={{ padding: '12px 24px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
             >
               <span style={{ fontSize: '1.2rem' }}>+</span> Nouvelle Entrée / Dépense
@@ -522,7 +527,8 @@ export default function FinancesPage() {
                             style={{ width: '20px', height: '20px', cursor: 'pointer' }}
                             title="Marquer comme payé"
                           />
-                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer' }}>×</button>
+                          <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
                         </div>
                       </div>
                     ))}
@@ -557,6 +563,8 @@ export default function FinancesPage() {
                           >
                             Payer
                           </button>
+                          <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
                         </div>
                       </div>
                     ))}
@@ -584,7 +592,8 @@ export default function FinancesPage() {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                           <span style={{ fontWeight: 'bold', color: '#10B981' }}>+{formatMoney(t.amount)}</span>
-                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer' }}>×</button>
+                          <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
                         </div>
                       </div>
                     ))}
@@ -603,7 +612,11 @@ export default function FinancesPage() {
                         <div style={{ fontSize: '0.9rem', color: '#6B7280', textDecoration: 'line-through' }}>
                           {isCombinedView && `[${t.entity}] `}{t.description || getCategory(t.category_id).name}
                         </div>
-                        <span style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>{formatMoney(t.amount)}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>{formatMoney(t.amount)}</span>
+                          <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
+                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -618,12 +631,14 @@ export default function FinancesPage() {
 
       <AddTransactionModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => { setIsModalOpen(false); setTransactionToEdit(null); }} 
         onAdd={handleAddTransaction}
+        onUpdate={handleEditTransaction}
         categories={categories}
         currentPin={pin}
         selectedMonth={currentMonth}
         selectedYear={currentYear}
+        initialData={transactionToEdit}
       />
     </FinanceLock>
   );

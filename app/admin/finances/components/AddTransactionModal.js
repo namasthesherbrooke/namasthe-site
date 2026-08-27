@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function AddTransactionModal({ isOpen, onClose, onAdd, categories, currentPin, selectedMonth, selectedYear }) {
+export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData }) {
   const [date, setDate] = useState('');
   const [isVariableDate, setIsVariableDate] = useState(false);
   const [type, setType] = useState('expense');
@@ -27,19 +27,36 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
   import { useEffect } from 'react';
   useEffect(() => {
     if (isOpen) {
-      const today = new Date();
-      const sMonth = selectedMonth !== undefined ? selectedMonth : today.getMonth();
-      const sYear = selectedYear !== undefined ? selectedYear : today.getFullYear();
-      const isCurrentMonth = sMonth === today.getMonth() && sYear === today.getFullYear();
-      
-      const yyyy = sYear;
-      const mm = String(sMonth + 1).padStart(2, '0');
-      const dd = isCurrentMonth ? String(today.getDate()).padStart(2, '0') : '01';
-      
-      setDate(`${yyyy}-${mm}-${dd}`);
-      setIsVariableDate(false);
+      if (initialData) {
+        setDate(initialData.date);
+        setIsVariableDate(initialData.date.endsWith('-01') && initialData.is_fixed); // Devine si c'est une date variable selon la convention du -01 et is_fixed, sinon on l'affiche
+        setType(initialData.type);
+        setEntity(initialData.entity);
+        setAmount(initialData.amount.toString());
+        setCategoryId(initialData.category_id);
+        setDescription(initialData.description || '');
+        setIsFixed(initialData.is_fixed);
+        setStatus(initialData.status);
+        setPriority(initialData.priority || 2);
+      } else {
+        const today = new Date();
+        const sMonth = selectedMonth !== undefined ? selectedMonth : today.getMonth();
+        const sYear = selectedYear !== undefined ? selectedYear : today.getFullYear();
+        const isCurrentMonth = sMonth === today.getMonth() && sYear === today.getFullYear();
+        
+        const yyyy = sYear;
+        const mm = String(sMonth + 1).padStart(2, '0');
+        const dd = isCurrentMonth ? String(today.getDate()).padStart(2, '0') : '01';
+        
+        setDate(`${yyyy}-${mm}-${dd}`);
+        setIsVariableDate(false);
+        setType('expense');
+        setAmount('');
+        setDescription('');
+        setCategoryId('');
+      }
     }
-  }, [isOpen, selectedMonth, selectedYear]);
+  }, [isOpen, selectedMonth, selectedYear, initialData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +75,23 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
           'Content-Type': 'application/json',
           'x-finance-pin': currentPin
         },
-        body: JSON.stringify({
+        body: JSON.stringify(initialData ? {
+          action: 'update_transaction',
+          data: {
+            id: initialData.id,
+            updates: {
+              date: isVariableDate ? `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01` : date,
+              type,
+              entity,
+              amount: parseFloat(amount),
+              category_id: categoryId,
+              description,
+              is_fixed: isFixed,
+              status: isVariableDate ? 'paid' : status,
+              priority: parseInt(priority)
+            }
+          }
+        } : {
           action: 'add_transaction',
           data: {
             date: isVariableDate ? `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01` : date,
@@ -68,16 +101,21 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
             category_id: categoryId,
             description,
             is_fixed: isFixed,
-            status: isVariableDate ? 'paid' : status, // Si variable, on peut le considérer payé ou on laisse au choix
+            status: isVariableDate ? 'paid' : status,
             priority: parseInt(priority)
           }
         })
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'ajout');
+      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
 
-      onAdd(data.transaction);
+      if (initialData && onUpdate) {
+        onUpdate(data.transaction);
+      } else if (onAdd) {
+        onAdd(data.transaction);
+      }
+      
       setAmount('');
       setDescription('');
       onClose();
@@ -92,7 +130,9 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
       <div style={{ background: 'white', padding: '30px', borderRadius: '16px', width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2 style={{ margin: 0, color: '#2C1810', fontSize: '1.5rem' }}>Nouvelle {type === 'expense' ? 'Dépense' : 'Entrée'}</h2>
+          <h2 style={{ margin: 0, color: '#2C1810', fontSize: '1.5rem' }}>
+            {initialData ? (type === 'expense' ? 'Modifier la dépense' : 'Modifier la rentrée') : (type === 'expense' ? 'Nouvelle Dépense' : 'Nouvelle Entrée')}
+          </h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#999' }}>&times;</button>
         </div>
 
@@ -251,7 +291,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
               style={{ flex: 2, padding: '12px', background: type === 'expense' ? '#EF4444' : '#10B981', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Enregistrement...' : `Ajouter la ${type === 'expense' ? 'dépense' : 'rentrée'}`}
+              {isSubmitting ? 'Enregistrement...' : (initialData ? 'Mettre à jour' : `Ajouter la ${type === 'expense' ? 'dépense' : 'rentrée'}`)}
             </button>
           </div>
 
