@@ -73,7 +73,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
           'Content-Type': 'application/json',
           'x-finance-pin': currentPin
         },
-        body: JSON.stringify(initialData ? {
+        body: JSON.stringify(initialData && !String(initialData.id).startsWith('ghost-') ? {
           action: 'update_transaction',
           data: {
             id: initialData.id,

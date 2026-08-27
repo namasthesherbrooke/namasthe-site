@@ -82,56 +82,37 @@ export default function FinancesPage() {
     setTransactions(transactions.map(t => t.id === updatedTransaction.id ? updatedTransaction : t));
   };
 
-  const getImportableFixedExpenses = () => {
-    const viewedDate = new Date(currentYear, currentMonth, 1);
-    const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && new Date(t.date) < viewedDate);
-    
-    const latestFixedMap = new Map();
-    pastFixed.forEach(t => {
-      const key = `${t.entity}-${t.category_id}-${t.description || ''}`;
-      if (!latestFixedMap.has(key) || new Date(t.date) > new Date(latestFixedMap.get(key).date)) {
-        latestFixedMap.set(key, t);
-      }
-    });
-    
-    return Array.from(latestFixedMap.values());
-  };
 
-  const handleImportRecurring = async () => {
-    const toImport = getImportableFixedExpenses().filter(t => isCombinedView || t.entity === activeTab);
-    if (toImport.length === 0) return;
-    
-    setIsImporting(true);
-    try {
-      const newTransactions = toImport.map(t => ({
-        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
-        type: t.type,
-        amount: t.amount,
-        category_id: t.category_id,
-        description: t.description,
-        entity: t.entity,
-        status: 'pending',
-        priority: t.priority,
-        is_fixed: true
-      }));
-      
-      const res = await fetch('/api/admin/finances', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
-        body: JSON.stringify({ action: 'import_recurring', data: { transactions: newTransactions } })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      
-      setTransactions([...data.imported, ...transactions]);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setIsImporting(false);
-    }
-  };
 
   const handleUpdateTransactionStatus = async (id, newStatus) => {
+    if (String(id).startsWith('ghost-')) {
+      const ghost = ghostExpenses.find(g => g.id === id);
+      if (!ghost) return;
+      try {
+        const res = await fetch('/api/admin/finances', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+          body: JSON.stringify({
+            action: 'add_transaction',
+            data: {
+              date: ghost.date,
+              type: ghost.type,
+              amount: ghost.amount,
+              category_id: ghost.category_id,
+              description: ghost.description,
+              entity: ghost.entity,
+              status: newStatus,
+              priority: ghost.priority,
+              is_fixed: true
+            }
+          })
+        });
+        const data = await res.json();
+        if (res.ok) setTransactions([data.transaction, ...transactions]);
+      } catch (err) { alert(err.message); }
+      return;
+    }
+
     try {
       const res = await fetch(`/api/admin/finances`, {
         method: 'POST',
@@ -150,6 +131,10 @@ export default function FinancesPage() {
   };
 
   const handleDelete = async (id) => {
+    if (String(id).startsWith('ghost-')) {
+      alert("Ceci est une dépense récurrente projetée. Pour l'annuler définitivement, supprimez-la dans le mois de sa création.");
+      return;
+    }
     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) return;
     try {
       const res = await fetch(`/api/admin/finances?id=${id}&table=finances_transactions`, {
@@ -193,18 +178,49 @@ export default function FinancesPage() {
   
   const currentMonthTransactions = accountTransactions.filter(t => {
     const d = new Date(t.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-  });
-
+  
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
   const formatMoney = (amount) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount);
 
-  // Groupes de transactions
-  const fixedExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && t.is_fixed);
-  const sporadicExpenses = currentMonthTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
-  const incomes = currentMonthTransactions.filter(t => t.type === 'income');
+  const viewedDate = new Date(currentYear, currentMonth, 1);
+  let baseCurrentMonthTransactions = transactions.filter(t => {
+    const d = new Date(t.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
 
-  // Fonction pour calculer la projection d'un compte spécifique
+  const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && new Date(t.date) < viewedDate);
+  const latestFixedMap = new Map();
+  pastFixed.forEach(t => {
+    const existsInCurrentMonth = baseCurrentMonthTransactions.some(current => 
+      current.description === t.description && current.category_id === t.category_id && current.entity === t.entity
+    );
+    if (!existsInCurrentMonth) {
+      const key = `${t.entity}-${t.category_id}-${t.description || ''}`;
+      if (!latestFixedMap.has(key) || new Date(t.date) > new Date(latestFixedMap.get(key).date)) {
+        latestFixedMap.set(key, t);
+      }
+    }
+  });
+
+  const ghostExpenses = Array.from(latestFixedMap.values()).map(t => ({
+    ...t,
+    id: `ghost-${t.id}`,
+    status: 'pending',
+    date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+    is_ghost: true
+  }));
+
+  const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses];
+
+  let accountTransactions = currentMonthTransactions;
+  if (!isCombinedView) {
+    accountTransactions = currentMonthTransactions.filter(t => t.entity === activeTab);
+  }
+
+  const fixedExpenses = accountTransactions.filter(t => t.type === 'expense' && t.is_fixed);
+  const sporadicExpenses = accountTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
+  const incomes = accountTransactions.filter(t => t.type === 'income');
+
   const getProjectedBalance = (accountName) => {
     const accTrans = transactions.filter(t => {
       const d = new Date(t.date);
@@ -559,23 +575,13 @@ export default function FinancesPage() {
                     <span style={{ fontWeight: 'bold', color: '#6B7280' }}>{formatMoney(fixedExpenses.reduce((a, b) => a + parseFloat(b.amount), 0))}</span>
                   </div>
                   <div style={{ padding: '10px 20px' }}>
-                    {fixedExpenses.length === 0 ? (
-                      <div style={{ textAlign: 'center', padding: '20px' }}>
-                        <p style={{ color: '#9CA3AF', marginBottom: '15px' }}>Aucune dépense fixe enregistrée ce mois-ci.</p>
-                        {getImportableFixedExpenses().filter(t => isCombinedView || t.entity === activeTab).length > 0 && (
-                          <button 
-                            onClick={handleImportRecurring}
-                            disabled={isImporting}
-                            style={{ padding: '10px 20px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
-                          >
-                            {isImporting ? 'Importation...' : '🔄 Importer les dépenses fixes du mois précédent'}
-                          </button>
-                        )}
-                      </div>
-                    ) : fixedExpenses.map(t => (
-                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6' }}>
+                    {fixedExpenses.length === 0 ? <p style={{ color: '#9CA3AF' }}>Aucune dépense fixe.</p> : fixedExpenses.map(t => (
+                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #F3F4F6', opacity: t.is_ghost ? 0.6 : 1 }}>
                         <div>
-                          <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>{t.description || getCategory(t.category_id).name}</div>
+                          <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>
+                            {t.is_ghost && <span title="Projeté automatiquement" style={{marginRight: '5px'}}>👻</span>}
+                            {t.description || getCategory(t.category_id).name}
+                          </div>
                           <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>
                             {isCombinedView && <span style={{ fontWeight: 'bold', marginRight: '5px' }}>[{t.entity}]</span>}
                             {getCategory(t.category_id).name}
