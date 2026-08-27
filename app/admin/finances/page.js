@@ -178,7 +178,8 @@ export default function FinancesPage() {
   
   const currentMonthTransactions = accountTransactions.filter(t => {
     const d = new Date(t.date);
-  
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });  
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
   const formatMoney = (amount) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount);
 
@@ -433,9 +434,15 @@ export default function FinancesPage() {
                   </h3>
                   
                   {suggestions.length === 0 ? (
-                    <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', color: '#166534', border: '1px solid #BBF7D0' }}>
-                      <strong>Parfait !</strong> Aucun des 3 comptes (Entreprise, Perso, Conjoint) n'est projeté dans le rouge ce mois-ci. Aucun virement de renflouement n'est nécessaire.
-                    </div>
+                    projectedBalance >= 0 ? (
+                      <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', color: '#166534', border: '1px solid #BBF7D0' }}>
+                        <strong>Parfait !</strong> Aucun des 3 comptes (Entreprise, Perso, Conjoint) n'est projeté dans le rouge ce mois-ci. Aucun virement de renflouement n'est nécessaire.
+                      </div>
+                    ) : (
+                      <div style={{ background: '#FEF2F2', padding: '15px', borderRadius: '12px', color: '#991B1B', border: '1px solid #FECACA' }}>
+                        <strong>Alerte de déficit !</strong> Des comptes sont projetés dans le rouge et il n'y a malheureusement aucun surplus disponible dans les autres comptes pour les renflouer.
+                      </div>
+                    )
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {suggestions.map((s, idx) => (
@@ -448,6 +455,11 @@ export default function FinancesPage() {
                           </div>
                         </div>
                       ))}
+                      {projectedBalance < 0 && (
+                        <div style={{ marginTop: '5px', background: '#FEF2F2', padding: '15px', borderRadius: '12px', color: '#991B1B', border: '1px solid #FECACA' }}>
+                          <strong>Attention !</strong> Même avec ces virements, le bilan global de vos comptes reste dans le rouge. Un apport externe est nécessaire.
+                        </div>
+                      )}
                       <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: '#6B7280' }}>
                         *Ces virements permettront de couvrir les dépenses prévues des comptes en déficit grâce aux surplus des autres.
                       </p>
