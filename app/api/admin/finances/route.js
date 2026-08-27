@@ -144,30 +144,18 @@ export async function POST(req) {
     if (action === 'add_balance') {
       const { account, date, amount } = body.data;
       
-      const { data: existing } = await supabaseAdmin
+      // Delete any existing balances for this account and date to prevent duplicates and clean up old ones
+      await supabaseAdmin
         .from('finances_balances')
-        .select('id')
+        .delete()
         .eq('account', account)
-        .eq('date', date)
-        .maybeSingle();
+        .eq('date', date);
 
-      let resultData, error;
-      if (existing) {
-        const res = await supabaseAdmin
-          .from('finances_balances')
-          .update({ amount: parseFloat(amount) })
-          .eq('id', existing.id)
-          .select();
-        resultData = res.data;
-        error = res.error;
-      } else {
-        const res = await supabaseAdmin
-          .from('finances_balances')
-          .insert([{ account, date, amount: parseFloat(amount) }])
-          .select();
-        resultData = res.data;
-        error = res.error;
-      }
+      // Insert the new balance
+      const { data: resultData, error } = await supabaseAdmin
+        .from('finances_balances')
+        .insert([{ account, date, amount: parseFloat(amount) }])
+        .select();
 
       if (error) throw error;
       return NextResponse.json({ success: true, balance: resultData[0] });
