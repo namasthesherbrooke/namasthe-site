@@ -421,6 +421,37 @@ export default function FinancesPage() {
     return startBal + incs - exps - ghostSum + simSum;
   };
 
+  // Transfer Recommendation Algorithm
+  const getTransferRecommendations = () => {
+    // We only recommend transfers if Entreprise is negative, but we evaluate for the current viewed month.
+    const entBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
+    if (entBalance >= 0) return []; // No deficit, no recommendation needed
+
+    const recommendations = [];
+    let deficit = Math.abs(entBalance);
+
+    // Prioritize 'Conjoint', then 'Perso' (since Herbalife/Uber etc. go there often)
+    const otherAccounts = ['Conjoint', 'Perso'];
+    
+    for (const acc of otherAccounts) {
+      if (deficit <= 0.01) break; // Deficit solved
+
+      const accSurplus = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
+      if (accSurplus > 0) {
+        const amountToTake = Math.min(accSurplus, deficit);
+        recommendations.push({
+          from: acc,
+          to: 'Entreprise',
+          amount: amountToTake
+        });
+        deficit -= amountToTake;
+      }
+    }
+    
+    // Return recommendations and whether the deficit is fully covered
+    return { recommendations, fullyCovered: deficit <= 0.01, remainingDeficit: deficit };
+  };
+
   const isCombinedView = activeTab === 'Vue Combinée';
 
   const getCategory = (id) => categories.find(c => c.id === id) || { name: 'Inconnue', color: '#ccc' };
@@ -785,6 +816,36 @@ export default function FinancesPage() {
                       <span>À payer : <strong style={{color: '#EF4444'}}>-{formatMoney(pendingExpenses)}</strong></span>
                     </div>
                   </div>
+
+                  {/* Recommandations de Transferts (Visible only for Entreprise deficit) */}
+                  {(activeTab === 'Entreprise' || isCombinedView) && (() => {
+                    const recsData = getTransferRecommendations();
+                    if (!recsData || recsData.recommendations.length === 0) return null;
+                    
+                    return (
+                      <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', border: '1px solid #BBF7D0', marginTop: '15px' }}>
+                        <h4 style={{ margin: '0 0 10px 0', color: '#166534', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '1rem' }}>
+                          💡 Recommandations de Transferts
+                        </h4>
+                        <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#15803D' }}>
+                          Le compte Entreprise projette un déficit. Voici comment rééquilibrer vos fonds :
+                        </p>
+                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#166534', fontSize: '0.9rem' }}>
+                          {recsData.recommendations.map((r, i) => (
+                            <li key={i} style={{ marginBottom: '5px' }}>
+                              Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise
+                            </li>
+                          ))}
+                        </ul>
+                        {!recsData.fullyCovered && (
+                          <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#991B1B' }}>
+                            ⚠️ Même avec ces transferts, il manquera {formatMoney(recsData.remainingDeficit)} pour l'Entreprise.
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
+
                 </div>
 
               </div>
