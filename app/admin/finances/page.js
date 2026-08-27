@@ -422,18 +422,12 @@ export default function FinancesPage() {
   };
 
   // Transfer Recommendation Algorithm (Centralization)
-  const getRemainingMondaysAndThursdays = (viewMonth, viewYear) => {
-    const today = new Date();
-    const isCurrentMonth = today.getMonth() === viewMonth && today.getFullYear() === viewYear;
-    const isPastMonth = today.getFullYear() > viewYear || (today.getFullYear() === viewYear && today.getMonth() > viewMonth);
-    
-    if (isPastMonth) return 1;
-    
-    let startDay = isCurrentMonth ? today.getDate() : 1;
+  const getTotalMondaysAndThursdays = (viewMonth, viewYear) => {
     let daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-    
     let count = 0;
-    for (let d = startDay; d <= daysInMonth; d++) {
+    
+    // Count ALL Mondays and Thursdays in the month to establish a standard 'cruising' target amount
+    for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(viewYear, viewMonth, d);
       const dayOfWeek = date.getDay();
       if (dayOfWeek === 1 || dayOfWeek === 4) count++;
@@ -446,7 +440,7 @@ export default function FinancesPage() {
     const recommendations = [];
     let totalTransferred = 0;
     
-    const divisor = getRemainingMondaysAndThursdays(currentMonth, currentYear);
+    const divisor = getTotalMondaysAndThursdays(currentMonth, currentYear);
 
     // Accounts that generate surplus to be transferred to Entreprise
     const otherAccounts = ['Conjoint', 'Perso'];
@@ -460,7 +454,7 @@ export default function FinancesPage() {
           to: 'Entreprise',
           amount: amountPerTransfer,
           totalAmount: accSurplus,
-          frequencyText: divisor > 1 ? `(à chaque Lundi/Jeudi, ${divisor}x ce mois)` : `(immédiatement)`
+          frequencyText: divisor > 1 ? `(cible bi-hebdomadaire, ${divisor}x par mois)` : `(immédiatement)`
         });
         totalTransferred += accSurplus;
       }
@@ -865,7 +859,7 @@ export default function FinancesPage() {
                         <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#1E40AF' }}>
                           Il est recommandé de consolider vos surplus vers l'Entreprise pour couvrir vos opérations et fournisseurs :
                           <br/><br/>
-                          <em>📅 <strong>Fréquence calculée :</strong> L'algorithme a divisé vos surplus globaux par le nombre de lundis et jeudis restants dans ce mois pour vous donner des montants réguliers.</em>
+                          <em>📅 <strong>Fréquence calculée :</strong> L'algorithme a divisé vos surplus mensuels par le nombre total de lundis et jeudis du mois pour vous donner un "rythme de croisière" régulier.</em>
                         </p>
                         <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem' }}>
                           {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
