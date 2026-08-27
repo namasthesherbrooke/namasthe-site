@@ -548,6 +548,9 @@ export default function FinancesPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
           <div>
             <h1 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', margin: '0 0 5px 0' }}>📊 Gestion Budgétaire</h1>
+            <div style={{ color: '#059669', fontSize: '0.9rem', fontWeight: 'bold', marginBottom: '15px' }}>
+              Aujourd'hui : <span style={{ textTransform: 'capitalize' }}>{new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+            </div>
             <div style={{ color: '#666', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
               Mois affiché : 
               <button onClick={handlePrevMonth} style={{cursor:'pointer', padding:'2px 8px', borderRadius:'6px', border:'1px solid #CBD5E1', background:'#fff', color: '#475569'}}>◀</button>
