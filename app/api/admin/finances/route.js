@@ -167,6 +167,19 @@ export async function POST(req) {
       return NextResponse.json({ success: true, pattern: data[0] });
     }
 
+    if (action === 'update_pattern') {
+      const { id, entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount, is_monthly, monthly_day, monthly_amount } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_income_patterns')
+        .update({ entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount, is_monthly: is_monthly || false, monthly_day: monthly_day || null, monthly_amount: monthly_amount || 0 })
+        .eq('id', id)
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, pattern: data[0] });
+    }
+
     return NextResponse.json({ error: "Action non valide" }, { status: 400 });
 
   } catch (error) {

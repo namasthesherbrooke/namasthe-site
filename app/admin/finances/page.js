@@ -26,6 +26,7 @@ export default function FinancesPage() {
   
   // Nouveaux états pour le formulaire d'ajout de patron de revenus
   const [newPattern, setNewPattern] = useState({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
+  const [editingPatternId, setEditingPatternId] = useState(null);
 
   const parseDateLocal = (dStr) => {
     if (!dStr) return new Date();
@@ -156,12 +157,14 @@ export default function FinancesPage() {
     if (newPattern.is_monthly && (!newPattern.monthly_day || !newPattern.monthly_amount)) return alert("Veuillez remplir le jour et le montant mensuel");
     
     try {
+      const isUpdating = !!editingPatternId;
       const res = await fetch('/api/admin/finances', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
         body: JSON.stringify({
-          action: 'add_pattern',
+          action: isUpdating ? 'update_pattern' : 'add_pattern',
           data: {
+            id: editingPatternId,
             entity: newPattern.entity,
             category_id: newPattern.category_id,
             description: newPattern.description,
@@ -180,9 +183,35 @@ export default function FinancesPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setIncomePatterns([...incomePatterns, data.pattern]);
+      
+      if (isUpdating) {
+        setIncomePatterns(incomePatterns.map(p => p.id === editingPatternId ? data.pattern : p));
+        setEditingPatternId(null);
+      } else {
+        setIncomePatterns([...incomePatterns, data.pattern]);
+      }
+      
       setNewPattern({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
     } catch (err) { alert(err.message); }
+  };
+
+  const handleEditClick = (p) => {
+    setEditingPatternId(p.id);
+    setNewPattern({
+      entity: p.entity,
+      category_id: p.category_id,
+      description: p.description || '',
+      is_monthly: p.is_monthly || false,
+      monthly_day: p.monthly_day || '',
+      monthly_amount: p.monthly_amount || '',
+      1: p.monday_amount || '',
+      2: p.tuesday_amount || '',
+      3: p.wednesday_amount || '',
+      4: p.thursday_amount || '',
+      5: p.friday_amount || '',
+      6: p.saturday_amount || '',
+      0: p.sunday_amount || ''
+    });
   };
 
   const handleDeletePattern = async (id) => {
@@ -881,16 +910,21 @@ export default function FinancesPage() {
                               )}
                             </div>
                           </div>
-                          <button onClick={() => handleDeletePattern(p.id)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Supprimer</button>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button onClick={() => handleEditClick(p)} style={{ background: '#E0E7FF', color: '#4F46E5', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Modifier</button>
+                            <button onClick={() => handleDeletePattern(p.id)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Supprimer</button>
+                          </div>
                         </div>
                       ))}
                     </div>
                   )}
 
                   {/* Formulaire d'ajout */}
-                  <form onSubmit={handleAddPattern} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '1px dashed #34D399' }}>
+                  <form onSubmit={handleAddPattern} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: editingPatternId ? '2px dashed #4F46E5' : '1px dashed #34D399' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                      <h5 style={{ margin: 0, color: '#059669' }}>Ajouter un patron de revenus</h5>
+                      <h5 style={{ margin: 0, color: editingPatternId ? '#4F46E5' : '#059669' }}>
+                        {editingPatternId ? 'Modifier le patron sélectionné' : 'Ajouter un patron de revenus'}
+                      </h5>
                       
                       <div style={{ display: 'flex', background: '#F3F4F6', borderRadius: '8px', padding: '4px' }}>
                         <button type="button" onClick={() => setNewPattern({...newPattern, is_monthly: false})} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: !newPattern.is_monthly ? '#10B981' : 'transparent', color: !newPattern.is_monthly ? 'white' : '#4B5563', cursor: 'pointer', fontWeight: !newPattern.is_monthly ? 'bold' : 'normal', fontSize: '0.8rem' }}>Hebdomadaire</button>
@@ -940,9 +974,16 @@ export default function FinancesPage() {
                         ))}
                       </div>
                     )}
-                    <button type="submit" style={{ background: '#10B981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
-                      Enregistrer le patron
-                    </button>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button type="submit" style={{ background: editingPatternId ? '#4F46E5' : '#10B981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                        {editingPatternId ? 'Mettre à jour le patron' : 'Enregistrer le patron'}
+                      </button>
+                      {editingPatternId && (
+                        <button type="button" onClick={() => { setEditingPatternId(null); setNewPattern({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' }); }} style={{ background: '#F3F4F6', color: '#4B5563', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                          Annuler
+                        </button>
+                      )}
+                    </div>
                   </form>
                 </div>
               )}
