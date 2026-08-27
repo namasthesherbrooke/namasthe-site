@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 
-export default function AddTransactionModal({ isOpen, onClose, onAdd, categories, currentPin }) {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+export default function AddTransactionModal({ isOpen, onClose, onAdd, categories, currentPin, selectedMonth, selectedYear }) {
+  const [date, setDate] = useState('');
+  const [isVariableDate, setIsVariableDate] = useState(false);
   const [type, setType] = useState('expense');
   const [entity, setEntity] = useState('Entreprise');
   const [amount, setAmount] = useState('');
@@ -22,6 +23,23 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
   const availableCategories = categories.filter(c => 
     c.type === type && (c.entity === entity || c.entity === 'Mixte')
   );
+
+  import { useEffect } from 'react';
+  useEffect(() => {
+    if (isOpen) {
+      const today = new Date();
+      const sMonth = selectedMonth !== undefined ? selectedMonth : today.getMonth();
+      const sYear = selectedYear !== undefined ? selectedYear : today.getFullYear();
+      const isCurrentMonth = sMonth === today.getMonth() && sYear === today.getFullYear();
+      
+      const yyyy = sYear;
+      const mm = String(sMonth + 1).padStart(2, '0');
+      const dd = isCurrentMonth ? String(today.getDate()).padStart(2, '0') : '01';
+      
+      setDate(`${yyyy}-${mm}-${dd}`);
+      setIsVariableDate(false);
+    }
+  }, [isOpen, selectedMonth, selectedYear]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,14 +61,14 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
         body: JSON.stringify({
           action: 'add_transaction',
           data: {
-            date,
+            date: isVariableDate ? `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-01` : date,
             type,
             entity,
             amount: parseFloat(amount),
             category_id: categoryId,
             description,
             is_fixed: isFixed,
-            status,
+            status: isVariableDate ? 'paid' : status, // Si variable, on peut le considérer payé ou on laisse au choix
             priority: parseInt(priority)
           }
         })
@@ -114,14 +132,26 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
 
           <div style={{ display: 'flex', gap: '10px' }}>
              <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Date</label>
-              <input 
-                type="date" 
-                value={date} 
-                onChange={(e) => setDate(e.target.value)}
-                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-                required
-              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                <label style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Date</label>
+                <label style={{ fontSize: '0.75rem', color: '#666', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={isVariableDate} onChange={(e) => setIsVariableDate(e.target.checked)} />
+                  Variable (Dans le mois)
+                </label>
+              </div>
+              {!isVariableDate ? (
+                <input 
+                  type="date" 
+                  value={date} 
+                  onChange={(e) => setDate(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                  required
+                />
+              ) : (
+                <div style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', background: '#F3F4F6', color: '#6B7280', fontSize: '0.9rem', textAlign: 'center' }}>
+                  Appliqué au mois affiché
+                </div>
+              )}
             </div>
             <div style={{ flex: 1 }}>
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Statut</label>

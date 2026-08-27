@@ -622,6 +622,8 @@ export default function FinancesPage() {
         onAdd={handleAddTransaction}
         categories={categories}
         currentPin={pin}
+        selectedMonth={currentMonth}
+        selectedYear={currentYear}
       />
     </FinanceLock>
   );
