@@ -79,9 +79,9 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     setError('');
 
     // Vérification des doublons suspects (uniquement en création, pas en édition)
-    if (!initialData || (initialData && String(initialData.id).startsWith('ghost-'))) {
+    if (!initialData || (initialData && (String(initialData.id).startsWith('ghost-') || String(initialData.id).startsWith('sim-')))) {
       const isDuplicate = currentMonthTransactions.some(t => {
-        return !t.is_ghost && 
+        return !t.is_ghost && !t.is_simulation &&
                parseFloat(t.amount) === parseFloat(amount) && 
                t.type === type && 
                t.entity === entity && 
@@ -103,7 +103,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
           'Content-Type': 'application/json',
           'x-finance-pin': currentPin
         },
-        body: JSON.stringify(initialData && initialData.id && !String(initialData.id).startsWith('ghost-') ? {
+        body: JSON.stringify(initialData && initialData.id && !String(initialData.id).startsWith('ghost-') && !String(initialData.id).startsWith('sim-') ? {
           action: 'update_transaction',
           data: {
             id: initialData.id,
