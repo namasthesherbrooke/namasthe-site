@@ -166,6 +166,14 @@ export default function AdminLayout({ children }) {
           }}>
             📚 Dossier Recettes
           </Link>
+          
+          <Link href="/admin/finances" onClick={() => setIsMobileMenuOpen(false)} style={{ 
+            display: 'block', padding: '12px 20px', color: pathname.includes('/finances') ? 'white' : '#94A3B8', 
+            background: pathname.includes('/finances') ? 'rgba(255,255,255,0.05)' : 'transparent',
+            textDecoration: 'none', transition: 'all 0.2s', borderLeft: pathname.includes('/finances') ? '4px solid #38BDF8' : '4px solid transparent'
+          }}>
+            💰 Finances & Budget
+          </Link>
         </nav>
         
         <div style={{ padding: '20px' }}>
