@@ -13,7 +13,7 @@ export default function FinancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const accounts = ['Vue Combinée', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon'];
+  const accounts = ['Vue Combinée', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
   const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -207,6 +207,26 @@ export default function FinancesPage() {
     projectedBalance = baseBalanceTotal + pendingIncomes - pendingExpenses;
   }
 
+  // --- LE CONSEILLER FINANCIER ---
+  // 1. Viabilité Entreprise
+  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const profitMargin = entrepriseIncomes > 0 ? ((entrepriseIncomes - entrepriseExpenses) / entrepriseIncomes) * 100 : (entrepriseExpenses > 0 ? -100 : 0);
+  
+  // 2. Provisions (Basé sur vos objectifs Personnels)
+  const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  
+  const taxProvision = persoIncomes * 0.25; // 25% Impôts
+  const emergencyProvision = persoIncomes * 0.15; // 10% Urgence + 5% Imprévus
+  const voyageProvision = persoIncomes * 0.12; // 7% Voyage + 5% Jacob
+  const celiProvision = persoIncomes * 0.08; // 8% CELI
+
+  // 3. Les petits sous (Lousse)
+  const safeSurplus = isCombinedView ? projectedBalance : 0;
+
+  // --- GRAND TOTAL (Valeur Nette) ---
+  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getProjectedBalance(acc), 0);
+  
   return (
     <FinanceLock onUnlock={handleUnlock}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', fontFamily: 'var(--font-sans)', paddingBottom: '50px' }}>
@@ -217,12 +237,20 @@ export default function FinancesPage() {
             <h1 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', margin: '0 0 5px 0' }}>📊 Gestion Budgétaire</h1>
             <p style={{ color: '#666', margin: 0 }}>Mois en cours : <strong style={{color: '#2C1810'}}>{new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</strong></p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            style={{ padding: '12px 24px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-          >
-            <span style={{ fontSize: '1.2rem' }}>+</span> Nouvelle Entrée / Dépense
-          </button>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div style={{ background: '#F0FDF4', padding: '10px 20px', borderRadius: '30px', border: '1px solid #BBF7D0', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <span style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 'bold', textTransform: 'uppercase' }}>Valeur Nette Globale</span>
+              <span style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#15803D' }}>{formatMoney(grandTotalProjected)}</span>
+            </div>
+            
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              style={{ padding: '12px 24px', background: '#2C1810', color: 'white', border: 'none', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+            >
+              <span style={{ fontSize: '1.2rem' }}>+</span> Nouvelle Entrée / Dépense
+            </button>
+          </div>
         </div>
 
         {/* ONGLETS DES COMPTES */}
@@ -321,12 +349,12 @@ export default function FinancesPage() {
               {isCombinedView && (
                 <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #E5E7EB' }}>
                   <h3 style={{ margin: '0 0 15px 0', color: '#4F46E5', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    🤖 Algorithme d'Équilibrage Suggéré
+                    🤖 Équilibrage des Comptes
                   </h3>
                   
                   {suggestions.length === 0 ? (
                     <div style={{ background: '#F0FDF4', padding: '15px', borderRadius: '12px', color: '#166534', border: '1px solid #BBF7D0' }}>
-                      <strong>Parfait !</strong> Aucun des 3 comptes (Entreprise, Perso, Conjoint) n'est projeté dans le rouge ce mois-ci. Aucun virement n'est nécessaire pour le moment.
+                      <strong>Parfait !</strong> Aucun des 3 comptes (Entreprise, Perso, Conjoint) n'est projeté dans le rouge ce mois-ci. Aucun virement de renflouement n'est nécessaire.
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -347,6 +375,73 @@ export default function FinancesPage() {
                   )}
                 </div>
               )}
+
+              {/* LE CONSEILLER FINANCIER (Seulement dans la Vue Combinée) */}
+              {isCombinedView && (
+                <div style={{ marginTop: '30px', paddingTop: '30px', borderTop: '2px dashed #E5E7EB' }}>
+                  <h3 style={{ margin: '0 0 20px 0', color: '#111827', fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🧐 Le Conseiller Financier
+                  </h3>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                    
+                    {/* Bilan Entreprise */}
+                    <div style={{ background: '#F8FAFC', padding: '20px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                      <h4 style={{ margin: '0 0 10px 0', color: '#475569' }}>🏢 Viabilité Entreprise</h4>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: profitMargin >= 15 ? '#059669' : profitMargin > 5 ? '#D97706' : '#DC2626' }}>
+                        {profitMargin.toFixed(1)}%
+                      </div>
+                      <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: '#64748B' }}>
+                        {profitMargin >= 15 ? 'Excellente marge de profit !' : profitMargin > 5 ? 'Marge stable, mais à surveiller.' : 'Attention, l\'entreprise est en déficit ou marge trop faible.'}
+                      </p>
+                      <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#94A3B8' }}>
+                        Revenus: {formatMoney(entrepriseIncomes)} | Dépenses: {formatMoney(entrepriseExpenses)}
+                      </div>
+                    </div>
+
+                    {/* Provisions Automatiques */}
+                    <div style={{ background: '#FFFBEB', padding: '20px', borderRadius: '12px', border: '1px solid #FEF3C7' }}>
+                      <h4 style={{ margin: '0 0 10px 0', color: '#92400E' }}>🏦 Planification de l'Épargne</h4>
+                      <p style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: '#B45309' }}>
+                        Basé sur vos revenus personnels ce mois-ci ({formatMoney(persoIncomes)}) :
+                      </p>
+                      <ul style={{ margin: 0, paddingLeft: '20px', color: '#92400E', fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li><strong>Impôts (25%) :</strong> {formatMoney(taxProvision)}</li>
+                        <li><strong>Urgence/Imprévus (15%) :</strong> {formatMoney(emergencyProvision)}</li>
+                        <li><strong>Voyage/Jacob (12%) :</strong> {formatMoney(voyageProvision)}</li>
+                        <li><strong>CELI (8%) :</strong> {formatMoney(celiProvision)}</li>
+                      </ul>
+                      <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#D97706', fontStyle: 'italic' }}>
+                        Virez ces montants vers leurs comptes respectifs pour suivre votre plan exact !
+                      </p>
+                    </div>
+
+                    {/* Lousse / Petits sous */}
+                    <div style={{ background: safeSurplus > 0 ? '#F0FDF4' : '#F9FAFB', padding: '20px', borderRadius: '12px', border: `1px solid ${safeSurplus > 0 ? '#BBF7D0' : '#E5E7EB'}` }}>
+                      <h4 style={{ margin: '0 0 10px 0', color: safeSurplus > 0 ? '#166534' : '#6B7280' }}>🏖️ Les Petits Sous (Lousse)</h4>
+                      {safeSurplus > 0 ? (
+                        <>
+                          <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#15803D' }}>
+                            {formatMoney(safeSurplus)}
+                          </div>
+                          <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', color: '#166534' }}>
+                            Vous avez un surplus sécuritaire ! Toutes vos dépenses prévues pour vos 3 comptes sont couvertes.
+                          </p>
+                          <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', fontWeight: 'bold', color: '#065F46' }}>
+                            💡 Suggéré : Transférer vers "Voyage et mon garçon".
+                          </p>
+                        </>
+                      ) : (
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: '#6B7280' }}>
+                          Pas de surplus sécuritaire détecté ce mois-ci une fois toutes les factures payées. Gardez le cap !
+                        </p>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>

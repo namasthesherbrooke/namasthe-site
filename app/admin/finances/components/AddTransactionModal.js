@@ -107,6 +107,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, categories
                 <option value="Impôts et taxes">Impôts et taxes</option>
                 <option value="Urgence">Urgence</option>
                 <option value="Voyage et mon garçon">Voyage et mon garçon</option>
+                <option value="CELI">CELI (Épargne)</option>
               </select>
             </div>
           </div>
