@@ -21,6 +21,8 @@ export default function FinancesPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [dailyProjections, setDailyProjections] = useState({ 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
 
   const parseDateLocal = (dStr) => {
     if (!dStr) return new Date();
@@ -222,6 +224,43 @@ export default function FinancesPage() {
     return getProjectedEndBalanceForMonth(prevM, prevY, acc);
   };
 
+  const daysInMonthForSim = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const todayForSim = new Date();
+  const isCurrentMonthView = todayForSim.getMonth() === currentMonth && todayForSim.getFullYear() === currentYear;
+  const startDay = isCurrentMonthView ? todayForSim.getDate() : 1;
+  const hasProjections = Object.values(dailyProjections).some(val => parseFloat(val) > 0);
+  
+  let virtualIncomes = [];
+  if (hasProjections) {
+    for (let day = startDay; day <= daysInMonthForSim; day++) {
+      const d = new Date(currentYear, currentMonth, day);
+      const dayOfWeek = d.getDay();
+      const projectedAmount = parseFloat(dailyProjections[dayOfWeek]) || 0;
+      
+      if (projectedAmount > 0) {
+        const hasRealIncomeToday = transactions.some(t => 
+          t.type === 'income' && t.entity === 'Entreprise' && 
+          parseDateLocal(t.date).getMonth() === currentMonth && 
+          parseDateLocal(t.date).getFullYear() === currentYear &&
+          parseDateLocal(t.date).getDate() === day
+        );
+        if (!hasRealIncomeToday) {
+          virtualIncomes.push({
+            id: `sim-${currentMonth}-${day}`,
+            date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+            type: 'income',
+            amount: projectedAmount,
+            entity: 'Entreprise',
+            description: 'Ventes simulées',
+            status: 'pending',
+            is_ghost: true,
+            is_simulation: true
+          });
+        }
+      }
+    }
+  }
+
   const getProjectedEndBalanceForMonth = (m, y, acc) => {
     const startBal = getCalculatedStartBalance(m, y, acc);
     
@@ -247,8 +286,12 @@ export default function FinancesPage() {
     const ghostSum = Array.from(ghostMap.values())
       .filter(t => t.priority !== 99)
       .reduce((a, t) => a + parseFloat(t.amount), 0);
+      
+    const simSum = virtualIncomes
+      .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc) && parseDateLocal(t.date).getMonth() === m && parseDateLocal(t.date).getFullYear() === y)
+      .reduce((a, t) => a + parseFloat(t.amount), 0);
     
-    return startBal + incs - exps - ghostSum;
+    return startBal + incs - exps - ghostSum + simSum;
   };
 
   const isCombinedView = activeTab === 'Vue Combinée';
@@ -286,7 +329,7 @@ export default function FinancesPage() {
       is_ghost: true
     }));
 
-  const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses];
+  const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses, ...virtualIncomes];
 
   let accountTransactions = currentMonthTransactions.filter(t => t.priority !== 99);
   if (!isCombinedView) {
@@ -662,9 +705,52 @@ export default function FinancesPage() {
 
             {/* FRISE CHRONOLOGIQUE */}
             <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB', marginBottom: '30px' }}>
-              <h3 style={{ margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151' }}>
-                ⏳ Évolution du solde (Jour par Jour)
-              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
+                <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: '#374151' }}>
+                  ⏳ Évolution du solde (Jour par Jour)
+                </h3>
+                <button 
+                  onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
+                  style={{ background: hasProjections ? '#059669' : '#F3F4F6', color: hasProjections ? 'white' : '#4B5563', border: '1px solid #D1D5DB', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  🧪 {hasProjections ? 'Simulateur actif' : 'Simuler des revenus'}
+                </button>
+              </div>
+
+              {isSimulatorOpen && (
+                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', padding: '20px', borderRadius: '12px', marginBottom: '20px' }}>
+                  <h4 style={{ margin: '0 0 15px 0', color: '#065F46' }}>🧪 Projections des revenus de l'entreprise</h4>
+                  <p style={{ margin: '0 0 15px 0', fontSize: '0.9rem', color: '#047857' }}>
+                    Saisissez vos prévisions moyennes pour chaque jour de la semaine. Ces revenus virtuels s'afficheront dans la frise pour les jours futurs sans revenus réels, afin de vous rassurer sur le solde final !
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '15px' }}>
+                    {[
+                      { k: 1, l: 'Lundi' }, { k: 2, l: 'Mardi' }, { k: 3, l: 'Mercredi' }, 
+                      { k: 4, l: 'Jeudi' }, { k: 5, l: 'Vendredi' }, { k: 6, l: 'Samedi' }, { k: 0, l: 'Dimanche' }
+                    ].map(day => (
+                      <div key={day.k}>
+                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#065F46', marginBottom: '5px' }}>{day.l}</label>
+                        <input 
+                          type="number" 
+                          step="1"
+                          placeholder="0 $"
+                          value={dailyProjections[day.k]}
+                          onChange={e => setDailyProjections({...dailyProjections, [day.k]: e.target.value})}
+                          style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #A7F3D0', background: 'white' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: '15px', textAlign: 'right' }}>
+                    <button 
+                      onClick={() => setDailyProjections({ 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' })}
+                      style={{ background: 'transparent', color: '#059669', border: 'none', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
+                    >
+                      Effacer la simulation
+                    </button>
+                  </div>
+                </div>
+              )}
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', minWidth: '600px', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                   <thead>
@@ -706,7 +792,8 @@ export default function FinancesPage() {
                           </td>
                           <td style={{ padding: '12px 15px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              {t.is_ghost && <span title="Projeté automatiquement">👻</span>}
+                              {t.is_ghost && !t.is_simulation && <span title="Projeté automatiquement">👻</span>}
+                              {t.is_simulation && <span title="Revenu virtuel simulé">🧪</span>}
                               <span style={{ fontWeight: '500', color: '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>
                                 {t.description || getCategory(t.category_id)?.name || 'N/A'}
                               </span>
