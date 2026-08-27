@@ -156,11 +156,11 @@ export async function POST(req) {
     }
 
     if (action === 'add_pattern') {
-      const { entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount } = body.data;
+      const { entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount, is_monthly, monthly_day, monthly_amount } = body.data;
       
       const { data, error } = await supabaseAdmin
         .from('finances_income_patterns')
-        .insert([{ entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount }])
+        .insert([{ entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount, is_monthly: is_monthly || false, monthly_day: monthly_day || null, monthly_amount: monthly_amount || 0 }])
         .select();
 
       if (error) throw error;
@@ -171,7 +171,7 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("Erreur API Finances POST:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur: " + error.message }, { status: 500 });
   }
 }
 

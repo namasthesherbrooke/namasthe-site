@@ -25,7 +25,7 @@ export default function FinancesPage() {
   const [incomePatterns, setIncomePatterns] = useState([]);
   
   // Nouveaux états pour le formulaire d'ajout de patron de revenus
-  const [newPattern, setNewPattern] = useState({ entity: 'Entreprise', category_id: '', description: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
+  const [newPattern, setNewPattern] = useState({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
 
   const parseDateLocal = (dStr) => {
     if (!dStr) return new Date();
@@ -153,6 +153,8 @@ export default function FinancesPage() {
   const handleAddPattern = async (e) => {
     e.preventDefault();
     if (!newPattern.category_id) return alert("Veuillez sélectionner une catégorie");
+    if (newPattern.is_monthly && (!newPattern.monthly_day || !newPattern.monthly_amount)) return alert("Veuillez remplir le jour et le montant mensuel");
+    
     try {
       const res = await fetch('/api/admin/finances', {
         method: 'POST',
@@ -163,6 +165,9 @@ export default function FinancesPage() {
             entity: newPattern.entity,
             category_id: newPattern.category_id,
             description: newPattern.description,
+            is_monthly: newPattern.is_monthly,
+            monthly_day: newPattern.monthly_day ? parseInt(newPattern.monthly_day) : null,
+            monthly_amount: newPattern.monthly_amount ? parseFloat(newPattern.monthly_amount) : 0,
             monday_amount: newPattern[1] || 0,
             tuesday_amount: newPattern[2] || 0,
             wednesday_amount: newPattern[3] || 0,
@@ -176,7 +181,7 @@ export default function FinancesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setIncomePatterns([...incomePatterns, data.pattern]);
-      setNewPattern({ entity: 'Entreprise', category_id: '', description: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
+      setNewPattern({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
     } catch (err) { alert(err.message); }
   };
 
@@ -302,7 +307,16 @@ export default function FinancesPage() {
       const column = dayMapping[dayOfWeek];
 
       incomePatterns.forEach(pattern => {
-        const projectedAmount = parseFloat(pattern[column]) || 0;
+        let projectedAmount = 0;
+        
+        if (pattern.is_monthly) {
+          if (day === parseInt(pattern.monthly_day)) {
+            projectedAmount = parseFloat(pattern.monthly_amount) || 0;
+          }
+        } else {
+          projectedAmount = parseFloat(pattern[column]) || 0;
+        }
+
         if (projectedAmount > 0) {
           const hasRealIncomeToday = transactions.some(t => 
             t.type === 'income' && 
@@ -836,13 +850,19 @@ export default function FinancesPage() {
                               [{p.entity}] {getCategory(p.category_id)?.name} {p.description ? `- ${p.description}` : ''}
                             </div>
                             <div style={{ fontSize: '0.85rem', color: '#4B5563', marginTop: '5px', display: 'flex', gap: '10px' }}>
-                              <span>L: {p.monday_amount}$</span>
-                              <span>M: {p.tuesday_amount}$</span>
-                              <span>M: {p.wednesday_amount}$</span>
-                              <span>J: {p.thursday_amount}$</span>
-                              <span>V: {p.friday_amount}$</span>
-                              <span>S: {p.saturday_amount}$</span>
-                              <span>D: {p.sunday_amount}$</span>
+                              {p.is_monthly ? (
+                                <span>📅 Le {p.monthly_day} du mois : <strong>{p.monthly_amount}$</strong></span>
+                              ) : (
+                                <>
+                                  <span>L: {p.monday_amount}$</span>
+                                  <span>M: {p.tuesday_amount}$</span>
+                                  <span>M: {p.wednesday_amount}$</span>
+                                  <span>J: {p.thursday_amount}$</span>
+                                  <span>V: {p.friday_amount}$</span>
+                                  <span>S: {p.saturday_amount}$</span>
+                                  <span>D: {p.sunday_amount}$</span>
+                                </>
+                              )}
                             </div>
                           </div>
                           <button onClick={() => handleDeletePattern(p.id)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}>Supprimer</button>
@@ -853,7 +873,15 @@ export default function FinancesPage() {
 
                   {/* Formulaire d'ajout */}
                   <form onSubmit={handleAddPattern} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '1px dashed #34D399' }}>
-                    <h5 style={{ margin: '0 0 15px 0', color: '#059669' }}>Ajouter un patron de revenus</h5>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                      <h5 style={{ margin: 0, color: '#059669' }}>Ajouter un patron de revenus</h5>
+                      
+                      <div style={{ display: 'flex', background: '#F3F4F6', borderRadius: '8px', padding: '4px' }}>
+                        <button type="button" onClick={() => setNewPattern({...newPattern, is_monthly: false})} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: !newPattern.is_monthly ? '#10B981' : 'transparent', color: !newPattern.is_monthly ? 'white' : '#4B5563', cursor: 'pointer', fontWeight: !newPattern.is_monthly ? 'bold' : 'normal', fontSize: '0.8rem' }}>Hebdomadaire</button>
+                        <button type="button" onClick={() => setNewPattern({...newPattern, is_monthly: true})} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: newPattern.is_monthly ? '#10B981' : 'transparent', color: newPattern.is_monthly ? 'white' : '#4B5563', cursor: 'pointer', fontWeight: newPattern.is_monthly ? 'bold' : 'normal', fontSize: '0.8rem' }}>Mensuel</button>
+                      </div>
+                    </div>
+
                     <div style={{ display: 'flex', gap: '15px', marginBottom: '15px', flexWrap: 'wrap' }}>
                       <select value={newPattern.entity} onChange={e => setNewPattern({...newPattern, entity: e.target.value})} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', flex: 1, minWidth: '150px' }}>
                         {accounts.filter(a => a !== 'Vue Combinée').map(a => <option key={a} value={a}>{a}</option>)}
@@ -865,24 +893,37 @@ export default function FinancesPage() {
                       <input type="text" placeholder="Description courte (ex: Pourboires)" value={newPattern.description} onChange={e => setNewPattern({...newPattern, description: e.target.value})} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', flex: 2, minWidth: '200px' }} />
                     </div>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '10px', marginBottom: '15px' }}>
-                      {[
-                        { k: 1, l: 'Lun' }, { k: 2, l: 'Mar' }, { k: 3, l: 'Mer' }, 
-                        { k: 4, l: 'Jeu' }, { k: 5, l: 'Ven' }, { k: 6, l: 'Sam' }, { k: 0, l: 'Dim' }
-                      ].map(day => (
-                        <div key={day.k}>
-                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: '#065F46', marginBottom: '3px' }}>{day.l}</label>
-                          <input 
-                            type="number" 
-                            step="0.01"
-                            placeholder="0"
-                            value={newPattern[day.k]}
-                            onChange={e => setNewPattern({...newPattern, [day.k]: e.target.value})}
-                            style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #A7F3D0' }}
-                          />
+                    {newPattern.is_monthly ? (
+                      <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: '#065F46', marginBottom: '3px' }}>Jour du mois (ex: 15)</label>
+                          <input type="number" min="1" max="31" placeholder="15" value={newPattern.monthly_day} onChange={e => setNewPattern({...newPattern, monthly_day: e.target.value})} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #A7F3D0' }} required />
                         </div>
-                      ))}
-                    </div>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: '#065F46', marginBottom: '3px' }}>Montant ($)</label>
+                          <input type="number" step="0.01" placeholder="300" value={newPattern.monthly_amount} onChange={e => setNewPattern({...newPattern, monthly_amount: e.target.value})} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #A7F3D0' }} required />
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '10px', marginBottom: '15px' }}>
+                        {[
+                          { k: 1, l: 'Lun' }, { k: 2, l: 'Mar' }, { k: 3, l: 'Mer' }, 
+                          { k: 4, l: 'Jeu' }, { k: 5, l: 'Ven' }, { k: 6, l: 'Sam' }, { k: 0, l: 'Dim' }
+                        ].map(day => (
+                          <div key={day.k}>
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', color: '#065F46', marginBottom: '3px' }}>{day.l}</label>
+                            <input 
+                              type="number" 
+                              step="0.01"
+                              placeholder="0"
+                              value={newPattern[day.k]}
+                              onChange={e => setNewPattern({...newPattern, [day.k]: e.target.value})}
+                              style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #A7F3D0' }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <button type="submit" style={{ background: '#10B981', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
                       Enregistrer le patron
                     </button>
