@@ -138,7 +138,37 @@ export default function FinancesPage() {
 
   const handleDelete = async (id) => {
     if (String(id).startsWith('ghost-')) {
-      alert("Ceci est une dépense récurrente projetée. Pour l'annuler définitivement, supprimez-la dans le mois de sa création.");
+      if (!confirm("Voulez-vous ARRÊTER DÉFINITIVEMENT cette dépense récurrente à partir de ce mois-ci ? (L'historique des mois précédents sera conservé)")) return;
+      
+      const ghostId = id.replace('ghost-', '');
+      const originalT = transactions.find(t => t.id === parseInt(ghostId) || t.id === ghostId);
+      if (!originalT) return;
+
+      try {
+        const res = await fetch(`/api/admin/finances`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+          body: JSON.stringify({
+            action: 'add_transaction',
+            data: {
+              date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+              type: originalT.type,
+              entity: originalT.entity,
+              amount: 0,
+              category_id: originalT.category_id,
+              description: originalT.description,
+              is_fixed: true,
+              status: 'paid',
+              priority: 99
+            }
+          })
+        });
+        if (!res.ok) throw new Error("Erreur lors de l'arrêt de la récurrence.");
+        const { transaction } = await res.json();
+        setTransactions([...transactions, transaction]);
+      } catch (err) {
+        alert(err.message);
+      }
       return;
     }
     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) return;
@@ -214,7 +244,9 @@ export default function FinancesPage() {
       }
     });
     
-    const ghostSum = Array.from(ghostMap.values()).reduce((a, t) => a + parseFloat(t.amount), 0);
+    const ghostSum = Array.from(ghostMap.values())
+      .filter(t => t.priority !== 99)
+      .reduce((a, t) => a + parseFloat(t.amount), 0);
     
     return startBal + incs - exps - ghostSum;
   };
@@ -244,17 +276,19 @@ export default function FinancesPage() {
     }
   });
 
-  const ghostExpenses = Array.from(latestFixedMap.values()).map(t => ({
-    ...t,
-    id: `ghost-${t.id}`,
-    status: 'pending',
-    date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
-    is_ghost: true
-  }));
+  const ghostExpenses = Array.from(latestFixedMap.values())
+    .filter(t => t.priority !== 99)
+    .map(t => ({
+      ...t,
+      id: `ghost-${t.id}`,
+      status: 'pending',
+      date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+      is_ghost: true
+    }));
 
   const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses];
 
-  let accountTransactions = currentMonthTransactions;
+  let accountTransactions = currentMonthTransactions.filter(t => t.priority !== 99);
   if (!isCombinedView) {
     accountTransactions = currentMonthTransactions.filter(t => t.entity === activeTab);
   }
@@ -271,6 +305,44 @@ export default function FinancesPage() {
   let pendingIncomes = accountTransactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   let pendingExpenses = accountTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   let suggestions = [];
+
+  // --- CHRONOLOGIE DU SOLDE ---
+  let timelineStartBalance = 0;
+  if (isCombinedView) {
+    timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise') +
+                           getCalculatedStartBalance(currentMonth, currentYear, 'Perso') +
+                           getCalculatedStartBalance(currentMonth, currentYear, 'Conjoint');
+  } else {
+    timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
+  }
+
+  const sortedTransactions = [...accountTransactions].sort((a, b) => {
+    const da = parseDateLocal(a.date);
+    const db = parseDateLocal(b.date);
+    if (da.getTime() !== db.getTime()) {
+      return da.getTime() - db.getTime();
+    }
+    if (a.type !== b.type) {
+      return a.type === 'income' ? -1 : 1;
+    }
+    return 0;
+  });
+
+  const timelineEvents = [];
+  let runningBal = timelineStartBalance;
+  
+  sortedTransactions.forEach(t => {
+    const amt = parseFloat(t.amount);
+    if (t.type === 'income') {
+      runningBal += amt;
+    } else {
+      runningBal -= amt;
+    }
+    timelineEvents.push({
+      ...t,
+      runningBalance: runningBal
+    });
+  });
 
   if (isCombinedView) {
     const pEnt = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
@@ -586,6 +658,80 @@ export default function FinancesPage() {
                 </div>
               )}
 
+            </div>
+
+            {/* FRISE CHRONOLOGIQUE */}
+            <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB', marginBottom: '30px' }}>
+              <h3 style={{ margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151' }}>
+                ⏳ Évolution du solde (Jour par Jour)
+              </h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', minWidth: '600px', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                  <thead>
+                    <tr style={{ background: '#F9FAFB', borderBottom: '2px solid #E5E7EB', color: '#6B7280', textAlign: 'left' }}>
+                      <th style={{ padding: '12px 15px', fontWeight: 'bold' }}>Date</th>
+                      <th style={{ padding: '12px 15px', fontWeight: 'bold' }}>Description</th>
+                      <th style={{ padding: '12px 15px', fontWeight: 'bold', textAlign: 'right' }}>Montant</th>
+                      <th style={{ padding: '12px 15px', fontWeight: 'bold', textAlign: 'right' }}>Solde après</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style={{ borderBottom: '1px solid #F3F4F6', color: '#9CA3AF' }}>
+                      <td style={{ padding: '12px 15px' }}>--</td>
+                      <td style={{ padding: '12px 15px', fontStyle: 'italic' }}>Solde initial du mois</td>
+                      <td style={{ padding: '12px 15px', textAlign: 'right' }}>--</td>
+                      <td style={{ padding: '12px 15px', textAlign: 'right', fontWeight: 'bold', color: timelineStartBalance >= 0 ? '#10B981' : '#EF4444' }}>
+                        {formatMoney(timelineStartBalance)}
+                      </td>
+                    </tr>
+                    {timelineEvents.length === 0 ? (
+                      <tr>
+                        <td colSpan="4" style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF' }}>Aucune transaction ce mois-ci.</td>
+                      </tr>
+                    ) : timelineEvents.map((t, idx) => {
+                      const isNegative = t.runningBalance < 0;
+                      const d = parseDateLocal(t.date);
+                      let dateStr = String(d.getDate()).padStart(2, '0');
+                      if (t.is_fixed && (t.priority === 3 || t.priority === 4)) {
+                        dateStr = 'Var.';
+                      }
+                      
+                      return (
+                        <tr key={idx} style={{ 
+                          borderBottom: '1px solid #F3F4F6', 
+                          background: isNegative ? '#FEF2F2' : 'transparent'
+                        }}>
+                          <td style={{ padding: '12px 15px', color: '#4B5563', whiteSpace: 'nowrap' }}>
+                            {dateStr}
+                          </td>
+                          <td style={{ padding: '12px 15px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              {t.is_ghost && <span title="Projeté automatiquement">👻</span>}
+                              <span style={{ fontWeight: '500', color: '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>
+                                {t.description || getCategory(t.category_id)?.name || 'N/A'}
+                              </span>
+                              {isCombinedView && <span style={{ fontSize: '0.7rem', color: '#6B7280' }}>[{t.entity}]</span>}
+                            </div>
+                          </td>
+                          <td style={{ padding: '12px 15px', textAlign: 'right', color: t.type === 'income' ? '#059669' : '#DC2626', fontWeight: 'bold' }}>
+                            {t.type === 'income' ? '+' : '-'}{formatMoney(parseFloat(t.amount))}
+                          </td>
+                          <td style={{ padding: '12px 15px', textAlign: 'right', fontWeight: 'bold', color: isNegative ? '#DC2626' : '#10B981' }}>
+                            {formatMoney(t.runningBalance)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              
+              {timelineEvents.some(t => t.runningBalance < 0) && (
+                <div style={{ marginTop: '15px', padding: '12px', background: '#FEF2F2', border: '1px solid #F87171', borderRadius: '8px', color: '#B91C1C', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>⚠️</span>
+                  <strong>Attention :</strong> Le compte tombera dans le négatif à certaines dates de ce mois. Assurez-vous d'avoir les fonds suffisants avant ces dates !
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
