@@ -480,8 +480,19 @@ export default function FinancesPage() {
   const ghostExpenses = Array.from(latestFixedMap.values())
     .filter(t => t.priority !== 99)
     .flatMap(t => {
-      // Pour les dépenses variables (ex: Épicerie), on les divise en 4 semaines pour ne pas plomber le solde le jour 1
-      if (Number(t.priority) === 3 || Number(t.priority) === 4) {
+      // Identifier si la dépense est à date variable (soit par priorité, soit par mot-clé)
+      const cat = getCategory(t.category_id);
+      const catName = (cat ? cat.name : '').toLowerCase();
+      const desc = (t.description || '').toLowerCase();
+      
+      const isVariableDate = Number(t.priority) === 3 || Number(t.priority) === 4 || 
+                             catName.includes('épicerie') || catName.includes('epicerie') || 
+                             catName.includes('animaux') || catName.includes('essence') ||
+                             catName.includes('pharmacie') ||
+                             desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
+
+      // Pour les dépenses variables, on les divise en 4 semaines pour ne pas plomber le solde le jour 1
+      if (isVariableDate) {
         const weeklyAmount = (parseFloat(t.amount) / 4).toFixed(2);
         return [7, 14, 21, 28].map((day, idx) => ({
           ...t,
