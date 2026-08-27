@@ -422,22 +422,48 @@ export default function FinancesPage() {
     }
   }
 
-  // --- LE CONSEILLER FINANCIER ---
-  // 1. Viabilité Entreprise
-  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const profitMargin = entrepriseIncomes > 0 ? ((entrepriseIncomes - entrepriseExpenses) / entrepriseIncomes) * 100 : (entrepriseExpenses > 0 ? -100 : 0);
+  // --- LE CONSEILLER FINANCIER (L'Algorithme CFO) ---
+  
+  // 1. Analyse Entreprise (Inclus les revenus virtuels/simulés)
+  const realEntrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const virtualEntrepriseIncomes = virtualIncomes.filter(t => t.entity === 'Entreprise').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseIncomes = realEntrepriseIncomes + virtualEntrepriseIncomes;
+  
+  const entrepriseTaxProvision = entrepriseIncomes * 0.15; // 15% provision pour Taxes/TPS/TVQ
+
+  // Simulation isolée de l'Entreprise pour trouver le "Extra" sécuritaire
+  const entrepriseStartBal = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise');
+  let entRunningBal = entrepriseStartBal;
+  let entMinBal = entrepriseStartBal;
+  
+  const entTransactions = currentMonthTransactions.filter(t => t.entity === 'Entreprise' && t.priority !== 99);
+  const entSorted = [...entTransactions].sort((a, b) => {
+    const dA = parseDateLocal(a.date).getTime();
+    const dB = parseDateLocal(b.date).getTime();
+    if (dA === dB) {
+      if (a.is_fixed && !b.is_fixed) return -1;
+      if (!a.is_fixed && b.is_fixed) return 1;
+      return 0;
+    }
+    return dA - dB;
+  });
+
+  entSorted.forEach(t => {
+    const amt = parseFloat(t.amount);
+    if (t.type === 'income') entRunningBal += amt;
+    else if (t.type === 'expense') entRunningBal -= amt;
+    if (entRunningBal < entMinBal) entMinBal = entRunningBal;
+  });
+
+  const entrepriseExtra = entMinBal;
   
   // 2. Provisions (Basé sur vos objectifs Personnels)
   const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
   
-  const taxProvision = persoIncomes * 0.25; // 25% Impôts
+  const taxProvision = persoIncomes * 0.25; // 25% Impôts personnels (si applicable)
   const emergencyProvision = persoIncomes * 0.15; // 10% Urgence + 5% Imprévus
   const voyageProvision = persoIncomes * 0.12; // 7% Voyage + 5% Jacob
   const celiProvision = persoIncomes * 0.08; // 8% CELI
-
-  // 3. Les petits sous (Lousse)
-  const safeSurplus = isCombinedView ? projectedBalance : 0;
 
   // --- GRAND TOTAL (Valeur Nette) ---
   const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getCalculatedStartBalance(currentMonth, currentYear, acc), 0);
@@ -639,62 +665,64 @@ export default function FinancesPage() {
               {isCombinedView && (
                 <div style={{ marginTop: '30px', paddingTop: '30px', borderTop: '2px dashed #E5E7EB' }}>
                   <h3 style={{ margin: '0 0 20px 0', color: '#111827', fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    🧐 Le Conseiller Financier
+                    🧐 L'Assistant Financier (Le Cerveau)
                   </h3>
                   
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                     
-                    {/* Bilan Entreprise */}
+                    {/* Algorithme CFO Entreprise */}
                     <div style={{ background: '#F8FAFC', padding: '20px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-                      <h4 style={{ margin: '0 0 10px 0', color: '#475569' }}>🏢 Viabilité Entreprise</h4>
-                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: profitMargin >= 15 ? '#059669' : profitMargin > 5 ? '#D97706' : '#DC2626' }}>
-                        {profitMargin.toFixed(1)}%
-                      </div>
-                      <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: '#64748B' }}>
-                        {profitMargin >= 15 ? 'Excellente marge de profit !' : profitMargin > 5 ? 'Marge stable, mais à surveiller.' : 'Attention, l\'entreprise est en déficit ou marge trop faible.'}
+                      <h4 style={{ margin: '0 0 10px 0', color: '#0F172A' }}>🏢 Trésorerie Entreprise</h4>
+                      <p style={{ margin: '0 0 15px 0', fontSize: '0.9rem', color: '#475569' }}>
+                        Basé sur vos ventes réelles et virtuelles ({formatMoney(entrepriseIncomes)}) et toutes vos dépenses futures.
                       </p>
-                      <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#94A3B8' }}>
-                        Revenus: {formatMoney(entrepriseIncomes)} | Dépenses: {formatMoney(entrepriseExpenses)}
+                      <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E293B', fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <li>
+                          <strong>Taxes à provisionner (15%) :</strong> <span style={{ color: '#DC2626' }}>{formatMoney(entrepriseTaxProvision)}</span>
+                        </li>
+                        <li>
+                          <strong>Liquidité Extra (Surplus garanti) :</strong> 
+                          <span style={{ color: entrepriseExtra > 0 ? '#059669' : '#DC2626', fontWeight: 'bold', marginLeft: '5px' }}>
+                            {formatMoney(entrepriseExtra)}
+                          </span>
+                        </li>
+                      </ul>
+                      
+                      <div style={{ marginTop: '20px', padding: '15px', background: 'white', borderRadius: '8px', border: '1px solid #CBD5E1' }}>
+                        <h5 style={{ margin: '0 0 8px 0', color: '#334155' }}>🤖 Recommandation :</h5>
+                        {entrepriseExtra > 0 ? (
+                          entrepriseExtra >= entrepriseTaxProvision ? (
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#059669' }}>
+                              ✅ Transférez <strong>{formatMoney(entrepriseTaxProvision)}</strong> vers "Impôts et taxes". Il vous restera ensuite <strong>{formatMoney(entrepriseExtra - entrepriseTaxProvision)}</strong> de profit pur que vous pouvez virer vers "Perso" !
+                            </p>
+                          ) : (
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#D97706' }}>
+                              ⚠️ Vous avez un léger surplus ({formatMoney(entrepriseExtra)}), mais il ne couvre pas complètement vos obligations de taxes ({formatMoney(entrepriseTaxProvision)}). Transférez le maximum possible ({formatMoney(entrepriseExtra)}) vers "Impôts et taxes". Ne virez rien dans Perso !
+                            </p>
+                          )
+                        ) : (
+                          <p style={{ margin: 0, fontSize: '0.9rem', color: '#DC2626' }}>
+                            🚨 DANGER ! La trésorerie de l'entreprise va tomber en déficit de <strong>{formatMoney(Math.abs(entrepriseExtra))}</strong>. NE FAITES AUCUN TRANSFERT. Laissez l'argent dans l'entreprise pour couvrir les factures !
+                          </p>
+                        )}
                       </div>
                     </div>
 
-                    {/* Provisions Automatiques */}
+                    {/* Provisions Automatiques Perso */}
                     <div style={{ background: '#FFFBEB', padding: '20px', borderRadius: '12px', border: '1px solid #FEF3C7' }}>
-                      <h4 style={{ margin: '0 0 10px 0', color: '#92400E' }}>🏦 Planification de l'Épargne</h4>
+                      <h4 style={{ margin: '0 0 10px 0', color: '#92400E' }}>🏦 Épargne & Budget Perso</h4>
                       <p style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: '#B45309' }}>
-                        Basé sur vos revenus personnels ce mois-ci ({formatMoney(persoIncomes)}) :
+                        Basé sur les revenus transférés dans Perso ({formatMoney(persoIncomes)}) :
                       </p>
                       <ul style={{ margin: 0, paddingLeft: '20px', color: '#92400E', fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <li><strong>Impôts (25%) :</strong> {formatMoney(taxProvision)}</li>
+                        <li><strong>Impôts pers. (25%) :</strong> {formatMoney(taxProvision)}</li>
                         <li><strong>Urgence/Imprévus (15%) :</strong> {formatMoney(emergencyProvision)}</li>
                         <li><strong>Voyage/Jacob (12%) :</strong> {formatMoney(voyageProvision)}</li>
                         <li><strong>CELI (8%) :</strong> {formatMoney(celiProvision)}</li>
                       </ul>
                       <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#D97706', fontStyle: 'italic' }}>
-                        Virez ces montants vers leurs comptes respectifs pour suivre votre plan exact !
+                        Virez ces montants vers leurs comptes respectifs pour suivre votre plan d'épargne !
                       </p>
-                    </div>
-
-                    {/* Lousse / Petits sous */}
-                    <div style={{ background: safeSurplus > 0 ? '#F0FDF4' : '#F9FAFB', padding: '20px', borderRadius: '12px', border: `1px solid ${safeSurplus > 0 ? '#BBF7D0' : '#E5E7EB'}` }}>
-                      <h4 style={{ margin: '0 0 10px 0', color: safeSurplus > 0 ? '#166534' : '#6B7280' }}>🏖️ Les Petits Sous (Lousse)</h4>
-                      {safeSurplus > 0 ? (
-                        <>
-                          <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#15803D' }}>
-                            {formatMoney(safeSurplus)}
-                          </div>
-                          <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', color: '#166534' }}>
-                            Vous avez un surplus sécuritaire ! Toutes vos dépenses prévues pour vos 3 comptes sont couvertes.
-                          </p>
-                          <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', fontWeight: 'bold', color: '#065F46' }}>
-                            💡 Suggéré : Transférer vers "Voyage et mon garçon".
-                          </p>
-                        </>
-                      ) : (
-                        <p style={{ margin: 0, fontSize: '0.9rem', color: '#6B7280' }}>
-                          Pas de surplus sécuritaire détecté ce mois-ci une fois toutes les factures payées. Gardez le cap !
-                        </p>
-                      )}
                     </div>
 
                   </div>
