@@ -279,15 +279,7 @@ export default function FinancesPage() {
   const safeSurplus = isCombinedView ? projectedBalance : 0;
 
   // --- GRAND TOTAL (Valeur Nette) ---
-  const getLatestBalance = (accountName) => {
-    const latestBal = balances.find(b => {
-      const d = parseDateLocal(b.date);
-      return b.account === accountName && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-    return latestBal ? parseFloat(latestBal.amount) : 0;
-  };
-
-  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getLatestBalance(acc), 0);
+  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getCalculatedStartBalance(currentMonth, currentYear, acc), 0);
   const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedEndBalanceForMonth(currentMonth, currentYear, acc), 0) + getProjectedEndBalanceForMonth(currentMonth, currentYear, 'CELI');
   
   return (
@@ -553,6 +545,9 @@ export default function FinancesPage() {
                           <div style={{ fontWeight: '500', color: t.status === 'paid' ? '#9CA3AF' : '#111827', textDecoration: t.status === 'paid' ? 'line-through' : 'none' }}>
                             {t.is_ghost && <span title="Projeté automatiquement" style={{marginRight: '5px'}}>👻</span>}
                             {t.description || getCategory(t.category_id).name}
+                            <span style={{ fontSize: '0.7rem', background: '#F3F4F6', color: '#4B5563', padding: '2px 6px', borderRadius: '4px', marginLeft: '8px', textDecoration: 'none', display: 'inline-block' }}>
+                              {String(t.date).endsWith('-01') ? '🔄 Variable' : `📅 Le ${String(parseDateLocal(t.date).getDate()).padStart(2, '0')}`}
+                            </span>
                           </div>
                           <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>
                             {isCombinedView && <span style={{ fontWeight: 'bold', marginRight: '5px' }}>[{t.entity}]</span>}
@@ -594,6 +589,9 @@ export default function FinancesPage() {
                           <div style={{ fontWeight: 'bold', color: t.priority === 1 ? '#991B1B' : '#111827' }}>
                             {isCombinedView && <span style={{ fontSize: '0.8rem', fontWeight: 'normal', display: 'block', color: '#6B7280' }}>[{t.entity}]</span>}
                             {t.description || getCategory(t.category_id).name}
+                            <span style={{ fontSize: '0.7rem', background: '#F3F4F6', color: '#4B5563', padding: '2px 6px', borderRadius: '4px', marginLeft: '8px', textDecoration: 'none', display: 'inline-block' }}>
+                              {`📅 Le ${String(parseDateLocal(t.date).getDate()).padStart(2, '0')}`}
+                            </span>
                           </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
