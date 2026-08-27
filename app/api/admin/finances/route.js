@@ -85,8 +85,17 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const action = body.action;
+    let action = body.action;
     const supabaseAdmin = getSupabaseAdmin();
+
+    // Force add_transaction if the frontend sent an invalid ID (bypasses browser cache issues)
+    if (action === 'update_transaction') {
+      const { id } = body.data;
+      if (!id || id === 'null' || String(id).startsWith('ghost-') || String(id).startsWith('sim-')) {
+        action = 'add_transaction';
+        body.data.id = undefined; // Remove the invalid ID so insert works
+      }
+    }
 
     if (action === 'add_transaction') {
       const { date, type, amount, category_id, description, entity, status = 'paid', priority = 2, is_fixed = false } = body.data;

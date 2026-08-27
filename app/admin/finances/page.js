@@ -360,16 +360,16 @@ export default function FinancesPage() {
         }
 
         if (projectedAmount > 0) {
-          const hasRealIncomeToday = transactions.some(t => 
+          const hasRealIncomeNearby = transactions.some(t => 
             t.type === 'income' && 
             t.entity === pattern.entity && 
-            t.category_id === pattern.category_id &&
+            (!pattern.category_id || t.category_id === pattern.category_id) &&
             parseDateLocal(t.date).getMonth() === currentMonth && 
             parseDateLocal(t.date).getFullYear() === currentYear &&
-            parseDateLocal(t.date).getDate() === day
+            Math.abs(parseDateLocal(t.date).getDate() - day) <= 3
           );
           
-          if (!hasRealIncomeToday) {
+          if (!hasRealIncomeNearby) {
             virtualIncomes.push({
               id: `sim-${pattern.id}-${currentMonth}-${day}`,
               date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
@@ -1148,11 +1148,12 @@ export default function FinancesPage() {
                             type="checkbox" 
                             checked={t.status === 'paid'} 
                             onChange={() => handleUpdateTransactionStatus(t.id, t.status === 'paid' ? 'pending' : 'paid')}
-                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-                            title="Marquer comme payé"
+                            style={{ width: '1.2rem', height: '1.2rem', cursor: 'pointer' }}
                           />
                           <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
-                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          {(!t.is_ghost && !t.is_simulation) && (
+                            <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -1220,7 +1221,9 @@ export default function FinancesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                           <span style={{ fontWeight: 'bold', color: '#10B981' }}>+{formatMoney(t.amount)}</span>
                           <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
-                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          {(!t.is_ghost && !t.is_simulation) && (
+                            <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -1242,7 +1245,9 @@ export default function FinancesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ fontSize: '0.9rem', color: '#9CA3AF' }}>{formatMoney(t.amount)}</span>
                           <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
-                          <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          {(!t.is_ghost && !t.is_simulation) && (
+                            <button onClick={() => handleDelete(t.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '1.2rem' }} title="Supprimer">×</button>
+                          )}
                         </div>
                       </div>
                     ))}
