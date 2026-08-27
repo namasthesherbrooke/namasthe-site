@@ -840,6 +840,8 @@ export default function FinancesPage() {
                         </h4>
                         <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#15803D' }}>
                           Le compte Entreprise projette un déficit. Voici comment rééquilibrer vos fonds :
+                          <br/><br/>
+                          <em>📅 <strong>Fréquence suggérée :</strong> Effectuez ces transferts 2x par semaine (le lundi et le jeudi, après vos grosses rentrées d'argent) pour un roulement optimal.</em>
                         </p>
                         <ul style={{ margin: 0, paddingLeft: '20px', color: '#166534', fontSize: '0.9rem' }}>
                           {recsData.recommendations.map((r, i) => (
@@ -962,8 +964,8 @@ export default function FinancesPage() {
                         <li><strong>Voyage/Jacob (12%) :</strong> {formatMoney(voyageProvision)}</li>
                         <li><strong>CELI (8%) :</strong> {formatMoney(celiProvision)}</li>
                       </ul>
-                      <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#D97706', fontStyle: 'italic' }}>
-                        Virez ces montants vers leurs comptes respectifs pour suivre votre plan d'épargne !
+                      <p style={{ margin: '10px 0 0 0', fontSize: '0.85rem', color: '#D97706', fontStyle: 'italic' }}>
+                        📅 <strong>Astuce :</strong> Virez ces montants vers leurs comptes respectifs 2x par semaine (le lundi et le jeudi) pour suivre votre plan d'épargne !
                       </p>
                     </div>
 
