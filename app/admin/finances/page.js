@@ -20,8 +20,26 @@ export default function FinancesPage() {
   const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isSavingBalance, setIsSavingBalance] = useState(false);
 
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(y => y - 1);
+    } else {
+      setCurrentMonth(m => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(y => y + 1);
+    } else {
+      setCurrentMonth(m => m + 1);
+    }
+  };
 
   const handleUnlock = (validPin) => {
     setPin(validPin);
@@ -209,12 +227,12 @@ export default function FinancesPage() {
 
   // --- LE CONSEILLER FINANCIER ---
   // 1. Viabilité Entreprise
-  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseIncomes = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const entrepriseExpenses = transactions.filter(t => t.entity === 'Entreprise' && t.type === 'expense' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
   const profitMargin = entrepriseIncomes > 0 ? ((entrepriseIncomes - entrepriseExpenses) / entrepriseIncomes) * 100 : (entrepriseExpenses > 0 ? -100 : 0);
   
   // 2. Provisions (Basé sur vos objectifs Personnels)
-  const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && new Date(t.date).getMonth() === currentMonth && new Date(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
   
   const taxProvision = persoIncomes * 0.25; // 25% Impôts
   const emergencyProvision = persoIncomes * 0.15; // 10% Urgence + 5% Imprévus
@@ -245,7 +263,14 @@ export default function FinancesPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
           <div>
             <h1 style={{ fontFamily: 'var(--font-serif)', color: '#2C1810', margin: '0 0 5px 0' }}>📊 Gestion Budgétaire</h1>
-            <p style={{ color: '#666', margin: 0 }}>Mois en cours : <strong style={{color: '#2C1810'}}>{new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</strong></p>
+            <div style={{ color: '#666', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+              Mois affiché : 
+              <button onClick={handlePrevMonth} style={{cursor:'pointer', padding:'2px 8px', borderRadius:'6px', border:'1px solid #CBD5E1', background:'#fff', color: '#475569'}}>◀</button>
+              <strong style={{color: '#2C1810', minWidth: '130px', textAlign: 'center', textTransform: 'capitalize'}}>
+                {new Date(currentYear, currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+              </strong>
+              <button onClick={handleNextMonth} style={{cursor:'pointer', padding:'2px 8px', borderRadius:'6px', border:'1px solid #CBD5E1', background:'#fff', color: '#475569'}}>▶</button>
+            </div>
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
