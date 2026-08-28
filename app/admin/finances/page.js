@@ -326,16 +326,20 @@ export default function FinancesPage() {
     return getProjectedEndBalanceForMonth(prevM, prevY, acc);
   };
 
-  const daysInMonthForSim = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const todayForSim = new Date();
-  const isCurrentMonthView = todayForSim.getMonth() === currentMonth && todayForSim.getFullYear() === currentYear;
-  const startDay = isCurrentMonthView ? todayForSim.getDate() : 1;
-  const hasProjections = incomePatterns.length > 0;
-  
-  let virtualIncomes = [];
-  if (hasProjections) {
-    for (let day = startDay; day <= daysInMonthForSim; day++) {
-      const d = new Date(currentYear, currentMonth, day);
+  const getVirtualIncomesForMonth = (m, y) => {
+    let vi = [];
+    if (incomePatterns.length === 0) return vi;
+
+    const daysInM = new Date(y, m + 1, 0).getDate();
+    const today = new Date();
+    const isCurrent = today.getMonth() === m && today.getFullYear() === y;
+    const isFuture = y > today.getFullYear() || (y === today.getFullYear() && m > today.getMonth());
+    
+    let sDay = 1;
+    if (isCurrent) sDay = today.getDate();
+
+    for (let day = sDay; day <= daysInM; day++) {
+      const d = new Date(y, m, day);
       const dayOfWeek = d.getDay();
       
       const dayMapping = {
@@ -365,15 +369,15 @@ export default function FinancesPage() {
             t.type === 'income' && 
             t.entity === pattern.entity && 
             (t.description === (pattern.description || 'Revenu simulé') || (!pattern.category_id || t.category_id === pattern.category_id)) &&
-            parseDateLocal(t.date).getMonth() === currentMonth && 
-            parseDateLocal(t.date).getFullYear() === currentYear &&
+            parseDateLocal(t.date).getMonth() === m && 
+            parseDateLocal(t.date).getFullYear() === y &&
             Math.abs(parseDateLocal(t.date).getDate() - day) <= 3
           );
           
           if (!hasRealIncomeNearby) {
-            virtualIncomes.push({
-              id: `sim-${pattern.id}-${currentMonth}-${day}`,
-              date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+            vi.push({
+              id: `sim-${pattern.id}-${m}-${day}`,
+              date: `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
               type: 'income',
               amount: projectedAmount,
               category_id: pattern.category_id,
@@ -387,7 +391,10 @@ export default function FinancesPage() {
         }
       });
     }
-  }
+    return vi;
+  };
+
+  const virtualIncomes = getVirtualIncomesForMonth(currentMonth, currentYear);
 
   const getProjectedEndBalanceForMonth = (m, y, acc) => {
     const startBal = getCalculatedStartBalance(m, y, acc);
@@ -415,8 +422,8 @@ export default function FinancesPage() {
       .filter(t => t.priority !== 99)
       .reduce((a, t) => a + parseFloat(t.amount), 0);
       
-    const simSum = virtualIncomes
-      .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc) && parseDateLocal(t.date).getMonth() === m && parseDateLocal(t.date).getFullYear() === y)
+    const simSum = getVirtualIncomesForMonth(m, y)
+      .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc))
       .reduce((a, t) => a + parseFloat(t.amount), 0);
     
     return startBal + incs - exps - ghostSum + simSum;
