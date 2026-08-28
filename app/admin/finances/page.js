@@ -151,6 +151,24 @@ export default function FinancesPage() {
     }
   };
 
+  const handleExecuteTransfer = async (from, to, amount) => {
+    try {
+      const res = await fetch('/api/admin/finances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'execute_transfer',
+          data: { from, to, amount, date: new Date().toISOString().split('T')[0] }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      
+      setTransactions([...data.transactions, ...transactions]);
+      alert('Transfert marqué comme fait et enregistré !');
+    } catch (err) { alert(err.message); }
+  };
+
   const handleAddPattern = async (e) => {
     e.preventDefault();
     if (!newPattern.category_id) return alert("Veuillez sélectionner une catégorie");
@@ -720,6 +738,34 @@ export default function FinancesPage() {
   });
 
   const entrepriseExtra = entMinBal;
+
+  // --- NOUVEAU : Calcul du profit et de la marge pour l'Entreprise ---
+  const allEntIncomes = entSorted.filter(t => t.type === 'income').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  const allEntExpenses = entSorted.filter(t => t.type === 'expense').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  
+  const profitNet = allEntIncomes - allEntExpenses;
+  const profitMargin = allEntIncomes > 0 ? (profitNet / allEntIncomes) * 100 : 0;
+  
+  let marginColor = '#475569';
+  let marginMessage = '';
+  let marginIcon = '';
+  if (profitMargin >= 20) {
+    marginColor = '#059669'; // Vert
+    marginIcon = '🚀';
+    marginMessage = 'Excellent ! L\'entreprise est très rentable. Vos revenus surpassent largement vos dépenses.';
+  } else if (profitMargin >= 10) {
+    marginColor = '#10B981'; // Vert clair
+    marginIcon = '✅';
+    marginMessage = 'Bonne rentabilité. L\'entreprise est saine et dégage un profit convenable.';
+  } else if (profitMargin >= 0) {
+    marginColor = '#F59E0B'; // Orange
+    marginIcon = '⚠️';
+    marginMessage = 'Viabilité fragile. La marge est très mince. Attention à vos prochaines dépenses !';
+  } else {
+    marginColor = '#DC2626'; // Rouge
+    marginIcon = '🚨';
+    marginMessage = 'Déficit ! Trop de dépenses ou pas assez de revenus ce mois-ci. L\'entreprise perd de l\'argent.';
+  }
   
   // 2. Provisions (Basé sur vos objectifs Personnels)
   const persoIncomes = transactions.filter(t => t.entity === 'Perso' && t.type === 'income' && parseDateLocal(t.date).getMonth() === currentMonth && parseDateLocal(t.date).getFullYear() === currentYear).reduce((acc, t) => acc + parseFloat(t.amount), 0);
@@ -911,8 +957,15 @@ export default function FinancesPage() {
                         </p>
                         <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem' }}>
                           {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
-                            <li key={i} style={{ marginBottom: '5px' }}>
-                              Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em>{r.frequencyText}</em>
+                            <li key={i} style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <button 
+                                onClick={() => handleExecuteTransfer(r.from, r.to, r.amount)}
+                                style={{ background: '#10B981', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+                                title="Marquer comme fait (Transférer l'argent maintenant)"
+                              >
+                                ✓
+                              </button>
+                              <span>Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em>{r.frequencyText}</em></span>
                             </li>
                           )) : (
                             <li style={{ marginBottom: '5px', color: '#991B1B' }}>Aucun surplus disponible dans vos comptes Perso/Conjoint.</li>
@@ -960,8 +1013,17 @@ export default function FinancesPage() {
                           <div>
                             Transférer depuis <strong>{s.from}</strong> vers <strong>{s.to}</strong>
                           </div>
-                          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                            {formatMoney(s.amount)}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                              {formatMoney(s.amount)}
+                            </div>
+                            <button 
+                              onClick={() => handleExecuteTransfer(s.from, s.to, s.amount)}
+                              style={{ background: '#10B981', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', padding: 0 }}
+                              title="Marquer comme fait (Transférer l'argent maintenant)"
+                            >
+                              ✓
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -1005,7 +1067,17 @@ export default function FinancesPage() {
                         </li>
                       </ul>
                       
-                      <div style={{ marginTop: '20px', padding: '15px', background: 'white', borderRadius: '8px', border: '1px solid #CBD5E1' }}>
+                      <div style={{ marginTop: '15px', padding: '12px', background: 'white', borderRadius: '8px', border: `1px solid ${marginColor}` }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                          <h5 style={{ margin: 0, color: marginColor }}>{marginIcon} Marge de Profit Nette</h5>
+                          <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: marginColor }}>{profitMargin.toFixed(1)}%</span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569' }}>
+                          {marginMessage}
+                        </p>
+                      </div>
+                      
+                      <div style={{ marginTop: '15px', padding: '15px', background: 'white', borderRadius: '8px', border: '1px solid #CBD5E1' }}>
                         <h5 style={{ margin: '0 0 8px 0', color: '#334155' }}>🤖 Recommandation :</h5>
                         {entrepriseExtra > 0 ? (
                           entrepriseExtra >= entrepriseTaxProvision ? (

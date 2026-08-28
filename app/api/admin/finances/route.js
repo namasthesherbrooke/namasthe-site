@@ -173,6 +173,39 @@ export async function POST(req) {
       return NextResponse.json({ success: true, imported: data });
     }
 
+    if (action === 'execute_transfer') {
+      const { from, to, amount, date, description } = body.data;
+      
+      // 1. Chercher la catégorie 'Transfert'
+      let { data: catData, error: catErr } = await supabaseAdmin
+        .from('finances_categories')
+        .select('id')
+        .ilike('name', '%Transfert%')
+        .limit(1);
+        
+      let categoryId = catData && catData.length > 0 ? catData[0].id : null;
+      
+      // Si elle n'existe pas, la créer
+      if (!categoryId) {
+         const { data: newCat, error: newCatErr } = await supabaseAdmin
+           .from('finances_categories')
+           .insert([{ name: 'Transfert (Auto)', type: 'expense', entity: 'Mixte', color: '#6B7280' }])
+           .select('id');
+         if (!newCatErr && newCat && newCat.length > 0) {
+           categoryId = newCat[0].id;
+         }
+      }
+
+      // 2. Insérer dépense et entrée
+      const { data: txs, error } = await supabaseAdmin.from('finances_transactions').insert([
+        { date, type: 'expense', amount: parseFloat(amount), category_id: categoryId, description: description || `Transfert vers ${to}`, entity: from, status: 'paid', priority: 2, is_fixed: false },
+        { date, type: 'income', amount: parseFloat(amount), category_id: categoryId, description: description || `Transfert depuis ${from}`, entity: to, status: 'paid', priority: 2, is_fixed: false }
+      ]).select();
+      
+      if (error) throw error;
+      return NextResponse.json({ success: true, transactions: txs });
+    }
+
     if (action === 'add_pattern') {
       const { entity, category_id, description, monday_amount, tuesday_amount, wednesday_amount, thursday_amount, friday_amount, saturday_amount, sunday_amount, is_monthly, monthly_day, monthly_amount } = body.data;
       

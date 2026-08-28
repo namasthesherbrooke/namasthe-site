@@ -14,12 +14,13 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
   const [isFixed, setIsFixed] = useState(false);
   const [status, setStatus] = useState('paid');
   const [priority, setPriority] = useState(2); // 1: Urgent, 2: Normal, 3: Bas
+  const [toEntity, setToEntity] = useState('Perso');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   // Filtrer les catégories selon l'entité et le type choisis
-  const availableCategories = categories.filter(c => 
+  const availableCategories = type === 'transfer' ? categories : categories.filter(c => 
     c.type === type && (c.entity === entity || c.entity === 'Mixte')
   );
 
@@ -61,8 +62,12 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!amount || !categoryId) {
-      setError('Veuillez remplir le montant et la catégorie.');
+    if (!amount) {
+      setError('Veuillez remplir le montant.');
+      return;
+    }
+    if (type !== 'transfer' && !categoryId) {
+      setError('Veuillez sélectionner une catégorie.');
       return;
     }
 
@@ -97,17 +102,51 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     }
 
     try {
-      const res = await fetch('/api/admin/finances', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-finance-pin': currentPin
-        },
-        body: JSON.stringify(initialData && initialData.id && !String(initialData.id).startsWith('ghost-') && !String(initialData.id).startsWith('sim-') ? {
-          action: 'update_transaction',
-          data: {
-            id: initialData.id,
-            updates: {
+      if (type === 'transfer') {
+        const res = await fetch('/api/admin/finances', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-finance-pin': currentPin
+          },
+          body: JSON.stringify({
+            action: 'execute_transfer',
+            data: { from: entity, to: toEntity, amount: parseFloat(amount), date, description: description || undefined }
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
+        
+        if (onAdd) {
+           onAdd(data.transactions[0]);
+           onAdd(data.transactions[1]);
+        }
+      } else {
+        const res = await fetch('/api/admin/finances', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-finance-pin': currentPin
+          },
+          body: JSON.stringify(initialData && initialData.id && !String(initialData.id).startsWith('ghost-') && !String(initialData.id).startsWith('sim-') ? {
+            action: 'update_transaction',
+            data: {
+              id: initialData.id,
+              updates: {
+                date,
+                type,
+                entity,
+                amount: parseFloat(amount),
+                category_id: categoryId,
+                description,
+                is_fixed: isFixed,
+                status,
+                priority: finalPriority
+              }
+            }
+          } : {
+            action: 'add_transaction',
+            data: {
               date,
               type,
               entity,
@@ -118,32 +157,19 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
               status,
               priority: finalPriority
             }
-          }
-        } : {
-          action: 'add_transaction',
-          data: {
-            date,
-            type,
-            entity,
-            amount: parseFloat(amount),
-            category_id: categoryId,
-            description,
-            is_fixed: isFixed,
-            status,
-            priority: finalPriority
-          }
-        })
-      });
+          })
+        });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'enregistrement');
 
-      const isConversion = initialData && (String(initialData.id).startsWith('ghost-') || String(initialData.id).startsWith('sim-'));
-      
-      if (initialData && onUpdate && !isConversion) {
-        onUpdate(data.transaction);
-      } else if (onAdd) {
-        onAdd(data.transaction);
+        const isConversion = initialData && (String(initialData.id).startsWith('ghost-') || String(initialData.id).startsWith('sim-'));
+        
+        if (initialData && onUpdate && !isConversion) {
+          onUpdate(data.transaction);
+        } else if (onAdd) {
+          onAdd(data.transaction);
+        }
       }
       
       setAmount('');
@@ -182,10 +208,13 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
               >
                 <option value="expense">Dépense (-)</option>
                 <option value="income">Entrée (+)</option>
+                <option value="transfer">Transfert (d'un compte à l'autre)</option>
               </select>
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Compte</label>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                {type === 'transfer' ? 'Compte source' : 'Compte'}
+              </label>
               <select 
                 value={entity} 
                 onChange={(e) => { setEntity(e.target.value); setCategoryId(''); }}
@@ -200,6 +229,24 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                 <option value="CELI">CELI (Épargne)</option>
               </select>
             </div>
+            {type === 'transfer' && (
+              <div style={{ flex: 1 }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Compte destination</label>
+                <select 
+                  value={toEntity} 
+                  onChange={(e) => setToEntity(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                >
+                  <option value="Entreprise">Entreprise</option>
+                  <option value="Perso">Perso</option>
+                  <option value="Conjoint">Conjoint</option>
+                  <option value="Impôts et taxes">Impôts et taxes</option>
+                  <option value="Urgence">Urgence</option>
+                  <option value="Voyage et mon garçon">Voyage et mon garçon</option>
+                  <option value="CELI">CELI (Épargne)</option>
+                </select>
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -242,22 +289,24 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
             />
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Catégorie</label>
-            <select 
-              value={categoryId} 
-              onChange={(e) => setCategoryId(e.target.value)}
-              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-              required
-            >
-              <option value="">-- Choisir une catégorie --</option>
-              {availableCategories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
+          {type !== 'transfer' && (
+            <div>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Catégorie</label>
+              <select 
+                value={categoryId} 
+                onChange={(e) => setCategoryId(e.target.value)}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                required={type !== 'transfer'}
+              >
+                <option value="">-- Choisir une catégorie --</option>
+                {availableCategories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {type === 'expense' && (
+          {(type === 'expense' || type === 'income') && (
             <div style={{ display: 'flex', gap: '15px', alignItems: 'center', background: '#F9FAFB', padding: '10px', borderRadius: '8px', border: '1px solid #E5E7EB', flexWrap: 'wrap' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.9rem' }}>
                 <input 
@@ -266,7 +315,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                   onChange={(e) => setIsFixed(e.target.checked)}
                   style={{ width: '18px', height: '18px' }}
                 />
-                Dépense Fixe (Récurrente)
+                {type === 'expense' ? 'Dépense Fixe (Récurrente)' : 'Entrée Fixe (Récurrente)'}
               </label>
               
               {isFixed && (
