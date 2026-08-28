@@ -840,15 +840,9 @@ export default function FinancesPage() {
                   </h3>
                   {isCombinedView ? (() => {
                     // Calcul du solde combiné en direct pour AUJOURD'HUI
-                    const today = new Date();
-                    today.setHours(23, 59, 59, 999);
-                    
-                    let liveCombinedBalance = timelineStartBalance;
-                    for (const t of timelineEvents) {
-                      if (parseDateLocal(t.date) <= today) {
-                        liveCombinedBalance = t.runningBalance;
-                      }
-                    }
+                    const liveCombinedBalance = getLiveBalanceForAccount(currentMonth, currentYear, 'Entreprise') +
+                                                getLiveBalanceForAccount(currentMonth, currentYear, 'Perso') +
+                                                getLiveBalanceForAccount(currentMonth, currentYear, 'Conjoint');
 
                     return (
                       <>
@@ -871,14 +865,7 @@ export default function FinancesPage() {
                     const isRollover = !currentBankBalanceObj;
 
                     // Calcul du solde en direct pour AUJOURD'HUI
-                    const today = new Date();
-                    today.setHours(23, 59, 59, 999);
-                    let liveBalance = timelineStartBalance;
-                    for (const t of timelineEvents) {
-                      if (parseDateLocal(t.date) <= today) {
-                        liveBalance = t.runningBalance;
-                      }
-                    }
+                    const liveBalance = getLiveBalanceForAccount(currentMonth, currentYear, activeTab);
 
                     return (
                       <>
