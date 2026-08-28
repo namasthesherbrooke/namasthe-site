@@ -501,17 +501,34 @@ export default function FinancesPage() {
     const otherAccounts = ['Conjoint', 'Perso'];
     
     for (const acc of otherAccounts) {
+      const madeTransfers = transactions.filter(t => 
+        t.entity === acc && 
+        t.type === 'expense' && 
+        t.description?.toLowerCase().includes('transfert vers entreprise') &&
+        parseDateLocal(t.date).getMonth() === currentMonth &&
+        parseDateLocal(t.date).getFullYear() === currentYear
+      );
+      const totalTransferredAlready = madeTransfers.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+
       const accSurplus = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
-      if (accSurplus > 0) {
-        const amountPerTransfer = accSurplus / divisor;
+      const grossSurplus = accSurplus + totalTransferredAlready;
+
+      if (grossSurplus > 0) {
+        const amountPerTransfer = grossSurplus / divisor;
+        let completedCount = madeTransfers.length;
+        // S'assurer qu'on ne dépasse pas le nombre de coches
+        if (completedCount > divisor) completedCount = divisor;
+
         recommendations.push({
           from: acc,
           to: 'Entreprise',
           amount: amountPerTransfer,
-          totalAmount: accSurplus,
+          totalAmount: grossSurplus,
+          completedCount,
+          totalCount: divisor,
           frequencyText: divisor > 1 ? `(cible bi-hebdomadaire, ${divisor}x par mois)` : `(immédiatement)`
         });
-        totalTransferred += accSurplus;
+        totalTransferred += accSurplus; // Seul le vrai surplus actuel compte pour sauver l'entreprise
       }
     }
     
@@ -955,17 +972,48 @@ export default function FinancesPage() {
                           <br/><br/>
                           <em>📅 <strong>Fréquence calculée :</strong> L'algorithme a divisé vos surplus mensuels par le nombre total de lundis et jeudis du mois pour vous donner un "rythme de croisière" régulier.</em>
                         </p>
-                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem' }}>
+                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem', listStyle: 'none', marginLeft: '-20px' }}>
                           {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
-                            <li key={i} style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                              <button 
-                                onClick={() => handleExecuteTransfer(r.from, r.to, r.amount)}
-                                style={{ background: '#10B981', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
-                                title="Marquer comme fait (Transférer l'argent maintenant)"
-                              >
-                                ✓
-                              </button>
-                              <span>Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em>{r.frequencyText}</em></span>
+                            <li key={i} style={{ marginBottom: '15px', background: 'white', padding: '15px', borderRadius: '12px', border: '1px solid #BFDBFE', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                              <div style={{ marginBottom: '10px' }}>
+                                Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em style={{color: '#6B7280'}}>{r.frequencyText}</em>
+                              </div>
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                {Array.from({ length: r.totalCount }).map((_, idx) => {
+                                  const isDone = idx < r.completedCount;
+                                  return (
+                                    <button 
+                                      key={idx}
+                                      onClick={() => {
+                                        if (!isDone) {
+                                          if(confirm(`Voulez-vous vraiment enregistrer un transfert de ${formatMoney(r.amount)} de ${r.from} vers Entreprise pour cocher cette case ?`)) {
+                                            handleExecuteTransfer(r.from, r.to, r.amount);
+                                          }
+                                        }
+                                      }}
+                                      disabled={isDone}
+                                      style={{ 
+                                        background: isDone ? '#10B981' : '#F3F4F6', 
+                                        color: isDone ? 'white' : '#9CA3AF', 
+                                        border: isDone ? 'none' : '1px solid #D1D5DB', 
+                                        borderRadius: '50%', 
+                                        width: '28px', 
+                                        height: '28px', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'center', 
+                                        cursor: isDone ? 'default' : 'pointer', 
+                                        padding: 0,
+                                        transition: 'all 0.2s',
+                                        boxShadow: isDone ? 'none' : 'inset 0 2px 4px rgba(0,0,0,0.05)'
+                                      }}
+                                      title={isDone ? "Déjà fait" : "Cocher pour effectuer ce transfert"}
+                                    >
+                                      ✓
+                                    </button>
+                                  );
+                                })}
+                              </div>
                             </li>
                           )) : (
                             <li style={{ marginBottom: '5px', color: '#991B1B' }}>Aucun surplus disponible dans vos comptes Perso/Conjoint.</li>
