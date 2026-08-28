@@ -338,6 +338,16 @@ export default function FinancesPage() {
     let sDay = 1;
     if (isCurrent) sDay = today.getDate();
 
+    // OPTIMISATION CRITIQUE : Pré-filtrer et parser les dates des revenus pour ce mois précis
+    // Cela évite de faire des millions de Date parsing dans la boucle interne.
+    const monthIncomes = transactions
+      .filter(t => t.type === 'income')
+      .map(t => {
+        const d = parseDateLocal(t.date);
+        return { ...t, pMonth: d.getMonth(), pYear: d.getFullYear(), pDay: d.getDate() };
+      })
+      .filter(t => t.pMonth === m && t.pYear === y);
+
     for (let day = sDay; day <= daysInM; day++) {
       const d = new Date(y, m, day);
       const dayOfWeek = d.getDay();
@@ -365,13 +375,10 @@ export default function FinancesPage() {
         }
 
         if (projectedAmount > 0) {
-          const hasRealIncomeNearby = transactions.some(t => 
-            t.type === 'income' && 
+          const hasRealIncomeNearby = monthIncomes.some(t => 
             t.entity === pattern.entity && 
             (t.description === (pattern.description || 'Revenu simulé') || (!pattern.category_id || t.category_id === pattern.category_id)) &&
-            parseDateLocal(t.date).getMonth() === m && 
-            parseDateLocal(t.date).getFullYear() === y &&
-            Math.abs(parseDateLocal(t.date).getDate() - day) <= 3
+            Math.abs(t.pDay - day) <= 3
           );
           
           if (!hasRealIncomeNearby) {
