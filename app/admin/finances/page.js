@@ -403,6 +403,14 @@ export default function FinancesPage() {
 
   const virtualIncomes = getVirtualIncomesForMonth(currentMonth, currentYear);
 
+  const getManualDateFor = (account, mm, yy) => {
+    const manualBal = balances.find(b => {
+      const d = parseDateLocal(b.date);
+      return b.account === account && d.getMonth() === mm && d.getFullYear() === yy;
+    });
+    return manualBal ? parseDateLocal(manualBal.date) : new Date(yy, mm, 1);
+  };
+
   const getProjectedEndBalanceForMonth = (m, y, acc) => {
     const startBal = getCalculatedStartBalance(m, y, acc);
     
@@ -412,6 +420,13 @@ export default function FinancesPage() {
     const exps = transactions.filter(t => t.entity === acc && t.type === 'expense' && parseDateLocal(t.date).getMonth() === m && parseDateLocal(t.date).getFullYear() === y)
       .reduce((a, t) => a + parseFloat(t.amount), 0);
       
+    let manDate;
+    if (acc === 'Vue Combinée') {
+      manDate = new Date(Math.max(...['Entreprise', 'Perso', 'Conjoint'].map(a => getManualDateFor(a, m, y))));
+    } else {
+      manDate = getManualDateFor(acc, m, y);
+    }
+
     const viewedDate = new Date(y, m, 1);
     const pastFixeds = transactions.filter(t => t.is_fixed && t.type === 'expense' && parseDateLocal(t.date) < viewedDate);
     const ghostMap = new Map();
@@ -426,11 +441,20 @@ export default function FinancesPage() {
     });
     
     const ghostSum = Array.from(ghostMap.values())
-      .filter(t => t.priority !== 99)
+      .filter(t => {
+        if (t.priority === 99) return false;
+        const ghostDay = parseDateLocal(t.date).getDate();
+        const daysInM = new Date(y, m + 1, 0).getDate();
+        const ghostDate = new Date(y, m, Math.min(ghostDay, daysInM));
+        return ghostDate > manDate;
+      })
       .reduce((a, t) => a + parseFloat(t.amount), 0);
       
     const simSum = getVirtualIncomesForMonth(m, y)
-      .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc))
+      .filter(t => {
+        if (acc !== 'Vue Combinée' && t.entity !== acc) return false;
+        return parseDateLocal(t.date) > manDate;
+      })
       .reduce((a, t) => a + parseFloat(t.amount), 0);
     
     return startBal + incs - exps - ghostSum + simSum;
