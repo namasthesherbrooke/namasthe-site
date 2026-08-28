@@ -816,15 +816,9 @@ export default function FinancesPage() {
                   </h3>
                   {isCombinedView ? (() => {
                     // Calcul du solde combiné en direct pour AUJOURD'HUI
-                    const today = new Date();
-                    today.setHours(23, 59, 59, 999);
-                    
-                    let liveCombinedBalance = timelineStartBalance;
-                    for (const t of timelineEvents) {
-                      if (parseDateLocal(t.date) <= today) {
-                        liveCombinedBalance = t.runningBalance;
-                      }
-                    }
+                    const liveCombinedBalance = getLiveBalanceForAccount(currentMonth, currentYear, 'Entreprise') +
+                                                getLiveBalanceForAccount(currentMonth, currentYear, 'Perso') +
+                                                getLiveBalanceForAccount(currentMonth, currentYear, 'Conjoint');
 
                     return (
                       <>
@@ -847,14 +841,7 @@ export default function FinancesPage() {
                     const isRollover = !currentBankBalanceObj;
 
                     // Calcul du solde en direct pour AUJOURD'HUI
-                    const today = new Date();
-                    today.setHours(23, 59, 59, 999);
-                    let liveBalance = timelineStartBalance;
-                    for (const t of timelineEvents) {
-                      if (parseDateLocal(t.date) <= today) {
-                        liveBalance = t.runningBalance;
-                      }
-                    }
+                    const liveBalance = getLiveBalanceForAccount(currentMonth, currentYear, activeTab);
 
                     return (
                       <>
@@ -1150,9 +1137,9 @@ export default function FinancesPage() {
                 </h3>
                 <button 
                   onClick={() => setIsSimulatorOpen(!isSimulatorOpen)}
-                  style={{ background: hasProjections ? '#059669' : '#F3F4F6', color: hasProjections ? 'white' : '#4B5563', border: '1px solid #D1D5DB', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                  style={{ background: virtualIncomes.length > 0 ? '#059669' : '#F3F4F6', color: virtualIncomes.length > 0 ? 'white' : '#4B5563', border: '1px solid #D1D5DB', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
                 >
-                  🧪 {hasProjections ? 'Simulateur actif' : 'Simuler des revenus'}
+                  🧪 {virtualIncomes.length > 0 ? 'Simulateur actif' : 'Simuler des revenus'}
                 </button>
               </div>
 
