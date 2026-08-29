@@ -13,7 +13,7 @@ export default function FinancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const accounts = ['Vue Combinée', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
+  const accounts = ['Vue Combinée', 'À Payer', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
   const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -852,13 +852,13 @@ export default function FinancesPage() {
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : '#2C1810') : '#F3F4F6',
+                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : (tab === 'À Payer' ? '#DC2626' : '#2C1810')) : '#F3F4F6',
                 color: activeTab === tab ? 'white' : '#6B7280',
                 transition: 'all 0.2s',
                 boxShadow: activeTab === tab ? '0 4px 10px rgba(0,0,0,0.15)' : 'none'
               }}
             >
-              {tab === 'Vue Combinée' ? '🌐 ' + tab : tab}
+              {tab === 'Vue Combinée' ? '🌐 ' + tab : (tab === 'À Payer' ? '🛒 ' + tab : tab)}
             </button>
           ))}
         </div>
@@ -867,7 +867,85 @@ export default function FinancesPage() {
           <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>Chargement...</div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            
+            {activeTab === 'À Payer' ? (() => {
+              const actualPending = transactions.filter(t => t.type === 'expense' && t.status === 'pending' && !t.is_ghost && !t.is_simulation);
+              const ghostPending = currentMonthTransactions.filter(t => t.is_ghost && t.type === 'expense' && t.status === 'pending');
+              
+              const allPendingMap = new Map();
+              [...actualPending, ...ghostPending].forEach(t => {
+                // Pour éviter des conflits d'IDs entre les vraies et les fantômes
+                const key = t.is_ghost ? t.id : `real-${t.id}`;
+                if (!allPendingMap.has(key)) allPendingMap.set(key, t);
+              });
+              
+              const allPending = Array.from(allPendingMap.values());
+              const totalPending = allPending.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+              
+              const grouped = {};
+              allPending.forEach(t => {
+                if (!grouped[t.entity]) grouped[t.entity] = [];
+                grouped[t.entity].push(t);
+              });
+
+              return (
+                <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB' }}>
+                  <h2 style={{ margin: '0 0 20px 0', color: '#111827', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    🛒 Factures et Commandes à Payer
+                  </h2>
+                  <div style={{ background: '#FEF2F2', padding: '20px', borderRadius: '12px', border: '1px solid #FEE2E2', marginBottom: '30px' }}>
+                    <p style={{ margin: '0 0 5px 0', color: '#991B1B', fontSize: '1.1rem' }}>Total Global à Payer :</p>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#DC2626' }}>{formatMoney(totalPending)}</div>
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
+                    {Object.keys(grouped).sort().map(entity => {
+                      const entityItems = grouped[entity].sort((a,b) => parseDateLocal(a.date) - parseDateLocal(b.date));
+                      const entityTotal = entityItems.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+                      return (
+                        <div key={entity} style={{ background: '#F9FAFB', padding: '20px', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '2px solid #E5E7EB', paddingBottom: '10px' }}>
+                            <h3 style={{ margin: 0, color: '#374151' }}>{entity}</h3>
+                            <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#DC2626' }}>{formatMoney(entityTotal)}</span>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {entityItems.map(t => (
+                              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'white', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
+                                <div>
+                                  <div style={{ fontWeight: 'bold', color: '#111827' }}>
+                                    {t.is_ghost && <span title="Projeté automatiquement" style={{marginRight: '5px'}}>👻</span>}
+                                    {t.description || getCategory(t.category_id)?.name || 'Inconnue'}
+                                  </div>
+                                  <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>
+                                    {getCategory(t.category_id)?.name || 'Inconnue'} • {t.is_fixed ? 'Fixe' : 'Sporadique'}
+                                    <span style={{ marginLeft: '5px', background: '#F3F4F6', padding: '2px 6px', borderRadius: '4px' }}>
+                                      📅 {String(parseDateLocal(t.date).getDate()).padStart(2, '0')} {parseDateLocal(t.date).toLocaleString('fr-FR', { month: 'short' })}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                  <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
+                                  <button 
+                                    onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
+                                    style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                                  >
+                                    Payer
+                                  </button>
+                                  <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {Object.keys(grouped).length === 0 && (
+                       <div style={{ color: '#6B7280', padding: '20px', fontStyle: 'italic' }}>Aucune facture à payer pour ce mois.</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })() : (
+              <>
             {/* RÉCONCILIATION ET PROJECTION */}
             <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
@@ -1604,7 +1682,8 @@ export default function FinancesPage() {
 
               </div>
             </div>
-
+            </>
+            )}
           </div>
         )}
       </div>
