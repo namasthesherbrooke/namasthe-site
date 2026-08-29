@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, currentPin, selectedMonth, selectedYear, initialData, currentMonthTransactions = [] }) {
+export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, categories, fournisseurs = [], setFournisseurs, currentPin, selectedMonth, selectedYear, initialData, currentMonthTransactions = [] }) {
   const [date, setDate] = useState('');
   const [isVariableAmount, setIsVariableAmount] = useState(false);
   const [isVariableDate, setIsVariableDate] = useState(false);
@@ -18,6 +18,37 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  
+  const [isAddingFournisseur, setIsAddingFournisseur] = useState(false);
+  const [newFournisseurName, setNewFournisseurName] = useState('');
+
+  const handleAddFournisseur = async () => {
+    if (!newFournisseurName.trim()) return;
+    try {
+      const res = await fetch('/api/admin/finances', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-finance-pin': currentPin
+        },
+        body: JSON.stringify({
+          action: 'add_fournisseur',
+          data: { name: newFournisseurName.trim() }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'ajout du fournisseur');
+      
+      if (setFournisseurs) {
+        setFournisseurs(prev => [...prev, data.fournisseur].sort((a, b) => a.name.localeCompare(b.name)));
+      }
+      setDescription(data.fournisseur.name);
+      setNewFournisseurName('');
+      setIsAddingFournisseur(false);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   // Filtrer les catégories selon l'entité et le type choisis
   const availableCategories = type === 'transfer' ? categories : categories.filter(c => 
@@ -360,14 +391,52 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
           )}
 
           <div>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Description / Note (Optionnel)</label>
-            <input 
-              type="text" 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Ex: Épicerie Maxi, Fournisseur X..."
-              style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
-            />
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', fontSize: '0.9rem' }}>Fournisseur / Description (Optionnel)</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ flex: 1, position: 'relative' }}>
+                <input 
+                  type="text" 
+                  value={description} 
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Ex: Épicerie Maxi, Fournisseur X..."
+                  list="fournisseurs-list"
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }}
+                  disabled={isAddingFournisseur}
+                />
+                <datalist id="fournisseurs-list">
+                  {fournisseurs.map(f => (
+                    <option key={f.id} value={f.name} />
+                  ))}
+                </datalist>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAddingFournisseur(!isAddingFournisseur)}
+                style={{ padding: '0 15px', background: '#F3F4F6', border: '1px solid #ddd', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: '#4B5563' }}
+                title="Ajouter un nouveau fournisseur à la liste"
+              >
+                {isAddingFournisseur ? 'Annuler' : '+ Gérer'}
+              </button>
+            </div>
+            
+            {isAddingFournisseur && (
+              <div style={{ marginTop: '10px', padding: '15px', background: '#F9FAFB', borderRadius: '8px', border: '1px dashed #D1D5DB', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input 
+                  type="text"
+                  value={newFournisseurName}
+                  onChange={e => setNewFournisseurName(e.target.value)}
+                  placeholder="Nom du nouveau fournisseur..."
+                  style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB' }}
+                />
+                <button 
+                  type="button"
+                  onClick={handleAddFournisseur}
+                  style={{ padding: '8px 12px', background: '#10B981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  Sauvegarder
+                </button>
+              </div>
+            )}
           </div>
 
           <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>

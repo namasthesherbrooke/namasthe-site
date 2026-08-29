@@ -51,6 +51,16 @@ export async function GET(req) {
       return NextResponse.json({ success: true, categories: data });
     }
 
+    if (action === 'fournisseurs') {
+      const { data, error } = await supabaseAdmin
+        .from('finances_fournisseurs')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      return NextResponse.json({ success: true, fournisseurs: data });
+    }
+
     if (action === 'balances') {
       const { data, error } = await supabaseAdmin
         .from('finances_balances')
@@ -126,6 +136,18 @@ export async function POST(req) {
 
       if (error) throw error;
       return NextResponse.json({ success: true, category: data[0] });
+    }
+
+    if (action === 'add_fournisseur') {
+      const { name } = body.data;
+      
+      const { data, error } = await supabaseAdmin
+        .from('finances_fournisseurs')
+        .insert([{ name }])
+        .select();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, fournisseur: data[0] });
     }
 
     if (action === 'update_transaction') {

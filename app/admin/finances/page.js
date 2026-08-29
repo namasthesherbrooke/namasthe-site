@@ -8,6 +8,7 @@ export default function FinancesPage() {
   const [pin, setPin] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [fournisseurs, setFournisseurs] = useState([]);
   const [balances, setBalances] = useState([]);
   
   const [isLoading, setIsLoading] = useState(true);
@@ -64,9 +65,10 @@ export default function FinancesPage() {
     setIsLoading(true);
     setError('');
     try {
-      const [transRes, catRes, balRes, patRes] = await Promise.all([
+      const [transRes, catRes, fourRes, balRes, patRes] = await Promise.all([
         fetch('/api/admin/finances?action=transactions', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=categories', { headers: { 'x-finance-pin': currentPin } }),
+        fetch('/api/admin/finances?action=fournisseurs', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=balances', { headers: { 'x-finance-pin': currentPin } }),
         fetch('/api/admin/finances?action=patterns', { headers: { 'x-finance-pin': currentPin } }).catch(() => ({ ok: false }))
       ]);
@@ -75,6 +77,7 @@ export default function FinancesPage() {
 
       const transData = await transRes.json();
       const catData = await catRes.json();
+      const fourData = fourRes.ok ? await fourRes.json() : { fournisseurs: [] };
       const balData = await balRes.json();
       
       let patData = { patterns: [] };
@@ -86,6 +89,7 @@ export default function FinancesPage() {
 
       setTransactions(transData.transactions || []);
       setCategories(catData.categories || []);
+      setFournisseurs(fourData.fournisseurs || []);
       setBalances(balData.balances || []);
       setIncomePatterns(patData.patterns || []);
     } catch (err) {
@@ -1728,6 +1732,8 @@ export default function FinancesPage() {
         onAdd={handleAddTransaction}
         onUpdate={handleEditTransaction}
         categories={categories}
+        fournisseurs={fournisseurs}
+        setFournisseurs={setFournisseurs}
         currentPin={pin}
         selectedMonth={currentMonth}
         selectedYear={currentYear}
