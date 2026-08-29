@@ -13,7 +13,7 @@ export default function FinancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const accounts = ['Vue Combinée', 'À Payer', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
+  const accounts = ['Vue Combinée', 'À Payer', 'À Commander', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
   const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -141,6 +141,24 @@ export default function FinancesPage() {
         body: JSON.stringify({
           action: 'update_transaction',
           data: { id, updates: { status: newStatus } }
+        })
+      });
+      if (!res.ok) throw new Error("Erreur de mise à jour");
+      const { transaction } = await res.json();
+      setTransactions(transactions.map(t => t.id === id ? transaction : t));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleMoveToBudget = async (id) => {
+    try {
+      const res = await fetch(`/api/admin/finances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'update_transaction',
+          data: { id, updates: { priority: 2 } }
         })
       });
       if (!res.ok) throw new Error("Erreur de mise à jour");
@@ -852,13 +870,13 @@ export default function FinancesPage() {
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : (tab === 'À Payer' ? '#DC2626' : '#2C1810')) : '#F3F4F6',
+                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : (tab === 'À Payer' ? '#DC2626' : (tab === 'À Commander' ? '#D97706' : '#2C1810'))) : '#F3F4F6',
                 color: activeTab === tab ? 'white' : '#6B7280',
                 transition: 'all 0.2s',
                 boxShadow: activeTab === tab ? '0 4px 10px rgba(0,0,0,0.15)' : 'none'
               }}
             >
-              {tab === 'Vue Combinée' ? '🌐 ' + tab : (tab === 'À Payer' ? '🛒 ' + tab : tab)}
+              {tab === 'Vue Combinée' ? '🌐 ' + tab : (tab === 'À Payer' ? '🛒 ' + tab : (tab === 'À Commander' ? '📝 ' + tab : tab))}
             </button>
           ))}
         </div>
@@ -867,9 +885,10 @@ export default function FinancesPage() {
           <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>Chargement...</div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-            {activeTab === 'À Payer' ? (() => {
-              const actualPending = transactions.filter(t => t.type === 'expense' && t.status === 'pending' && !t.is_ghost && !t.is_simulation);
-              const ghostPending = currentMonthTransactions.filter(t => t.is_ghost && t.type === 'expense' && t.status === 'pending');
+            {activeTab === 'À Payer' || activeTab === 'À Commander' ? (() => {
+              const isWishlist = activeTab === 'À Commander';
+              const actualPending = transactions.filter(t => t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority == 99 : t.priority != 99) && !t.is_ghost && !t.is_simulation);
+              const ghostPending = currentMonthTransactions.filter(t => t.is_ghost && t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority == 99 : t.priority != 99));
               
               const allPendingMap = new Map();
               [...actualPending, ...ghostPending].forEach(t => {
@@ -890,11 +909,11 @@ export default function FinancesPage() {
               return (
                 <div style={{ background: 'white', padding: '25px', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', border: '1px solid #E5E7EB' }}>
                   <h2 style={{ margin: '0 0 20px 0', color: '#111827', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    🛒 Factures et Commandes à Payer
+                    {isWishlist ? '📝 Commandes à faire (Wishlist)' : '🛒 Factures et Commandes à Payer'}
                   </h2>
-                  <div style={{ background: '#FEF2F2', padding: '20px', borderRadius: '12px', border: '1px solid #FEE2E2', marginBottom: '30px' }}>
-                    <p style={{ margin: '0 0 5px 0', color: '#991B1B', fontSize: '1.1rem' }}>Total Global à Payer :</p>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#DC2626' }}>{formatMoney(totalPending)}</div>
+                  <div style={{ background: isWishlist ? '#FFFBEB' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${isWishlist ? '#FEF3C7' : '#FEE2E2'}`, marginBottom: '30px' }}>
+                    <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
@@ -924,12 +943,25 @@ export default function FinancesPage() {
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                   <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
-                                  <button 
-                                    onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
-                                    style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
-                                  >
-                                    Payer
-                                  </button>
+                                  {isWishlist ? (
+                                    <button 
+                                      onClick={() => {
+                                        if(confirm("C'est commandé ! Transférer cette commande dans le budget 'À Payer' pour la projection financière ?")) {
+                                          handleMoveToBudget(t.id);
+                                        }
+                                      }}
+                                      style={{ padding: '6px 12px', background: '#F59E0B', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                      ✅ Commandé !
+                                    </button>
+                                  ) : (
+                                    <button 
+                                      onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
+                                      style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                      Payer
+                                    </button>
+                                  )}
                                   <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
                                 </div>
                               </div>
@@ -939,7 +971,9 @@ export default function FinancesPage() {
                       );
                     })}
                     {Object.keys(grouped).length === 0 && (
-                       <div style={{ color: '#6B7280', padding: '20px', fontStyle: 'italic' }}>Aucune facture à payer pour ce mois.</div>
+                       <div style={{ color: '#6B7280', padding: '20px', fontStyle: 'italic' }}>
+                         {isWishlist ? 'Aucune commande prévue.' : 'Aucune facture à payer pour ce mois.'}
+                       </div>
                     )}
                   </div>
                 </div>

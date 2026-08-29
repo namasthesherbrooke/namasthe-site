@@ -352,6 +352,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                     <option value={1}>Urgent 🔴</option>
                     <option value={2}>Normal ⚪</option>
                     <option value={3}>Bas 🟢</option>
+                    <option value={99}>🛒 À Commander (Wishlist)</option>
                   </select>
                 </div>
               )}
