@@ -24,6 +24,11 @@ export default function FinancesPage() {
   const [isSavingBalance, setIsSavingBalance] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [incomePatterns, setIncomePatterns] = useState([]);
+
+  // Nouveaux états pour l'ajout rapide de commandes
+  const [quickAddDesc, setQuickAddDesc] = useState('');
+  const [quickAddAmount, setQuickAddAmount] = useState('');
+  const [isQuickAdding, setIsQuickAdding] = useState(false);
   
   // Nouveaux états pour le formulaire d'ajout de patron de revenus
   const [newPattern, setNewPattern] = useState({ entity: 'Entreprise', category_id: '', description: '', is_monthly: false, monthly_day: '', monthly_amount: '', 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 0: '' });
@@ -170,6 +175,52 @@ export default function FinancesPage() {
       setTransactions(transactions.map(t => t.id === id ? transaction : t));
     } catch (err) {
       alert(err.message);
+    }
+  };
+
+  const handleQuickAddWishlist = async (e) => {
+    e.preventDefault();
+    if (!quickAddAmount || !quickAddDesc.trim()) return;
+    setIsQuickAdding(true);
+    
+    const expenseCategories = categories.filter(c => c.type === 'expense');
+    const defaultCategoryId = expenseCategories.length > 0 ? expenseCategories[0].id : null;
+
+    if (!defaultCategoryId) {
+       alert("Erreur: Aucune catégorie de dépense trouvée pour classer la commande.");
+       setIsQuickAdding(false);
+       return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/finances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'add_transaction',
+          data: {
+            date: new Date().toISOString().split('T')[0],
+            type: 'expense',
+            entity: 'Entreprise',
+            amount: parseFloat(quickAddAmount),
+            category_id: defaultCategoryId,
+            description: quickAddDesc,
+            is_fixed: false,
+            status: 'pending',
+            priority: 99
+          }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur lors de l\'ajout rapide');
+      
+      setTransactions([data.transaction, ...transactions]);
+      setQuickAddDesc('');
+      setQuickAddAmount('');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsQuickAdding(false);
     }
   };
 
@@ -919,6 +970,42 @@ export default function FinancesPage() {
                     <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
                     <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
                   </div>
+
+                  {isWishlist && (
+                    <form onSubmit={handleQuickAddWishlist} style={{ background: 'white', padding: '15px', borderRadius: '12px', border: '2px solid #D97706', marginBottom: '30px', display: 'flex', gap: '15px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                      <div style={{ flex: '2', minWidth: '200px' }}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: '#4B5563', marginBottom: '5px' }}>Quoi commander ? (Fournisseur / Article)</label>
+                        <input 
+                          type="text" 
+                          value={quickAddDesc}
+                          onChange={(e) => setQuickAddDesc(e.target.value)}
+                          placeholder="Ex: Tasses, Lait d'avoine, Fournisseur X..."
+                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }}
+                          required
+                        />
+                      </div>
+                      <div style={{ flex: '1', minWidth: '120px' }}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: '#4B5563', marginBottom: '5px' }}>Montant estimé ($)</label>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          min="0"
+                          value={quickAddAmount}
+                          onChange={(e) => setQuickAddAmount(e.target.value)}
+                          placeholder="0.00"
+                          style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '1.1rem' }}
+                          required
+                        />
+                      </div>
+                      <button 
+                        type="submit" 
+                        disabled={isQuickAdding}
+                        style={{ padding: '10px 20px', background: '#D97706', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', height: '42px', whiteSpace: 'nowrap' }}
+                      >
+                        {isQuickAdding ? 'Ajout...' : '+ Ajouter'}
+                      </button>
+                    </form>
+                  )}
                   
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
                     {Object.keys(grouped).sort().map(entity => {
