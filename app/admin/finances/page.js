@@ -966,9 +966,32 @@ export default function FinancesPage() {
                   <h2 style={{ margin: '0 0 20px 0', color: '#111827', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {isWishlist ? '📝 Commandes à faire (Wishlist)' : '🛒 Factures et Commandes à Payer'}
                   </h2>
-                  <div style={{ background: isWishlist ? '#FFFBEB' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${isWishlist ? '#FEF3C7' : '#FEE2E2'}`, marginBottom: '30px' }}>
-                    <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
+                  <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '1', minWidth: '250px', background: isWishlist ? '#FFFBEB' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${isWishlist ? '#FEF3C7' : '#FEE2E2'}` }}>
+                      <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
+                      <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
+                    </div>
+                    
+                    {isWishlist && (
+                      <div style={{ flex: '2', minWidth: '300px', background: '#F9FAFB', padding: '15px', borderRadius: '12px', border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <p style={{ margin: '0 0 10px 0', color: '#4B5563', fontSize: '0.9rem', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                          Impact au 1er du mois prochain (Dépenses + Commandes) :
+                        </p>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                          {['Entreprise', 'Perso', 'Conjoint'].map(acc => {
+                            const projected = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
+                            return (
+                              <div key={acc} style={{ flex: '1', minWidth: '90px', background: 'white', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: '0.75rem', color: '#6B7280', marginBottom: '2px', fontWeight: 'bold' }}>{acc}</div>
+                                <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: projected >= 0 ? '#10B981' : '#EF4444' }}>
+                                  {formatMoney(projected)}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {isWishlist && (
