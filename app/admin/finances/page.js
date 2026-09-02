@@ -516,12 +516,56 @@ export default function FinancesPage() {
       }
     });
     
-    const ghostSum = Array.from(ghostMap.values())
+    const getManualDateFor = (account, mm, yy) => {
+      const manualBal = balances.find(b => {
+        const d = parseDateLocal(b.date);
+        return b.account === account && d.getMonth() === mm && d.getFullYear() === yy;
+      });
+      return manualBal ? parseDateLocal(manualBal.date) : new Date(yy, mm, 1);
+    };
+
+    let manualDate = new Date(y, m, 1);
+    if (acc === 'Vue Combinée') {
+      const d1 = getManualDateFor('Entreprise', m, y);
+      const d2 = getManualDateFor('Perso', m, y);
+      const d3 = getManualDateFor('Conjoint', m, y);
+      manualDate = new Date(Math.max(d1, d2, d3));
+    } else {
+      manualDate = getManualDateFor(acc, m, y);
+    }
+    
+    const ghosts = Array.from(ghostMap.values())
       .filter(t => t.priority !== 99)
-      .reduce((a, t) => a + parseFloat(t.amount), 0);
+      .flatMap(t => {
+        const cat = getCategory(t.category_id);
+        const catName = (cat ? cat.name : '').toLowerCase();
+        const desc = (t.description || '').toLowerCase();
+        const isVariableDate = Number(t.priority) === 3 || Number(t.priority) === 4 || 
+                               catName.includes('épicerie') || catName.includes('epicerie') || 
+                               catName.includes('animaux') || catName.includes('essence') ||
+                               catName.includes('pharmacie') ||
+                               desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
+
+        if (isVariableDate) {
+          const weeklyAmount = (parseFloat(t.amount) / 4).toFixed(2);
+          return [7, 14, 21, 28].map(day => ({
+            date: `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+            amount: weeklyAmount
+          }));
+        }
+        return [{
+          date: `${y}-${String(m + 1).padStart(2, '0')}-01`,
+          amount: t.amount
+        }];
+      });
+
+    const ghostSum = ghosts
+      .filter(g => parseDateLocal(g.date) > manualDate)
+      .reduce((a, g) => a + parseFloat(g.amount), 0);
       
     const simSum = getVirtualIncomesForMonth(m, y)
       .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc))
+      .filter(t => parseDateLocal(t.date) > manualDate)
       .reduce((a, t) => a + parseFloat(t.amount), 0);
     
     return startBal + incs - exps - ghostSum + simSum;
