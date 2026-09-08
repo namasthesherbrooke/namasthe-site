@@ -536,7 +536,10 @@ export default function FinancesPage() {
     
     allFixeds.forEach(t => {
       if (t.entity === acc || acc === 'Vue Combinée') {
-        const k = `${t.entity}-${t.category_id}-${t.description}-${t.type}`;
+        let k = `${t.entity}-${t.category_id}-${t.description}-${t.type}`;
+        if (Number(t.priority) >= 95 && Number(t.priority) <= 101) {
+          k += `-dow-${t.priority}`;
+        }
         if (!ghostMap.has(k) || parseDateLocal(t.date) > parseDateLocal(ghostMap.get(k).date)) {
           ghostMap.set(k, t);
         }
