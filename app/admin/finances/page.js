@@ -765,15 +765,11 @@ export default function FinancesPage() {
   const sporadicExpenses = accountTransactions.filter(t => t.type === 'expense' && !t.is_fixed);
   const incomes = accountTransactions.filter(t => t.type === 'income');
 
-  // Calculs Projection globale ou par compte
   let projectedBalance = 0;
   if (!isCombinedView) {
     projectedBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, activeTab);
   }
-  let pendingIncomes = accountTransactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  let pendingExpenses = accountTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  let suggestions = [];
-
+  
   // --- CHRONOLOGIE DU SOLDE ---
   const getManualBalanceDate = (acc) => {
     const manualBal = balances.find(b => {
@@ -792,7 +788,6 @@ export default function FinancesPage() {
   } else {
     timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
   }
-
   // Filtrer les fantômes et simulations qui sont passés par rapport au solde manuel
   const filteredAccountTransactions = accountTransactions.filter(t => {
     if (t.is_ghost || t.is_simulation) {
@@ -801,6 +796,10 @@ export default function FinancesPage() {
     }
     return true;
   });
+
+  let pendingIncomes = filteredAccountTransactions.filter(t => t.type === 'income' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  let pendingExpenses = filteredAccountTransactions.filter(t => t.type === 'expense' && t.status === 'pending').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  let suggestions = [];
 
   const sortedTransactions = [...filteredAccountTransactions].sort((a, b) => {
     const da = parseDateLocal(a.date);
@@ -900,12 +899,22 @@ export default function FinancesPage() {
 
   const entrepriseExtra = entMinBal;
 
-  // --- NOUVEAU : Calcul du profit et de la marge pour l'Entreprise ---
-  const allEntIncomes = entSorted.filter(t => t.type === 'income').reduce((acc, t) => acc + parseFloat(t.amount), 0);
-  const allEntExpenses = entSorted.filter(t => t.type === 'expense').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+  // --- NOUVEAU : Viabilité réelle du Café (Peu importe le compte de dépôt) ---
+  const cafeIncomes = currentMonthTransactions.filter(t => 
+    t.type === 'income' && t.priority !== 99 &&
+    (
+      t.entity === 'Entreprise' ||
+      (t.description || '').toLowerCase().includes('system') ||
+      (t.description || '').toLowerCase().includes('uber') ||
+      (t.description || '').toLowerCase().includes('doordash') ||
+      (t.description || '').toLowerCase().includes('square')
+    )
+  ).reduce((acc, t) => acc + parseFloat(t.amount), 0);
+
+  const cafeExpenses = entSorted.filter(t => t.type === 'expense').reduce((acc, t) => acc + parseFloat(t.amount), 0);
   
-  const profitNet = allEntIncomes - allEntExpenses;
-  const profitMargin = allEntIncomes > 0 ? (profitNet / allEntIncomes) * 100 : 0;
+  const profitNet = cafeIncomes - cafeExpenses;
+  const profitMargin = cafeIncomes > 0 ? (profitNet / cafeIncomes) * 100 : 0;
   
   let marginColor = '#475569';
   let marginMessage = '';
@@ -1427,10 +1436,15 @@ export default function FinancesPage() {
                       
                       <div style={{ marginTop: '15px', padding: '12px', background: 'white', borderRadius: '8px', border: `1px solid ${marginColor}` }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                          <h5 style={{ margin: 0, color: marginColor }}>{marginIcon} Marge de Profit Nette</h5>
+                          <h5 style={{ margin: 0, color: marginColor }}>{marginIcon} Viabilité Opérationnelle (Le Café)</h5>
                           <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: marginColor }}>{profitMargin.toFixed(1)}%</span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569' }}>
+                        <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem', color: '#475569' }}>
+                          Revenus (System, Uber, Doordash, etc.) : <strong>{formatMoney(cafeIncomes)}</strong><br/>
+                          Dépenses de l'entreprise : <strong>{formatMoney(cafeExpenses)}</strong><br/>
+                          Profit Net : <strong style={{ color: profitNet >= 0 ? '#059669' : '#DC2626' }}>{formatMoney(profitNet)}</strong>
+                        </p>
+                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', borderTop: '1px solid #E2E8F0', paddingTop: '5px' }}>
                           {marginMessage}
                         </p>
                       </div>
