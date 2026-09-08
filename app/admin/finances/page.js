@@ -570,13 +570,9 @@ export default function FinancesPage() {
         const cat = getCategory(t.category_id);
         const catName = (cat ? cat.name : '').toLowerCase();
         const desc = (t.description || '').toLowerCase();
-        const isVariableDate = Number(t.priority) === 3 || Number(t.priority) === 4 || 
-                               catName.includes('épicerie') || catName.includes('epicerie') || 
-                               catName.includes('animaux') || catName.includes('essence') ||
-                               catName.includes('pharmacie') ||
-                               desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
+        const isWeekly = Number(t.priority) >= 95 && Number(t.priority) <= 101;
 
-        if (isVariableDate) {
+        if (isWeekly) {
           const targetDow = parseDateLocal(t.date).getDay();
           const ghostDates = [];
           const tempDate = new Date(y, m, 1);
@@ -684,7 +680,10 @@ export default function FinancesPage() {
   const allFixed = transactions.filter(t => t.is_fixed);
   const latestFixedMap = new Map();
   allFixed.forEach(t => {
-    const key = `${t.entity}-${t.category_id}-${t.description || ''}-${t.type}`;
+    let key = `${t.entity}-${t.category_id}-${t.description || ''}-${t.type}`;
+    if (Number(t.priority) >= 95 && Number(t.priority) <= 101) {
+      key += `-dow-${t.priority}`;
+    }
     if (!latestFixedMap.has(key) || parseDateLocal(t.date) > parseDateLocal(latestFixedMap.get(key).date)) {
       latestFixedMap.set(key, t);
     }
@@ -693,19 +692,9 @@ export default function FinancesPage() {
   const ghostRecurring = Array.from(latestFixedMap.values())
     .filter(t => t.priority !== 99)
     .flatMap(t => {
-      // Identifier si la transaction est à date variable (soit par priorité, soit par mot-clé)
-      const cat = getCategory(t.category_id);
-      const catName = (cat ? cat.name : '').toLowerCase();
-      const desc = (t.description || '').toLowerCase();
-      
-      const isVariableDate = Number(t.priority) === 3 || Number(t.priority) === 4 || 
-                             catName.includes('épicerie') || catName.includes('epicerie') || 
-                             catName.includes('animaux') || catName.includes('essence') ||
-                             catName.includes('pharmacie') ||
-                             desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
+      const isWeekly = Number(t.priority) >= 95 && Number(t.priority) <= 101;
 
-      // Pour les transactions variables (Hebdomadaires), on génère une occurrence pour chaque même jour de la semaine dans le mois
-      if (isVariableDate) {
+      if (isWeekly) {
         const targetDow = parseDateLocal(t.date).getDay();
         const ghostDates = [];
         const tempDate = new Date(currentYear, currentMonth, 1);
