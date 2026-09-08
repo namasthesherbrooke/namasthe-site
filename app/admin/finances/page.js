@@ -1021,14 +1021,29 @@ export default function FinancesPage() {
               const projPer = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Perso');
               const projCon = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Conjoint');
               const combinedProjected = projEnt + projPer + projCon;
-              const margeManoeuvre = combinedProjected - totalPending;
+              
+              const getFirstDayExpenses = (acc) => {
+                const uniqueFixed = new Map();
+                transactions.filter(t => t.entity === acc && t.type === 'expense' && t.is_fixed && !t.is_ghost && !t.is_simulation)
+                  .forEach(t => {
+                     if (!uniqueFixed.has(t.description) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(t.description).date)) {
+                         uniqueFixed.set(t.description, t);
+                     }
+                  });
+                return Array.from(uniqueFixed.values())
+                  .filter(t => parseDateLocal(t.date).getDate() === 1 || Number(t.priority) === 1)
+                  .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+              };
+              const firstDayTotal = getFirstDayExpenses('Entreprise') + getFirstDayExpenses('Perso') + getFirstDayExpenses('Conjoint');
+              
+              const margeManoeuvre = combinedProjected - firstDayTotal - totalPending;
               
               const currentEnt = getLiveBalanceForAccount(currentMonth, currentYear, 'Entreprise');
               const currentPer = getLiveBalanceForAccount(currentMonth, currentYear, 'Perso');
               const currentCon = getLiveBalanceForAccount(currentMonth, currentYear, 'Conjoint');
               const combinedCurrent = currentEnt + currentPer + currentCon;
 
-              let globalRunningTotal = combinedProjected;
+              let globalRunningTotal = combinedProjected - firstDayTotal;
               const wishlistAffordability = {};
               
               if (isWishlist) {
@@ -1074,7 +1089,7 @@ export default function FinancesPage() {
                         <p style={{ margin: '0 0 5px 0', color: margeManoeuvre >= 0 ? '#065F46' : '#991B1B', fontSize: '1.2rem', fontWeight: 'bold' }}>Marge de Manœuvre Globale :</p>
                         <div style={{ fontSize: '3rem', fontWeight: 'bold', color: margeManoeuvre >= 0 ? '#059669' : '#DC2626' }}>{formatMoney(margeManoeuvre)}</div>
                         <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: margeManoeuvre >= 0 ? '#047857' : '#B91C1C' }}>
-                          (Solde Projeté Combiné: {formatMoney(combinedProjected)}) - (Commandes: {formatMoney(totalPending)})
+                          (Solde Projeté: {formatMoney(combinedProjected)}) - (Factures du 1er: {formatMoney(firstDayTotal)}) - (Commandes: {formatMoney(totalPending)})
                         </p>
                       </div>
                     )}
