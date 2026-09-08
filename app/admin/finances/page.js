@@ -627,56 +627,6 @@ export default function FinancesPage() {
     return count > 0 ? count : 1;
   };
 
-  const getTransferRecommendations = () => {
-    const recommendations = [];
-    let totalTransferred = 0;
-    
-    const divisor = getTotalMondaysAndThursdays(currentMonth, currentYear);
-
-    // Accounts that generate surplus to be transferred to Entreprise
-    const otherAccounts = ['Conjoint', 'Perso'];
-    
-    for (const acc of otherAccounts) {
-      const madeTransfers = transactions.filter(t => 
-        t.entity === acc && 
-        t.type === 'expense' && 
-        t.description?.toLowerCase().includes('transfert vers entreprise') &&
-        parseDateLocal(t.date).getMonth() === currentMonth &&
-        parseDateLocal(t.date).getFullYear() === currentYear
-      );
-      const totalTransferredAlready = madeTransfers.reduce((sum, t) => sum + parseFloat(t.amount), 0);
-
-      const accSurplus = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
-      const grossSurplus = accSurplus + totalTransferredAlready;
-
-      if (grossSurplus > 0) {
-        const amountPerTransfer = grossSurplus / divisor;
-        let completedCount = madeTransfers.length;
-        // S'assurer qu'on ne dépasse pas le nombre de coches
-        if (completedCount > divisor) completedCount = divisor;
-
-        recommendations.push({
-          from: acc,
-          to: 'Entreprise',
-          amount: amountPerTransfer,
-          totalAmount: grossSurplus,
-          completedCount,
-          totalCount: divisor,
-          frequencyText: divisor > 1 ? `(cible bi-hebdomadaire, ${divisor}x par mois)` : `(immédiatement)`
-        });
-        totalTransferred += accSurplus; // Seul le vrai surplus actuel compte pour sauver l'entreprise
-      }
-    }
-    
-    // Calculate if Entreprise is still in deficit after these transfers
-    const entBalance = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
-    const remainingDeficit = (entBalance + totalTransferred) < 0 ? Math.abs(entBalance + totalTransferred) : 0;
-    
-    // Return recommendations and if Entreprise is fully covered
-    if (recommendations.length === 0 && entBalance >= 0) return null; // Nothing to do
-
-    return { recommendations, fullyCovered: remainingDeficit === 0, remainingDeficit };
-  };
 
   const isCombinedView = activeTab === 'Vue Combinée';
 
@@ -1328,81 +1278,7 @@ export default function FinancesPage() {
                     </div>
                   </div>
 
-                  {/* Recommandations de Transferts (Visible if surplus exists or deficit in Entreprise) */}
-                  {(activeTab === 'Entreprise' || isCombinedView) && (() => {
-                    const recsData = getTransferRecommendations();
-                    if (!recsData || (recsData.recommendations.length === 0 && recsData.fullyCovered)) return null;
-                    
-                    return (
-                      <div style={{ background: '#EFF6FF', padding: '15px', borderRadius: '12px', border: '1px solid #BFDBFE', marginTop: '15px' }}>
-                        <h4 style={{ margin: '0 0 10px 0', color: '#1E3A8A', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '1rem' }}>
-                          💡 Centralisation des Fonds
-                        </h4>
-                        <p style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#1E40AF' }}>
-                          Il est recommandé de consolider vos surplus vers l'Entreprise pour couvrir vos opérations et fournisseurs :
-                          <br/><br/>
-                          <em>📅 <strong>Fréquence calculée :</strong> L'algorithme a divisé vos surplus mensuels par le nombre total de lundis et jeudis du mois pour vous donner un "rythme de croisière" régulier.</em>
-                        </p>
-                        <ul style={{ margin: 0, paddingLeft: '20px', color: '#1E3A8A', fontSize: '0.9rem', listStyle: 'none', marginLeft: '-20px' }}>
-                          {recsData.recommendations.length > 0 ? recsData.recommendations.map((r, i) => (
-                            <li key={i} style={{ marginBottom: '15px', background: 'white', padding: '15px', borderRadius: '12px', border: '1px solid #BFDBFE', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                              <div style={{ marginBottom: '10px' }}>
-                                Transférer <strong>{formatMoney(r.amount)}</strong> de <strong>{r.from}</strong> vers Entreprise <em style={{color: '#6B7280'}}>{r.frequencyText}</em>
-                              </div>
-                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                {Array.from({ length: r.totalCount }).map((_, idx) => {
-                                  const isDone = idx < r.completedCount;
-                                  return (
-                                    <button 
-                                      key={idx}
-                                      onClick={() => {
-                                        if (!isDone) {
-                                          if(confirm(`Voulez-vous vraiment enregistrer un transfert de ${formatMoney(r.amount)} de ${r.from} vers Entreprise pour cocher cette case ?`)) {
-                                            handleExecuteTransfer(r.from, r.to, r.amount);
-                                          }
-                                        }
-                                      }}
-                                      disabled={isDone}
-                                      style={{ 
-                                        background: isDone ? '#10B981' : '#F3F4F6', 
-                                        color: isDone ? 'white' : '#9CA3AF', 
-                                        border: isDone ? 'none' : '1px solid #D1D5DB', 
-                                        borderRadius: '50%', 
-                                        width: '28px', 
-                                        height: '28px', 
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        justifyContent: 'center', 
-                                        cursor: isDone ? 'default' : 'pointer', 
-                                        padding: 0,
-                                        transition: 'all 0.2s',
-                                        boxShadow: isDone ? 'none' : 'inset 0 2px 4px rgba(0,0,0,0.05)'
-                                      }}
-                                      title={isDone ? "Déjà fait" : "Cocher pour effectuer ce transfert"}
-                                    >
-                                      ✓
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </li>
-                          )) : (
-                            <li style={{ marginBottom: '5px', color: '#991B1B' }}>Aucun surplus disponible dans vos comptes Perso/Conjoint.</li>
-                          )}
-                        </ul>
-                        {!recsData.fullyCovered && (
-                          <p style={{ margin: '10px 0 0 0', fontSize: '0.8rem', color: '#991B1B' }}>
-                            ⚠️ Même avec ces transferts (si disponibles), l'Entreprise sera en déficit de {formatMoney(recsData.remainingDeficit)}.
-                          </p>
-                        )}
-                        {recsData.fullyCovered && recsData.recommendations.length > 0 && (
-                          <p style={{ margin: '10px 0 0 0', fontSize: '0.85rem', color: '#065F46' }}>
-                            ✅ L'entreprise aura assez de liquidités pour toutes ses dépenses. Le solde restant pourra être utilisé pour l'épargne.
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })()}
+
 
                 </div>
 
