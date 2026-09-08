@@ -522,12 +522,12 @@ export default function FinancesPage() {
       .reduce((a, t) => a + parseFloat(t.amount), 0);
       
     const viewedDate = new Date(y, m, 1);
-    const pastFixeds = transactions.filter(t => t.is_fixed && t.type === 'expense' && parseDateLocal(t.date) < viewedDate);
+    const allFixeds = transactions.filter(t => t.is_fixed);
     const ghostMap = new Map();
-    pastFixeds.forEach(t => {
-      const currentExists = transactions.some(c => c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && parseDateLocal(c.date).getMonth() === m && parseDateLocal(c.date).getFullYear() === y);
-      if (!currentExists && t.entity === acc) {
-        const k = `${t.entity}-${t.category_id}-${t.description}`;
+    
+    allFixeds.forEach(t => {
+      if (t.entity === acc || acc === 'Vue Combinée') {
+        const k = `${t.entity}-${t.category_id}-${t.description}-${t.type}`;
         if (!ghostMap.has(k) || parseDateLocal(t.date) > parseDateLocal(ghostMap.get(k).date)) {
           ghostMap.set(k, t);
         }
@@ -575,28 +575,49 @@ export default function FinancesPage() {
             tempDate.setDate(tempDate.getDate() + 1);
           }
           
-          return ghostDates.map(day => ({
-            date: `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-            amount: t.amount
-          }));
+          return ghostDates.map(day => {
+            const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const existsExactDate = transactions.some(c => 
+              c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && c.type === t.type && c.date === dateStr
+            );
+            if (existsExactDate) return null;
+
+            return {
+              type: t.type,
+              date: dateStr,
+              amount: t.amount
+            };
+          }).filter(Boolean);
         }
-        const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
-        return [{
-          date: `${y}-${String(m + 1).padStart(2, '0')}-${originalDay}`,
-          amount: t.amount
-        }];
+        
+        const existsInCurrentMonth = transactions.some(c => 
+          c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && c.type === t.type && parseDateLocal(c.date).getMonth() === m && parseDateLocal(c.date).getFullYear() === y
+        );
+
+        if (!existsInCurrentMonth) {
+          const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
+          return [{
+            type: t.type,
+            date: `${y}-${String(m + 1).padStart(2, '0')}-${originalDay}`,
+            amount: t.amount
+          }];
+        }
+        return [];
       });
 
-    const ghostSum = ghosts
-      .filter(g => parseDateLocal(g.date) > manualDate)
+    const ghostExpenseSum = ghosts
+      .filter(g => g.type === 'expense' && parseDateLocal(g.date) > manualDate)
+      .reduce((a, g) => a + parseFloat(g.amount), 0);
+      
+    const ghostIncomeSum = ghosts
+      .filter(g => g.type === 'income' && parseDateLocal(g.date) > manualDate)
       .reduce((a, g) => a + parseFloat(g.amount), 0);
       
     const simSum = getVirtualIncomesForMonth(m, y)
       .filter(t => (acc === 'Vue Combinée' ? true : t.entity === acc))
       .filter(t => parseDateLocal(t.date) > manualDate)
       .reduce((a, t) => a + parseFloat(t.amount), 0);
-    
-    return startBal + incs - exps - ghostSum + simSum;
+    return startBal + incs - exps - ghostExpenseSum + ghostIncomeSum + simSum;
   };
 
   const getLiveBalanceForAccount = (m, y, acc) => {
@@ -648,24 +669,19 @@ export default function FinancesPage() {
     return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
 
-  const pastFixed = transactions.filter(t => t.is_fixed && t.type === 'expense' && parseDateLocal(t.date) < viewedDate);
+  const allFixed = transactions.filter(t => t.is_fixed);
   const latestFixedMap = new Map();
-  pastFixed.forEach(t => {
-    const existsInCurrentMonth = baseCurrentMonthTransactions.some(current => 
-      current.description === t.description && current.category_id === t.category_id && current.entity === t.entity
-    );
-    if (!existsInCurrentMonth) {
-      const key = `${t.entity}-${t.category_id}-${t.description || ''}`;
-      if (!latestFixedMap.has(key) || parseDateLocal(t.date) > parseDateLocal(latestFixedMap.get(key).date)) {
-        latestFixedMap.set(key, t);
-      }
+  allFixed.forEach(t => {
+    const key = `${t.entity}-${t.category_id}-${t.description || ''}-${t.type}`;
+    if (!latestFixedMap.has(key) || parseDateLocal(t.date) > parseDateLocal(latestFixedMap.get(key).date)) {
+      latestFixedMap.set(key, t);
     }
   });
 
-  const ghostExpenses = Array.from(latestFixedMap.values())
+  const ghostRecurring = Array.from(latestFixedMap.values())
     .filter(t => t.priority !== 99)
     .flatMap(t => {
-      // Identifier si la dépense est à date variable (soit par priorité, soit par mot-clé)
+      // Identifier si la transaction est à date variable (soit par priorité, soit par mot-clé)
       const cat = getCategory(t.category_id);
       const catName = (cat ? cat.name : '').toLowerCase();
       const desc = (t.description || '').toLowerCase();
@@ -676,7 +692,7 @@ export default function FinancesPage() {
                              catName.includes('pharmacie') ||
                              desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
 
-      // Pour les dépenses variables (Hebdomadaires), on génère une occurrence pour chaque même jour de la semaine dans le mois
+      // Pour les transactions variables (Hebdomadaires), on génère une occurrence pour chaque même jour de la semaine dans le mois
       if (isVariableDate) {
         const targetDow = parseDateLocal(t.date).getDay();
         const ghostDates = [];
@@ -688,28 +704,46 @@ export default function FinancesPage() {
           tempDate.setDate(tempDate.getDate() + 1);
         }
 
-        return ghostDates.map((day, idx) => ({
-          ...t,
-          id: `ghost-${t.id}-${idx}`,
-          status: 'pending',
-          amount: t.amount,
-          date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-          is_ghost: true
-        }));
+        return ghostDates.map((day, idx) => {
+          const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          
+          // Ne pas générer ce ghost si une transaction RÉELLE de cette récurrence existe déjà à cette date exacte
+          const existsExactDate = baseCurrentMonthTransactions.some(c => 
+            c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && c.type === t.type && c.date === dateStr
+          );
+          if (existsExactDate) return null;
+
+          return {
+            ...t,
+            id: `ghost-${t.id}-${idx}`,
+            status: 'pending',
+            amount: t.amount,
+            date: dateStr,
+            is_ghost: true
+          };
+        }).filter(Boolean);
       }
 
-      // Pour les dépenses fixes normales, on les place à leur jour habituel
-      const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
-      return [{
-        ...t,
-        id: `ghost-${t.id}`,
-        status: 'pending',
-        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${originalDay}`,
-        is_ghost: true
-      }];
+      // Pour les transactions fixes normales (Mensuelles)
+      // Ne générer le ghost que s'il n'y a AUCUNE vraie transaction ce mois-ci
+      const existsInCurrentMonth = baseCurrentMonthTransactions.some(c => 
+        c.description === t.description && c.category_id === t.category_id && c.entity === t.entity && c.type === t.type
+      );
+      
+      if (!existsInCurrentMonth) {
+        const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
+        return [{
+          ...t,
+          id: `ghost-${t.id}`,
+          status: 'pending',
+          date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${originalDay}`,
+          is_ghost: true
+        }];
+      }
+      return [];
     });
 
-  const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostExpenses, ...virtualIncomes];
+  const currentMonthTransactions = [...baseCurrentMonthTransactions, ...ghostRecurring, ...virtualIncomes];
 
   let accountTransactions = currentMonthTransactions.filter(t => t.priority !== 99);
   if (!isCombinedView) {
