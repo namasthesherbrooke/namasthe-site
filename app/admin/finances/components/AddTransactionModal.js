@@ -350,22 +350,24 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
               </label>
               
               {isFixed && (
-                <div style={{ display: 'flex', gap: '15px', marginLeft: 'auto' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563' }}>
-                    <input 
-                      type="checkbox" 
-                      checked={isVariableDate}
-                      onChange={(e) => setIsVariableDate(e.target.checked)}
-                    />
-                    Date variable
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', background: 'white', padding: '10px', borderRadius: '8px', border: '1px solid #E5E7EB', width: '100%' }}>
+                  <label style={{ display: 'block', fontWeight: 'bold', fontSize: '0.85rem', color: '#374151' }}>Fréquence de répétition :</label>
+                  <select 
+                    value={isVariableDate ? 'weekly' : 'monthly'}
+                    onChange={(e) => setIsVariableDate(e.target.value === 'weekly')}
+                    style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.9rem', width: '100%' }}
+                  >
+                    <option value="monthly">Mensuel (le {date ? date.split('-')[2] : 'X'} de chaque mois)</option>
+                    <option value="weekly">Hebdomadaire (4 fois par mois)</option>
+                  </select>
+                  
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563', marginTop: '5px' }}>
                     <input 
                       type="checkbox" 
                       checked={isVariableAmount}
                       onChange={(e) => setIsVariableAmount(e.target.checked)}
                     />
-                    Montant variable
+                    Le montant peut varier (Estimation approximative)
                   </label>
                 </div>
               )}
