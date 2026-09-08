@@ -756,7 +756,9 @@ export default function FinancesPage() {
 
   let accountTransactions = currentMonthTransactions.filter(t => t.priority !== 99);
   if (!isCombinedView) {
-    accountTransactions = currentMonthTransactions.filter(t => t.entity === activeTab);
+    accountTransactions = accountTransactions.filter(t => t.entity === activeTab);
+  } else {
+    accountTransactions = accountTransactions.filter(t => ['Entreprise', 'Perso', 'Conjoint'].includes(t.entity));
   }
 
   const fixedExpenses = accountTransactions.filter(t => t.type === 'expense' && t.is_fixed);
