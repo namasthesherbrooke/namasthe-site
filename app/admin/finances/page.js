@@ -178,6 +178,24 @@ export default function FinancesPage() {
     }
   };
 
+  const handleUpdatePriority = async (id, newPriority) => {
+    try {
+      const res = await fetch(`/api/admin/finances`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
+        body: JSON.stringify({
+          action: 'update_transaction',
+          data: { id, updates: { priority: parseInt(newPriority) } }
+        })
+      });
+      if (!res.ok) throw new Error("Erreur de mise à jour");
+      const { transaction } = await res.json();
+      setTransactions(transactions.map(t => t.id === id ? transaction : t));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleQuickAddWishlist = async (e) => {
     e.preventDefault();
     if (!quickAddAmount || !quickAddDesc.trim()) return;
@@ -207,7 +225,7 @@ export default function FinancesPage() {
             description: quickAddDesc,
             is_fixed: false,
             status: 'pending',
-            priority: 99
+            priority: 92
           }
         })
       });
@@ -986,8 +1004,8 @@ export default function FinancesPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             {activeTab === 'À Payer' || activeTab === 'À Commander' ? (() => {
               const isWishlist = activeTab === 'À Commander';
-              const actualPending = transactions.filter(t => t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority == 99 : t.priority != 99) && !t.is_ghost && !t.is_simulation);
-              const ghostPending = currentMonthTransactions.filter(t => t.is_ghost && t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority == 99 : t.priority != 99));
+              const actualPending = transactions.filter(t => t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority >= 90 : t.priority < 90) && !t.is_ghost && !t.is_simulation);
+              const ghostPending = currentMonthTransactions.filter(t => t.is_ghost && t.type === 'expense' && t.status === 'pending' && (isWishlist ? t.priority >= 90 : t.priority < 90));
               
               const allPendingMap = new Map();
               [...actualPending, ...ghostPending].forEach(t => {
@@ -998,6 +1016,32 @@ export default function FinancesPage() {
               
               const allPending = Array.from(allPendingMap.values());
               const totalPending = allPending.reduce((sum, t) => sum + parseFloat(t.amount), 0);
+              
+              const projEnt = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Entreprise');
+              const projPer = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Perso');
+              const projCon = getProjectedEndBalanceForMonth(currentMonth, currentYear, 'Conjoint');
+              const combinedProjected = projEnt + projPer + projCon;
+              const margeManoeuvre = combinedProjected - totalPending;
+              
+              const currentEnt = getLiveBalanceForAccount(currentMonth, currentYear, 'Entreprise');
+              const currentPer = getLiveBalanceForAccount(currentMonth, currentYear, 'Perso');
+              const currentCon = getLiveBalanceForAccount(currentMonth, currentYear, 'Conjoint');
+              const combinedCurrent = currentEnt + currentPer + currentCon;
+
+              let globalRunningTotal = combinedProjected;
+              const wishlistAffordability = {};
+              
+              if (isWishlist) {
+                const allWishlistSorted = [...allPending].sort((a, b) => {
+                  if (a.priority !== b.priority) return (a.priority || 99) - (b.priority || 99);
+                  return parseDateLocal(a.date) - parseDateLocal(b.date);
+                });
+                
+                allWishlistSorted.forEach(t => {
+                  globalRunningTotal -= parseFloat(t.amount);
+                  wishlistAffordability[t.id] = globalRunningTotal >= 0;
+                });
+              }
               
               const grouped = {};
               allPending.forEach(t => {
@@ -1011,10 +1055,29 @@ export default function FinancesPage() {
                     {isWishlist ? '📝 Commandes à faire (Wishlist)' : '🛒 Factures et Commandes à Payer'}
                   </h2>
                   <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
-                    <div style={{ flex: '1', minWidth: '250px', background: isWishlist ? '#FFFBEB' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${isWishlist ? '#FEF3C7' : '#FEE2E2'}` }}>
-                      <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
-                      <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: '1', minWidth: '250px' }}>
+                      <div style={{ background: isWishlist ? '#FFFBEB' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${isWishlist ? '#FEF3C7' : '#FEE2E2'}` }}>
+                        <p style={{ margin: '0 0 5px 0', color: isWishlist ? '#92400E' : '#991B1B', fontSize: '1.1rem' }}>{isWishlist ? 'Total Global à Commander :' : 'Total Global à Payer :'}</p>
+                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: isWishlist ? '#D97706' : '#DC2626' }}>{formatMoney(totalPending)}</div>
+                      </div>
+                      
+                      {isWishlist && (
+                        <div style={{ background: '#F0F9FF', padding: '15px', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
+                          <p style={{ margin: '0 0 5px 0', color: '#0369A1', fontSize: '0.9rem', fontWeight: 'bold' }}>Solde Actuel Combiné (Ent+Per+Conj) :</p>
+                          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#0284C7' }}>{formatMoney(combinedCurrent)}</div>
+                        </div>
+                      )}
                     </div>
+                    
+                    {isWishlist && (
+                      <div style={{ flex: '1.5', minWidth: '300px', background: margeManoeuvre >= 0 ? '#ECFDF5' : '#FEF2F2', padding: '20px', borderRadius: '12px', border: `1px solid ${margeManoeuvre >= 0 ? '#A7F3D0' : '#FECACA'}`, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <p style={{ margin: '0 0 5px 0', color: margeManoeuvre >= 0 ? '#065F46' : '#991B1B', fontSize: '1.2rem', fontWeight: 'bold' }}>Marge de Manœuvre Globale :</p>
+                        <div style={{ fontSize: '3rem', fontWeight: 'bold', color: margeManoeuvre >= 0 ? '#059669' : '#DC2626' }}>{formatMoney(margeManoeuvre)}</div>
+                        <p style={{ margin: '5px 0 0 0', fontSize: '0.85rem', color: margeManoeuvre >= 0 ? '#047857' : '#B91C1C' }}>
+                          (Solde Projeté Combiné: {formatMoney(combinedProjected)}) - (Commandes: {formatMoney(totalPending)})
+                        </p>
+                      </div>
+                    )}
                     
                     {isWishlist && (
                       <div style={{ flex: '2', minWidth: '300px', background: '#F9FAFB', padding: '15px', borderRadius: '12px', border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -1023,7 +1086,7 @@ export default function FinancesPage() {
                         </p>
                         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                           {['Entreprise', 'Perso', 'Conjoint'].map(acc => {
-                            const projected = getProjectedEndBalanceForMonth(currentMonth, currentYear, acc);
+                            const projected = acc === 'Entreprise' ? projEnt : acc === 'Perso' ? projPer : projCon;
                             return (
                               <div key={acc} style={{ flex: '1', minWidth: '90px', background: 'white', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                                 <div style={{ fontSize: '0.75rem', color: '#6B7280', marginBottom: '2px', fontWeight: 'bold' }}>{acc}</div>
@@ -1076,7 +1139,10 @@ export default function FinancesPage() {
                   
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
                     {Object.keys(grouped).sort().map(entity => {
-                      const entityItems = grouped[entity].sort((a,b) => parseDateLocal(a.date) - parseDateLocal(b.date));
+                      const entityItems = grouped[entity].sort((a,b) => {
+                        if (isWishlist && a.priority !== b.priority) return (a.priority || 99) - (b.priority || 99);
+                        return parseDateLocal(a.date) - parseDateLocal(b.date);
+                      });
                       const entityTotal = entityItems.reduce((sum, t) => sum + parseFloat(t.amount), 0);
                       return (
                         <div key={entity} style={{ background: '#F9FAFB', padding: '20px', borderRadius: '12px', border: '1px solid #E5E7EB' }}>
@@ -1085,14 +1151,28 @@ export default function FinancesPage() {
                             <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#DC2626' }}>{formatMoney(entityTotal)}</span>
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {entityItems.map(t => (
-                              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'white', borderRadius: '8px', border: '1px solid #F3F4F6' }}>
+                            {entityItems.map(t => {
+                              const canAfford = isWishlist ? wishlistAffordability[t.id] : true;
+                              return (
+                              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'white', borderRadius: '8px', border: `1px solid ${isWishlist ? (canAfford ? '#A7F3D0' : '#FECACA') : '#F3F4F6'}` }}>
                                 <div>
-                                  <div style={{ fontWeight: 'bold', color: '#111827' }}>
-                                    {t.is_ghost && <span title="Projeté automatiquement" style={{marginRight: '5px'}}>👻</span>}
+                                  <div style={{ fontWeight: 'bold', color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {t.is_ghost && <span title="Projeté automatiquement">👻</span>}
                                     {t.description || getCategory(t.category_id)?.name || 'Inconnue'}
+                                    {isWishlist && (
+                                      <select 
+                                        value={t.priority || 99} 
+                                        onChange={(e) => handleUpdatePriority(t.id, e.target.value)}
+                                        style={{ marginLeft: '10px', padding: '2px 5px', borderRadius: '4px', border: '1px solid #D1D5DB', background: t.priority == 91 ? '#FEE2E2' : t.priority == 92 ? '#FEF3C7' : t.priority == 93 ? '#DCFCE7' : '#F3F4F6', fontSize: '0.8rem', outline: 'none', cursor: 'pointer' }}
+                                      >
+                                        <option value="91">🔥 P1 (Haute)</option>
+                                        <option value="92">⚡ P2 (Moyenne)</option>
+                                        <option value="93">🌱 P3 (Basse)</option>
+                                        <option value="99">Aucune</option>
+                                      </select>
+                                    )}
                                   </div>
-                                  <div style={{ fontSize: '0.8rem', color: '#6B7280' }}>
+                                  <div style={{ fontSize: '0.8rem', color: '#6B7280', marginTop: '4px' }}>
                                     {getCategory(t.category_id)?.name || 'Inconnue'} • {t.is_fixed ? 'Fixe' : 'Sporadique'}
                                     <span style={{ marginLeft: '5px', background: '#F3F4F6', padding: '2px 6px', borderRadius: '4px' }}>
                                       📅 {String(parseDateLocal(t.date).getDate()).padStart(2, '0')} {parseDateLocal(t.date).toLocaleString('fr-FR', { month: 'short' })}
@@ -1100,7 +1180,14 @@ export default function FinancesPage() {
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                  <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
+                                  <span style={{ fontWeight: 'bold', color: '#EF4444', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    {formatMoney(t.amount)}
+                                    {isWishlist && (
+                                      <span title={canAfford ? "Fonds globaux suffisants" : "Fonds globaux insuffisants"} style={{ fontSize: '1.2rem' }}>
+                                        {canAfford ? '✅' : '❌'}
+                                      </span>
+                                    )}
+                                  </span>
                                   {isWishlist ? (
                                     <button 
                                       onClick={() => {
@@ -1123,7 +1210,8 @@ export default function FinancesPage() {
                                   <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
                                 </div>
                               </div>
-                            ))}
+                            );
+                            })}
                           </div>
                         </div>
                       );
