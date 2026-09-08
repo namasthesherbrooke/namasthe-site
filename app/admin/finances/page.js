@@ -924,8 +924,9 @@ export default function FinancesPage() {
   const celiProvision = persoIncomes * 0.08; // 8% CELI
 
   // --- GRAND TOTAL (Valeur Nette) ---
-  const grandTotalCurrent = accounts.filter(a => a !== 'Vue Combinée').reduce((sum, acc) => sum + getLiveBalanceForAccount(currentMonth, currentYear, acc), 0);
-  const grandTotalProjected = accounts.filter(a => a !== 'Vue Combinée' && a !== 'CELI').reduce((sum, acc) => sum + getProjectedEndBalanceForMonth(currentMonth, currentYear, acc), 0) + getProjectedEndBalanceForMonth(currentMonth, currentYear, 'CELI');
+  const mainAccounts = ['Entreprise', 'Perso', 'Conjoint'];
+  const grandTotalCurrent = mainAccounts.reduce((sum, acc) => sum + getLiveBalanceForAccount(currentMonth, currentYear, acc), 0);
+  const grandTotalProjected = mainAccounts.reduce((sum, acc) => sum + getProjectedEndBalanceForMonth(currentMonth, currentYear, acc), 0);
   
   return (
     <FinanceLock onUnlock={handleUnlock}>
