@@ -548,7 +548,7 @@ export default function FinancesPage() {
         const d = parseDateLocal(b.date);
         return b.account === account && d.getMonth() === mm && d.getFullYear() === yy;
       });
-      return manualBal ? parseDateLocal(manualBal.date) : new Date(yy, mm, 1);
+      return manualBal ? parseDateLocal(manualBal.date) : new Date(yy, mm, 0);
     };
 
     let manualDate = new Date(y, m, 1);
@@ -776,7 +776,7 @@ export default function FinancesPage() {
       const d = parseDateLocal(b.date);
       return b.account === acc && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
-    return manualBal ? parseDateLocal(manualBal.date) : new Date(currentYear, currentMonth, 1);
+    return manualBal ? parseDateLocal(manualBal.date) : new Date(currentYear, currentMonth, 0);
   };
 
   let timelineStartBalance = 0;
