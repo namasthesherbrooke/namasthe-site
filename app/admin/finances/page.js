@@ -565,10 +565,19 @@ export default function FinancesPage() {
                                desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
 
         if (isVariableDate) {
-          const weeklyAmount = (parseFloat(t.amount) / 4).toFixed(2);
-          return [7, 14, 21, 28].map(day => ({
+          const targetDow = parseDateLocal(t.date).getDay();
+          const ghostDates = [];
+          const tempDate = new Date(y, m, 1);
+          while (tempDate.getMonth() === m) {
+            if (tempDate.getDay() === targetDow) {
+              ghostDates.push(tempDate.getDate());
+            }
+            tempDate.setDate(tempDate.getDate() + 1);
+          }
+          
+          return ghostDates.map(day => ({
             date: `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-            amount: weeklyAmount
+            amount: t.amount
           }));
         }
         const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
@@ -667,14 +676,23 @@ export default function FinancesPage() {
                              catName.includes('pharmacie') ||
                              desc.includes('épicerie') || desc.includes('epicerie') || desc.includes('animaux');
 
-      // Pour les dépenses variables, on les divise en 4 semaines pour ne pas plomber le solde le jour 1
+      // Pour les dépenses variables (Hebdomadaires), on génère une occurrence pour chaque même jour de la semaine dans le mois
       if (isVariableDate) {
-        const weeklyAmount = (parseFloat(t.amount) / 4).toFixed(2);
-        return [7, 14, 21, 28].map((day, idx) => ({
+        const targetDow = parseDateLocal(t.date).getDay();
+        const ghostDates = [];
+        const tempDate = new Date(currentYear, currentMonth, 1);
+        while (tempDate.getMonth() === currentMonth) {
+          if (tempDate.getDay() === targetDow) {
+            ghostDates.push(tempDate.getDate());
+          }
+          tempDate.setDate(tempDate.getDate() + 1);
+        }
+
+        return ghostDates.map((day, idx) => ({
           ...t,
           id: `ghost-${t.id}-${idx}`,
           status: 'pending',
-          amount: weeklyAmount,
+          amount: t.amount,
           date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
           is_ghost: true
         }));
