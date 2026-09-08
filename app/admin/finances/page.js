@@ -571,8 +571,9 @@ export default function FinancesPage() {
             amount: weeklyAmount
           }));
         }
+        const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
         return [{
-          date: `${y}-${String(m + 1).padStart(2, '0')}-01`,
+          date: `${y}-${String(m + 1).padStart(2, '0')}-${originalDay}`,
           amount: t.amount
         }];
       });
@@ -729,12 +730,13 @@ export default function FinancesPage() {
         }));
       }
 
-      // Pour les dépenses fixes normales, on les place le jour 1 par défaut, ou à leur jour habituel si on le connaissait (ici on force le 1 pour l'instant)
+      // Pour les dépenses fixes normales, on les place à leur jour habituel
+      const originalDay = String(parseDateLocal(t.date).getDate()).padStart(2, '0');
       return [{
         ...t,
         id: `ghost-${t.id}`,
         status: 'pending',
-        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`,
+        date: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${originalDay}`,
         is_ghost: true
       }];
     });
@@ -769,26 +771,20 @@ export default function FinancesPage() {
   };
 
   let timelineStartBalance = 0;
-  let manualDateCombined = new Date(currentYear, currentMonth, 1);
   
   if (isCombinedView) {
     timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, 'Entreprise') +
                            getCalculatedStartBalance(currentMonth, currentYear, 'Perso') +
                            getCalculatedStartBalance(currentMonth, currentYear, 'Conjoint');
-    // On prend la date la plus récente parmi les soldes manuels
-    const d1 = getManualBalanceDate('Entreprise');
-    const d2 = getManualBalanceDate('Perso');
-    const d3 = getManualBalanceDate('Conjoint');
-    manualDateCombined = new Date(Math.max(d1, d2, d3));
   } else {
     timelineStartBalance = getCalculatedStartBalance(currentMonth, currentYear, activeTab);
-    manualDateCombined = getManualBalanceDate(activeTab);
   }
 
   // Filtrer les fantômes et simulations qui sont passés par rapport au solde manuel
   const filteredAccountTransactions = accountTransactions.filter(t => {
     if (t.is_ghost || t.is_simulation) {
-      return parseDateLocal(t.date) > manualDateCombined;
+      const accManualDate = getManualBalanceDate(t.entity);
+      return parseDateLocal(t.date) > accManualDate;
     }
     return true;
   });
