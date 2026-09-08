@@ -1534,9 +1534,21 @@ export default function FinancesPage() {
 
                     {/* NEW SECTION: Bilan du Mois (Conjoint & Perso) */}
                     {(() => {
+                      const getDynamicBudget = (accountName) => {
+                         const uniqueFixed = new Map();
+                         transactions.filter(t => t.entity === accountName && t.type === 'expense' && t.is_fixed && !t.is_ghost && !t.is_simulation)
+                           .forEach(t => {
+                              const key = `${t.category_id}-${t.description}`;
+                              if (!uniqueFixed.has(key) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(key).date)) {
+                                  uniqueFixed.set(key, t);
+                              }
+                           });
+                         return Array.from(uniqueFixed.values()).reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+                      };
+
                       const bilanAccounts = [
-                        { name: 'Conjoint', budget: 1935 },
-                        { name: 'Perso', budget: 1455 }
+                        { name: 'Conjoint', budget: getDynamicBudget('Conjoint') },
+                        { name: 'Perso', budget: getDynamicBudget('Perso') }
                       ];
 
                       return (
