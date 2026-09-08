@@ -1022,8 +1022,9 @@ export default function FinancesPage() {
                 const uniqueFixed = new Map();
                 transactions.filter(t => t.entity === acc && t.type === 'expense' && t.is_fixed && !t.is_ghost && !t.is_simulation)
                   .forEach(t => {
-                     if (!uniqueFixed.has(t.description) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(t.description).date)) {
-                         uniqueFixed.set(t.description, t);
+                     const key = `${t.category_id}-${t.description}`;
+                     if (!uniqueFixed.has(key) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(key).date)) {
+                         uniqueFixed.set(key, t);
                      }
                   });
                 return Array.from(uniqueFixed.values())
@@ -1552,8 +1553,9 @@ export default function FinancesPage() {
                             const uniqueFixed = new Map();
                             transactions.filter(t => t.entity === acc.name && t.type === 'expense' && t.is_fixed && !t.is_ghost && !t.is_simulation)
                               .forEach(t => {
-                                 if (!uniqueFixed.has(t.description) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(t.description).date)) {
-                                     uniqueFixed.set(t.description, t);
+                                 const key = `${t.category_id}-${t.description}`;
+                                 if (!uniqueFixed.has(key) || parseDateLocal(t.date) > parseDateLocal(uniqueFixed.get(key).date)) {
+                                     uniqueFixed.set(key, t);
                                  }
                               });
                               
