@@ -106,7 +106,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
     if (isFixed) {
       if (isVariableDate) { // Hebdomadaire
         const d = new Date(date + 'T12:00:00');
-        finalPriority = 95 + d.getDay();
+        finalPriority = 110 + d.getDay();
       } else { // Mensuel
         if (isVariableAmount) finalPriority = 4;
         else finalPriority = 3;

@@ -537,7 +537,7 @@ export default function FinancesPage() {
     allFixeds.forEach(t => {
       if (t.entity === acc || acc === 'Vue Combinée') {
         let k = `${t.entity}-${t.category_id}-${t.description}-${t.type}`;
-        if (Number(t.priority) >= 95 && Number(t.priority) <= 101) {
+        if (Number(t.priority) >= 110 && Number(t.priority) <= 116) {
           k += `-dow-${t.priority}`;
         }
         if (!ghostMap.has(k) || parseDateLocal(t.date) > parseDateLocal(ghostMap.get(k).date)) {
@@ -570,7 +570,7 @@ export default function FinancesPage() {
         const cat = getCategory(t.category_id);
         const catName = (cat ? cat.name : '').toLowerCase();
         const desc = (t.description || '').toLowerCase();
-        const isWeekly = Number(t.priority) >= 95 && Number(t.priority) <= 101;
+        const isWeekly = Number(t.priority) >= 110 && Number(t.priority) <= 116;
 
         if (isWeekly) {
           const targetDow = parseDateLocal(t.date).getDay();
@@ -681,7 +681,7 @@ export default function FinancesPage() {
   const latestFixedMap = new Map();
   allFixed.forEach(t => {
     let key = `${t.entity}-${t.category_id}-${t.description || ''}-${t.type}`;
-    if (Number(t.priority) >= 95 && Number(t.priority) <= 101) {
+    if (Number(t.priority) >= 110 && Number(t.priority) <= 116) {
       key += `-dow-${t.priority}`;
     }
     if (!latestFixedMap.has(key) || parseDateLocal(t.date) > parseDateLocal(latestFixedMap.get(key).date)) {
@@ -692,7 +692,7 @@ export default function FinancesPage() {
   const ghostRecurring = Array.from(latestFixedMap.values())
     .filter(t => t.priority !== 99)
     .flatMap(t => {
-      const isWeekly = Number(t.priority) >= 95 && Number(t.priority) <= 101;
+      const isWeekly = Number(t.priority) >= 110 && Number(t.priority) <= 116;
 
       if (isWeekly) {
         const targetDow = parseDateLocal(t.date).getDay();
