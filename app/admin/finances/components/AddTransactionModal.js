@@ -104,9 +104,13 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
 
     let finalPriority = 2;
     if (isFixed) {
-      if (isVariableAmount && isVariableDate) finalPriority = 4;
-      else if (isVariableAmount) finalPriority = 1;
-      else if (isVariableDate) finalPriority = 3;
+      if (isVariableDate) { // Hebdomadaire
+        const d = new Date(date + 'T12:00:00');
+        finalPriority = 95 + d.getDay();
+      } else { // Mensuel
+        if (isVariableAmount) finalPriority = 4;
+        else finalPriority = 3;
+      }
     } else {
       finalPriority = parseInt(priority);
     }
@@ -358,7 +362,7 @@ export default function AddTransactionModal({ isOpen, onClose, onAdd, onUpdate, 
                     style={{ padding: '8px', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.9rem', width: '100%' }}
                   >
                     <option value="monthly">Mensuel (le {date ? date.split('-')[2] : 'X'} de chaque mois)</option>
-                    <option value="weekly">Hebdomadaire (4 fois par mois)</option>
+                    <option value="weekly">Hebdomadaire (toutes les semaines, le même jour)</option>
                   </select>
                   
                   <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.85rem', color: '#4B5563', marginTop: '5px' }}>
