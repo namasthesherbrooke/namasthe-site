@@ -114,10 +114,19 @@ export default function FinancesPage() {
 
 
 
-  const handleUpdateTransactionStatus = async (id, newStatus) => {
-    if (String(id).startsWith('ghost-')) {
-      const ghost = ghostExpenses.find(g => g.id === id);
-      if (!ghost) return;
+  const handleUpdateTransactionStatus = async (tx, newStatus) => {
+    let isGhost = String(tx.id).startsWith('ghost-');
+
+    if (newStatus === 'paid') {
+      const isVariableAmount = tx.priority === 1 || tx.priority === 4;
+      if (isGhost || isVariableAmount) {
+        setTransactionToEdit({ ...tx, status: 'paid' });
+        setIsModalOpen(true);
+        return;
+      }
+    }
+
+    if (isGhost) {
       try {
         const res = await fetch('/api/admin/finances', {
           method: 'POST',
@@ -125,14 +134,14 @@ export default function FinancesPage() {
           body: JSON.stringify({
             action: 'add_transaction',
             data: {
-              date: ghost.date,
-              type: ghost.type,
-              amount: ghost.amount,
-              category_id: ghost.category_id,
-              description: ghost.description,
-              entity: ghost.entity,
+              date: tx.date,
+              type: tx.type,
+              amount: tx.amount,
+              category_id: tx.category_id,
+              description: tx.description,
+              entity: tx.entity,
               status: newStatus,
-              priority: ghost.priority,
+              priority: tx.priority,
               is_fixed: true
             }
           })
@@ -149,7 +158,7 @@ export default function FinancesPage() {
         headers: { 'Content-Type': 'application/json', 'x-finance-pin': pin },
         body: JSON.stringify({
           action: 'update_transaction',
-          data: { id, updates: { status: newStatus } }
+          data: { id: tx.id, updates: { status: newStatus } }
         })
       });
       if (!res.ok) throw new Error("Erreur de mise à jour");
@@ -1216,7 +1225,7 @@ export default function FinancesPage() {
                                     </button>
                                   ) : (
                                     <button 
-                                      onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
+                                      onClick={() => handleUpdateTransactionStatus(t, 'paid')}
                                       style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
                                     >
                                       Payer
@@ -1807,7 +1816,7 @@ export default function FinancesPage() {
                           <input 
                             type="checkbox" 
                             checked={t.status === 'paid'} 
-                            onChange={() => handleUpdateTransactionStatus(t.id, t.status === 'paid' ? 'pending' : 'paid')}
+                            onChange={() => handleUpdateTransactionStatus(t, t.status === 'paid' ? 'pending' : 'paid')}
                             style={{ width: '1.2rem', height: '1.2rem', cursor: 'pointer' }}
                           />
                           <button onClick={() => { setTransactionToEdit(t); setIsModalOpen(true); }} style={{ background: 'none', border: 'none', color: '#3B82F6', cursor: 'pointer', fontSize: '1.1rem' }} title="Modifier">✎</button>
@@ -1846,7 +1855,7 @@ export default function FinancesPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(t.amount)}</span>
                           <button 
-                            onClick={() => handleUpdateTransactionStatus(t.id, 'paid')}
+                            onClick={() => handleUpdateTransactionStatus(t, 'paid')}
                             style={{ padding: '6px 12px', background: '#3B82F6', color: 'white', border: 'none', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
                           >
                             Payer
