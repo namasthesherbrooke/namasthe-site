@@ -416,6 +416,12 @@ export default function FinancesPage() {
   };
 
   const getCalculatedStartBalance = (m, y, acc) => {
+    if (acc === 'Vue Combinée') {
+      return getCalculatedStartBalance(m, y, 'Entreprise') +
+             getCalculatedStartBalance(m, y, 'Perso') +
+             getCalculatedStartBalance(m, y, 'Conjoint');
+    }
+
     const manualBal = balances.find(b => {
       const d = parseDateLocal(b.date);
       return b.account === acc && d.getMonth() === m && d.getFullYear() === y;
