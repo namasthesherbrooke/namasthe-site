@@ -80,6 +80,7 @@ export default function BudgetSimulator() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [laterExpenses, setLaterExpenses] = useState([]);
+  const [currentBankBalance, setCurrentBankBalance] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -87,41 +88,51 @@ export default function BudgetSimulator() {
     const savedIncomes = localStorage.getItem('budget_sim_incomes');
     const savedExpenses = localStorage.getItem('budget_sim_expenses');
     const savedLaterExpenses = localStorage.getItem('budget_sim_later_expenses');
+    const savedBankBalance = localStorage.getItem('budget_sim_bank_balance');
 
     if (savedIncomes && savedExpenses) {
       setIncomes(JSON.parse(savedIncomes));
       setExpenses(JSON.parse(savedExpenses));
       if (savedLaterExpenses) setLaterExpenses(JSON.parse(savedLaterExpenses));
       else setLaterExpenses(DEFAULT_LATER_EXPENSES);
+      if (savedBankBalance) setCurrentBankBalance(savedBankBalance);
     } else {
       setIncomes(DEFAULT_INCOMES);
       setExpenses(DEFAULT_EXPENSES);
       setLaterExpenses(DEFAULT_LATER_EXPENSES);
+      setCurrentBankBalance('');
     }
     setIsLoaded(true);
   }, []);
 
-  const saveToLocal = (newIncomes, newExpenses, newLaterExpenses) => {
+  const saveToLocal = (newIncomes, newExpenses, newLaterExpenses, newBankBalance) => {
     localStorage.setItem('budget_sim_incomes', JSON.stringify(newIncomes));
     localStorage.setItem('budget_sim_expenses', JSON.stringify(newExpenses));
     localStorage.setItem('budget_sim_later_expenses', JSON.stringify(newLaterExpenses));
+    localStorage.setItem('budget_sim_bank_balance', newBankBalance);
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
+  };
+
+  const handleBankBalanceChange = (val) => {
+    const cleaned = val.replace(',', '.').replace(/[^0-9.-]/g, '');
+    setCurrentBankBalance(cleaned);
+    saveToLocal(incomes, expenses, laterExpenses, cleaned);
   };
 
   const handleUpdate = (type, id, field, value) => {
     if (type === 'income') {
       const updated = incomes.map(item => item.id === id ? { ...item, [field]: value } : item);
       setIncomes(updated);
-      saveToLocal(updated, expenses, laterExpenses);
+      saveToLocal(updated, expenses, laterExpenses, currentBankBalance);
     } else if (type === 'expense') {
       const updated = expenses.map(item => item.id === id ? { ...item, [field]: value } : item);
       setExpenses(updated);
-      saveToLocal(incomes, updated, laterExpenses);
+      saveToLocal(incomes, updated, laterExpenses, currentBankBalance);
     } else {
       const updated = laterExpenses.map(item => item.id === id ? { ...item, [field]: value } : item);
       setLaterExpenses(updated);
-      saveToLocal(incomes, expenses, updated);
+      saveToLocal(incomes, expenses, updated, currentBankBalance);
     }
   };
 
@@ -129,15 +140,15 @@ export default function BudgetSimulator() {
     if (type === 'income') {
       const updated = incomes.filter(i => i.id !== id);
       setIncomes(updated);
-      saveToLocal(updated, expenses, laterExpenses);
+      saveToLocal(updated, expenses, laterExpenses, currentBankBalance);
     } else if (type === 'expense') {
       const updated = expenses.filter(i => i.id !== id);
       setExpenses(updated);
-      saveToLocal(incomes, updated, laterExpenses);
+      saveToLocal(incomes, updated, laterExpenses, currentBankBalance);
     } else {
       const updated = laterExpenses.filter(i => i.id !== id);
       setLaterExpenses(updated);
-      saveToLocal(incomes, expenses, updated);
+      saveToLocal(incomes, expenses, updated, currentBankBalance);
     }
   };
 
@@ -146,15 +157,15 @@ export default function BudgetSimulator() {
     if (type === 'income') {
       const updated = [...incomes, newItem];
       setIncomes(updated);
-      saveToLocal(updated, expenses, laterExpenses);
+      saveToLocal(updated, expenses, laterExpenses, currentBankBalance);
     } else if (type === 'expense') {
       const updated = [...expenses, newItem];
       setExpenses(updated);
-      saveToLocal(incomes, updated, laterExpenses);
+      saveToLocal(incomes, updated, laterExpenses, currentBankBalance);
     } else {
       const updated = [...laterExpenses, newItem];
       setLaterExpenses(updated);
-      saveToLocal(incomes, expenses, updated);
+      saveToLocal(incomes, expenses, updated, currentBankBalance);
     }
   };
 
@@ -163,7 +174,8 @@ export default function BudgetSimulator() {
       setIncomes(DEFAULT_INCOMES);
       setExpenses(DEFAULT_EXPENSES);
       setLaterExpenses(DEFAULT_LATER_EXPENSES);
-      saveToLocal(DEFAULT_INCOMES, DEFAULT_EXPENSES, DEFAULT_LATER_EXPENSES);
+      setCurrentBankBalance('');
+      saveToLocal(DEFAULT_INCOMES, DEFAULT_EXPENSES, DEFAULT_LATER_EXPENSES, '');
     }
   };
 
@@ -179,7 +191,8 @@ export default function BudgetSimulator() {
   const totalActiveIncome = incomes.filter(i => i.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
   const totalUrgentExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
   const totalLaterExpense = laterExpenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
-  const balanceUrgent = totalActiveIncome - totalUrgentExpense;
+  const startBal = parseAmount(currentBankBalance);
+  const balanceUrgent = startBal + totalActiveIncome - totalUrgentExpense;
   const finalBalance = balanceUrgent - totalLaterExpense;
 
   const formatMoney = (val) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(val);
@@ -203,11 +216,32 @@ export default function BudgetSimulator() {
 
       {/* RÉSULTAT GLOBAL FIXE EN HAUT POUR VISIBILITÉ */}
       <div style={{ background: finalBalance >= 0 ? '#ECFDF5' : '#FEF2F2', border: `1px solid ${finalBalance >= 0 ? '#10B981' : '#EF4444'}`, borderRadius: '12px', padding: '20px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', flexWrap: 'wrap', gap: '20px' }}>
-        <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', alignItems: 'center' }}>
+          
+          <div style={{ background: 'white', padding: '10px 15px', borderRadius: '8px', border: '1px solid #D1D5DB' }}>
+            <div style={{ fontSize: '11px', color: '#4B5563', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', marginBottom: '5px' }}>🏦 Compte en banque (Actuel)</div>
+            <div style={{ position: 'relative', width: '130px' }}>
+              <span style={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)', color: '#6B7280', fontWeight: 'bold' }}>$</span>
+              <input 
+                type="text" 
+                inputMode="decimal"
+                value={currentBankBalance}
+                onChange={(e) => handleBankBalanceChange(e.target.value)}
+                style={{ width: '100%', padding: '6px 8px 6px 22px', border: 'none', background: '#F3F4F6', borderRadius: '4px', textAlign: 'right', fontSize: '16px', fontWeight: 'bold', color: '#111827', outline: 'none' }}
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div style={{ fontSize: '20px', color: '#9CA3AF', fontWeight: '300' }}>+</div>
+
           <div>
             <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Revenus</div>
             <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#10B981' }}>{formatMoney(totalActiveIncome)}</div>
           </div>
+          
+          <div style={{ fontSize: '20px', color: '#9CA3AF', fontWeight: '300' }}>-</div>
+          
           <div>
             <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Dépenses fixes</div>
             <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(totalUrgentExpense)}</div>
