@@ -135,9 +135,13 @@ export default function BudgetSimulator() {
       <div style={{ position: 'relative', width: '120px' }}>
         <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>$</span>
         <input 
-          type="number" 
+          type="text" 
+          inputMode="decimal"
           value={item.amount === 0 ? '' : item.amount} 
-          onChange={(e) => handleUpdate(type, item.id, 'amount', e.target.value)}
+          onChange={(e) => {
+            let val = e.target.value.replace(',', '.').replace(/[^0-9.]/g, '');
+            handleUpdate(type, item.id, 'amount', val);
+          }}
           style={{ width: '100%', padding: '8px 8px 8px 25px', border: '1px solid #D1D5DB', borderRadius: '6px', textAlign: 'right', background: item.isActive ? 'white' : '#F3F4F6' }}
           placeholder="0.00"
         />
