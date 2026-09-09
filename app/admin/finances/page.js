@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import FinanceLock from './components/FinanceLock';
 import AddTransactionModal from './components/AddTransactionModal';
-
+import BudgetSimulator from './components/BudgetSimulator';
 export default function FinancesPage() {
   const [pin, setPin] = useState('');
   const [transactions, setTransactions] = useState([]);
@@ -14,7 +14,7 @@ export default function FinancesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const accounts = ['Vue Combinée', 'À Payer', 'À Commander', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
+  const accounts = ['Vue Combinée', 'Simulateur 📊', 'À Payer', 'À Commander', 'Entreprise', 'Perso', 'Conjoint', 'Impôts et taxes', 'Urgence', 'Voyage et mon garçon', 'CELI'];
   const [activeTab, setActiveTab] = useState('Vue Combinée'); 
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -1004,7 +1004,7 @@ export default function FinancesPage() {
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : (tab === 'À Payer' ? '#DC2626' : (tab === 'À Commander' ? '#D97706' : '#2C1810'))) : '#F3F4F6',
+                background: activeTab === tab ? (tab === 'Vue Combinée' ? '#4F46E5' : (tab === 'Simulateur 📊' ? '#059669' : (tab === 'À Payer' ? '#DC2626' : (tab === 'À Commander' ? '#D97706' : '#2C1810')))) : '#F3F4F6',
                 color: activeTab === tab ? 'white' : '#6B7280',
                 transition: 'all 0.2s',
                 boxShadow: activeTab === tab ? '0 4px 10px rgba(0,0,0,0.15)' : 'none'
@@ -1017,6 +1017,8 @@ export default function FinancesPage() {
 
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>Chargement...</div>
+        ) : activeTab === 'Simulateur 📊' ? (
+          <BudgetSimulator />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
             {activeTab === 'À Payer' || activeTab === 'À Commander' ? (() => {
