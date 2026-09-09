@@ -177,8 +177,10 @@ export default function BudgetSimulator() {
   };
 
   const totalActiveIncome = incomes.filter(i => i.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
-  const totalActiveExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0) + laterExpenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
-  const balance = totalActiveIncome - totalActiveExpense;
+  const totalUrgentExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
+  const totalLaterExpense = laterExpenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
+  const balanceUrgent = totalActiveIncome - totalUrgentExpense;
+  const finalBalance = balanceUrgent - totalLaterExpense;
 
   const formatMoney = (val) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(val);
 
@@ -200,21 +202,31 @@ export default function BudgetSimulator() {
       </div>
 
       {/* RÉSULTAT GLOBAL FIXE EN HAUT POUR VISIBILITÉ */}
-      <div style={{ background: balance >= 0 ? '#ECFDF5' : '#FEF2F2', border: `1px solid ${balance >= 0 ? '#10B981' : '#EF4444'}`, borderRadius: '12px', padding: '20px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
-        <div style={{ display: 'flex', gap: '40px' }}>
+      <div style={{ background: finalBalance >= 0 ? '#ECFDF5' : '#FEF2F2', border: `1px solid ${finalBalance >= 0 ? '#10B981' : '#EF4444'}`, borderRadius: '12px', padding: '20px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
           <div>
-            <div style={{ fontSize: '14px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Revenus cochés</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10B981' }}>{formatMoney(totalActiveIncome)}</div>
+            <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Revenus</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#10B981' }}>{formatMoney(totalActiveIncome)}</div>
           </div>
           <div>
-            <div style={{ fontSize: '14px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Dépenses cochées</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(totalActiveExpense)}</div>
+            <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Dépenses fixes</div>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#EF4444' }}>{formatMoney(totalUrgentExpense)}</div>
           </div>
+          <div style={{ borderLeft: '2px solid #D1D5DB', paddingLeft: '30px' }}>
+            <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Reste (Base)</div>
+            <div style={{ fontSize: '22px', fontWeight: 'bold', color: balanceUrgent >= 0 ? '#059669' : '#DC2626' }}>{formatMoney(balanceUrgent)}</div>
+          </div>
+          {totalLaterExpense > 0 && (
+            <div style={{ borderLeft: '2px dashed #D1D5DB', paddingLeft: '30px' }}>
+              <div style={{ fontSize: '12px', color: '#D97706', textTransform: 'uppercase', letterSpacing: '1px' }}>À venir (Extra)</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#D97706' }}>-{formatMoney(totalLaterExpense)}</div>
+            </div>
+          )}
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: '14px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Reste à la fin du mois</div>
-          <div style={{ fontSize: '36px', fontWeight: '900', color: balance >= 0 ? '#059669' : '#DC2626' }}>
-            {balance > 0 ? '+' : ''}{formatMoney(balance)}
+        <div style={{ textAlign: 'right', background: 'white', padding: '10px 20px', borderRadius: '8px', border: `2px solid ${finalBalance >= 0 ? '#10B981' : '#EF4444'}` }}>
+          <div style={{ fontSize: '12px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Reste Final</div>
+          <div style={{ fontSize: '32px', fontWeight: '900', color: finalBalance >= 0 ? '#059669' : '#DC2626' }}>
+            {finalBalance > 0 ? '+' : ''}{formatMoney(finalBalance)}
           </div>
         </div>
       </div>
