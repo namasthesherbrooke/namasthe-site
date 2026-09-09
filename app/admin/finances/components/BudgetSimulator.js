@@ -108,8 +108,15 @@ export default function BudgetSimulator() {
 
   if (!isLoaded) return <div>Chargement du simulateur...</div>;
 
-  const totalActiveIncome = incomes.filter(i => i.isActive).reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
-  const totalActiveExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
+  const parseAmount = (val) => {
+    if (val === undefined || val === null || val === '') return 0;
+    const cleaned = String(val).replace(',', '.').replace(/[^0-9.-]/g, '');
+    const num = parseFloat(cleaned);
+    return isNaN(num) ? 0 : num;
+  };
+
+  const totalActiveIncome = incomes.filter(i => i.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
+  const totalActiveExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
   const balance = totalActiveIncome - totalActiveExpense;
 
   const formatMoney = (val) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(val);
@@ -138,10 +145,7 @@ export default function BudgetSimulator() {
           type="text" 
           inputMode="decimal"
           value={item.amount === 0 ? '' : item.amount} 
-          onChange={(e) => {
-            let val = e.target.value.replace(',', '.').replace(/[^0-9.]/g, '');
-            handleUpdate(type, item.id, 'amount', val);
-          }}
+          onChange={(e) => handleUpdate(type, item.id, 'amount', e.target.value)}
           style={{ width: '100%', padding: '8px 8px 8px 25px', border: '1px solid #D1D5DB', borderRadius: '6px', textAlign: 'right', background: item.isActive ? 'white' : '#F3F4F6' }}
           placeholder="0.00"
         />
