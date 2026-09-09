@@ -163,7 +163,7 @@ export default function FinancesPage() {
       });
       if (!res.ok) throw new Error("Erreur de mise à jour");
       const { transaction } = await res.json();
-      setTransactions(transactions.map(t => t.id === id ? transaction : t));
+      setTransactions(transactions.map(t => t.id === tx.id ? transaction : t));
     } catch (err) {
       alert(err.message);
     }
