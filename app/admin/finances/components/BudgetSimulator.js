@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, CheckCircle, Circle, Save, RefreshCw } from 'lucide-react';
+
 
 const DEFAULT_INCOMES = [
   { id: 'inc_1', label: 'Dépôts System', amount: 7017, isActive: true },
@@ -118,10 +118,10 @@ export default function BudgetSimulator() {
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid #E5E7EB' }}>
       <button 
         onClick={() => handleUpdate(type, item.id, 'isActive', !item.isActive)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', color: item.isActive ? '#10B981' : '#9CA3AF' }}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: item.isActive ? '#10B981' : '#9CA3AF' }}
         title={item.isActive ? "Désactiver" : "Activer"}
       >
-        {item.isActive ? <CheckCircle size={20} /> : <Circle size={20} />}
+        {item.isActive ? '✅' : '⚪'}
       </button>
       
       <input 
@@ -145,9 +145,10 @@ export default function BudgetSimulator() {
 
       <button 
         onClick={() => handleDelete(type, item.id)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#EF4444', padding: '4px' }}
+        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '4px' }}
+        title="Supprimer"
       >
-        <Trash2 size={18} />
+        🗑️
       </button>
     </div>
   );
@@ -161,9 +162,9 @@ export default function BudgetSimulator() {
           <p style={{ margin: 0, color: '#6B7280' }}>Votre carré de sable Excel. Modifiez, cochez, testez.</p>
         </div>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          {isSaved && <span style={{ color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '14px' }}><Save size={16}/> Sauvegardé</span>}
+          {isSaved && <span style={{ color: '#10B981', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '14px' }}>💾 Sauvegardé</span>}
           <button onClick={resetDefaults} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'white', border: '1px solid #D1D5DB', borderRadius: '8px', cursor: 'pointer', color: '#374151' }}>
-            <RefreshCw size={16} /> Réinitialiser
+            🔄 Réinitialiser
           </button>
         </div>
       </div>
@@ -195,7 +196,7 @@ export default function BudgetSimulator() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ margin: 0, color: '#059669', fontSize: '18px' }}>Entrées d'argent</h3>
             <button onClick={() => handleAdd('income')} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px', background: '#ECFDF5', color: '#059669', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
-              <Plus size={16} /> Ajouter
+              ➕ Ajouter
             </button>
           </div>
           
@@ -210,7 +211,7 @@ export default function BudgetSimulator() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ margin: 0, color: '#DC2626', fontSize: '18px' }}>Dépenses / Sorties</h3>
             <button onClick={() => handleAdd('expense')} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px', background: '#FEF2F2', color: '#DC2626', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
-              <Plus size={16} /> Ajouter
+              ➕ Ajouter
             </button>
           </div>
           
