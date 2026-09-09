@@ -34,6 +34,46 @@ const DEFAULT_EXPENSES = [
   { id: 'exp_23', label: 'Assurances invalidités', amount: 185, isActive: true }
 ];
 
+const ItemRow = ({ item, type, handleUpdate, handleDelete }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid #E5E7EB' }}>
+    <button 
+      onClick={() => handleUpdate(type, item.id, 'isActive', !item.isActive)}
+      style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: item.isActive ? '#10B981' : '#9CA3AF' }}
+      title={item.isActive ? "Désactiver" : "Activer"}
+    >
+      {item.isActive ? '✅' : '⚪'}
+    </button>
+    
+    <input 
+      type="text" 
+      value={item.label} 
+      onChange={(e) => handleUpdate(type, item.id, 'label', e.target.value)}
+      style={{ flex: 1, padding: '8px', border: '1px solid transparent', borderRadius: '4px', background: item.isActive ? 'transparent' : '#F3F4F6', color: item.isActive ? '#111827' : '#9CA3AF', fontWeight: '500' }}
+      placeholder="Nom"
+    />
+    
+    <div style={{ position: 'relative', width: '120px' }}>
+      <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>$</span>
+      <input 
+        type="text" 
+        inputMode="decimal"
+        value={item.amount === 0 ? '' : item.amount} 
+        onChange={(e) => handleUpdate(type, item.id, 'amount', e.target.value)}
+        style={{ width: '100%', padding: '8px 8px 8px 25px', border: '1px solid #D1D5DB', borderRadius: '6px', textAlign: 'right', background: item.isActive ? 'white' : '#F3F4F6' }}
+        placeholder="0.00"
+      />
+    </div>
+
+    <button 
+      onClick={() => handleDelete(type, item.id)}
+      style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '4px' }}
+      title="Supprimer"
+    >
+      🗑️
+    </button>
+  </div>
+);
+
 export default function BudgetSimulator() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -121,45 +161,6 @@ export default function BudgetSimulator() {
 
   const formatMoney = (val) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(val);
 
-  const ItemRow = ({ item, type }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid #E5E7EB' }}>
-      <button 
-        onClick={() => handleUpdate(type, item.id, 'isActive', !item.isActive)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: item.isActive ? '#10B981' : '#9CA3AF' }}
-        title={item.isActive ? "Désactiver" : "Activer"}
-      >
-        {item.isActive ? '✅' : '⚪'}
-      </button>
-      
-      <input 
-        type="text" 
-        value={item.label} 
-        onChange={(e) => handleUpdate(type, item.id, 'label', e.target.value)}
-        style={{ flex: 1, padding: '8px', border: '1px solid transparent', borderRadius: '4px', background: item.isActive ? 'transparent' : '#F3F4F6', color: item.isActive ? '#111827' : '#9CA3AF', fontWeight: '500' }}
-        placeholder="Nom"
-      />
-      
-      <div style={{ position: 'relative', width: '120px' }}>
-        <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>$</span>
-        <input 
-          type="text" 
-          inputMode="decimal"
-          value={item.amount === 0 ? '' : item.amount} 
-          onChange={(e) => handleUpdate(type, item.id, 'amount', e.target.value)}
-          style={{ width: '100%', padding: '8px 8px 8px 25px', border: '1px solid #D1D5DB', borderRadius: '6px', textAlign: 'right', background: item.isActive ? 'white' : '#F3F4F6' }}
-          placeholder="0.00"
-        />
-      </div>
-
-      <button 
-        onClick={() => handleDelete(type, item.id)}
-        style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '4px' }}
-        title="Supprimer"
-      >
-        🗑️
-      </button>
-    </div>
-  );
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'system-ui, sans-serif' }}>
@@ -209,7 +210,7 @@ export default function BudgetSimulator() {
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {incomes.map(item => <ItemRow key={item.id} item={item} type="income" />)}
+            {incomes.map(item => <ItemRow key={item.id} item={item} type="income" handleUpdate={handleUpdate} handleDelete={handleDelete} />)}
             {incomes.length === 0 && <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px 0', textAlign: 'center' }}>Aucun revenu configuré</div>}
           </div>
         </div>
@@ -224,7 +225,7 @@ export default function BudgetSimulator() {
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {expenses.map(item => <ItemRow key={item.id} item={item} type="expense" />)}
+            {expenses.map(item => <ItemRow key={item.id} item={item} type="expense" handleUpdate={handleUpdate} handleDelete={handleDelete} />)}
             {expenses.length === 0 && <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px 0', textAlign: 'center' }}>Aucune dépense configurée</div>}
           </div>
         </div>
