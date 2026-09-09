@@ -34,6 +34,8 @@ const DEFAULT_EXPENSES = [
   { id: 'exp_23', label: 'Assurances invalidités', amount: 185, isActive: true }
 ];
 
+const DEFAULT_LATER_EXPENSES = [];
+
 const ItemRow = ({ item, type, handleUpdate, handleDelete }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid #E5E7EB' }}>
     <button 
@@ -77,26 +79,32 @@ const ItemRow = ({ item, type, handleUpdate, handleDelete }) => (
 export default function BudgetSimulator() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [laterExpenses, setLaterExpenses] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const savedIncomes = localStorage.getItem('budget_sim_incomes');
     const savedExpenses = localStorage.getItem('budget_sim_expenses');
+    const savedLaterExpenses = localStorage.getItem('budget_sim_later_expenses');
 
     if (savedIncomes && savedExpenses) {
       setIncomes(JSON.parse(savedIncomes));
       setExpenses(JSON.parse(savedExpenses));
+      if (savedLaterExpenses) setLaterExpenses(JSON.parse(savedLaterExpenses));
+      else setLaterExpenses(DEFAULT_LATER_EXPENSES);
     } else {
       setIncomes(DEFAULT_INCOMES);
       setExpenses(DEFAULT_EXPENSES);
+      setLaterExpenses(DEFAULT_LATER_EXPENSES);
     }
     setIsLoaded(true);
   }, []);
 
-  const saveToLocal = (newIncomes, newExpenses) => {
+  const saveToLocal = (newIncomes, newExpenses, newLaterExpenses) => {
     localStorage.setItem('budget_sim_incomes', JSON.stringify(newIncomes));
     localStorage.setItem('budget_sim_expenses', JSON.stringify(newExpenses));
+    localStorage.setItem('budget_sim_later_expenses', JSON.stringify(newLaterExpenses));
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
@@ -105,11 +113,15 @@ export default function BudgetSimulator() {
     if (type === 'income') {
       const updated = incomes.map(item => item.id === id ? { ...item, [field]: value } : item);
       setIncomes(updated);
-      saveToLocal(updated, expenses);
-    } else {
+      saveToLocal(updated, expenses, laterExpenses);
+    } else if (type === 'expense') {
       const updated = expenses.map(item => item.id === id ? { ...item, [field]: value } : item);
       setExpenses(updated);
-      saveToLocal(incomes, updated);
+      saveToLocal(incomes, updated, laterExpenses);
+    } else {
+      const updated = laterExpenses.map(item => item.id === id ? { ...item, [field]: value } : item);
+      setLaterExpenses(updated);
+      saveToLocal(incomes, expenses, updated);
     }
   };
 
@@ -117,11 +129,15 @@ export default function BudgetSimulator() {
     if (type === 'income') {
       const updated = incomes.filter(i => i.id !== id);
       setIncomes(updated);
-      saveToLocal(updated, expenses);
-    } else {
+      saveToLocal(updated, expenses, laterExpenses);
+    } else if (type === 'expense') {
       const updated = expenses.filter(i => i.id !== id);
       setExpenses(updated);
-      saveToLocal(incomes, updated);
+      saveToLocal(incomes, updated, laterExpenses);
+    } else {
+      const updated = laterExpenses.filter(i => i.id !== id);
+      setLaterExpenses(updated);
+      saveToLocal(incomes, expenses, updated);
     }
   };
 
@@ -130,11 +146,15 @@ export default function BudgetSimulator() {
     if (type === 'income') {
       const updated = [...incomes, newItem];
       setIncomes(updated);
-      saveToLocal(updated, expenses);
-    } else {
+      saveToLocal(updated, expenses, laterExpenses);
+    } else if (type === 'expense') {
       const updated = [...expenses, newItem];
       setExpenses(updated);
-      saveToLocal(incomes, updated);
+      saveToLocal(incomes, updated, laterExpenses);
+    } else {
+      const updated = [...laterExpenses, newItem];
+      setLaterExpenses(updated);
+      saveToLocal(incomes, expenses, updated);
     }
   };
 
@@ -142,7 +162,8 @@ export default function BudgetSimulator() {
     if(confirm('Voulez-vous vraiment réinitialiser avec les valeurs par défaut ?')) {
       setIncomes(DEFAULT_INCOMES);
       setExpenses(DEFAULT_EXPENSES);
-      saveToLocal(DEFAULT_INCOMES, DEFAULT_EXPENSES);
+      setLaterExpenses(DEFAULT_LATER_EXPENSES);
+      saveToLocal(DEFAULT_INCOMES, DEFAULT_EXPENSES, DEFAULT_LATER_EXPENSES);
     }
   };
 
@@ -156,7 +177,7 @@ export default function BudgetSimulator() {
   };
 
   const totalActiveIncome = incomes.filter(i => i.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
-  const totalActiveExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
+  const totalActiveExpense = expenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0) + laterExpenses.filter(e => e.isActive).reduce((acc, curr) => acc + parseAmount(curr.amount), 0);
   const balance = totalActiveIncome - totalActiveExpense;
 
   const formatMoney = (val) => new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(val);
@@ -198,7 +219,7 @@ export default function BudgetSimulator() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' }}>
         
         {/* COLONNE REVENUS */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
@@ -215,7 +236,7 @@ export default function BudgetSimulator() {
           </div>
         </div>
 
-        {/* COLONNE DÉPENSES */}
+        {/* COLONNE DÉPENSES URGENTES */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ margin: 0, color: '#DC2626', fontSize: '18px' }}>Dépenses / Sorties</h3>
@@ -227,6 +248,21 @@ export default function BudgetSimulator() {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {expenses.map(item => <ItemRow key={item.id} item={item} type="expense" handleUpdate={handleUpdate} handleDelete={handleDelete} />)}
             {expenses.length === 0 && <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px 0', textAlign: 'center' }}>Aucune dépense configurée</div>}
+          </div>
+        </div>
+        
+        {/* COLONNE DÉPENSES MOINS URGENTES */}
+        <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ margin: 0, color: '#D97706', fontSize: '18px' }}>À venir (Moins urgent)</h3>
+            <button onClick={() => handleAdd('laterExpense')} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '6px 12px', background: '#FFFBEB', color: '#D97706', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
+              ➕ Ajouter
+            </button>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {laterExpenses.map(item => <ItemRow key={item.id} item={item} type="laterExpense" handleUpdate={handleUpdate} handleDelete={handleDelete} />)}
+            {laterExpenses.length === 0 && <div style={{ color: '#9CA3AF', fontStyle: 'italic', padding: '20px 0', textAlign: 'center' }}>Aucune dépense à venir configurée</div>}
           </div>
         </div>
 
